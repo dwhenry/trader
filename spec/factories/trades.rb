@@ -5,4 +5,9 @@ FactoryGirl.define do
     currency 'AUD'
     date { Time.zone.today }
   end
+
+  trait :fully_setup do
+    portfolio { create(:portfolio, business: create(:business)) }
+    security { create(:security) }
+  end
 end
