@@ -14,7 +14,7 @@ RSpec.describe Trade do
       CustomConfig.create!(
         object_type: 'Portfolio',
         object_id: trade.portfolio_id,
-        config: [{ 'name' => 'allow_negative_positions', 'value' => 'no' }]
+        config: [{ 'name' => 'allow_negative_positions', 'value' => 'no' }],
       )
     end
 
@@ -51,7 +51,7 @@ RSpec.describe Trade do
       CustomConfig.create!(
         object_type: 'Business',
         object_id: trade.portfolio.business_id,
-        config: [{ 'name' => 'allow_negative_positions', 'value' => 'no' }]
+        config: [{ 'name' => 'allow_negative_positions', 'value' => 'no' }],
       )
     end
 

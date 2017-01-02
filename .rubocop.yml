@@ -39,3 +39,6 @@ Style/EmptyMethod:
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma

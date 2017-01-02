@@ -8,7 +8,7 @@ module CustomConfigValidation
   end
 
   def _custom_config_validation
-    self.validatables.each do |validatable|
+    validatables.each do |validatable|
       configs = CustomConfig.where(object_type: validatable.class.to_s, object_id: [nil, validatable.id])
       configs.each do |config|
         config.config.each do |validation|
@@ -21,9 +21,8 @@ module CustomConfigValidation
 
   class BaseValidator
     def self.get(key)
-      if CustomConfigValidation.const_defined?("#{key.camelcase}Validator")
-        CustomConfigValidation.const_get("#{key.camelcase}Validator")
-      end
+      return unless CustomConfigValidation.const_defined?("#{key.camelcase}Validator")
+      CustomConfigValidation.const_get("#{key.camelcase}Validator")
     end
   end
 
@@ -38,16 +37,15 @@ module CustomConfigValidation
 
     def validate(value)
       return if value == 'yes' || @object.quantity.positive?
-      if current_position < adjusted_position
-        @object.errors.add(:quantity, 'Generates a negative position')
-      end
+      return if current_position >= adjusted_trade_quantity
+      @object.errors.add(:quantity, 'Generates a negative position')
     end
 
     def current_position
       Trade.where(portfolio_id: @object.portfolio_id, security_id: @object.security_id).sum(:quantity)
     end
 
-    def adjusted_position
+    def adjusted_trade_quantity
       # TODO: take into account edits once they are implemented.
       @object.quantity.abs
     end

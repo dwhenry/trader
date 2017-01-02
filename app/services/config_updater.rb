@@ -13,11 +13,11 @@ class ConfigUpdater
         update_business
         return true
         # update_portfolio
-      rescue => e
+      rescue
         raise ActiveRecord::Rollback
       end
     end
-    return false
+    false
   end
 
   private
@@ -37,15 +37,14 @@ class ConfigUpdater
     record_error { @current_user.business.update!(name: @params[:business_name]) }
   end
 
-  def record_error(msg=nil, &block)
+  def record_error(msg = nil)
     @errors << msg if msg
-    if block_given?
-      begin
-        block.call
-      rescue => e
-        @errors << e.message
-        raise
-      end
+    return unless block_given?
+    begin
+      yield
+    rescue => e
+      @errors << e.message
+      raise
     end
   end
 end
