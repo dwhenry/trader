@@ -3,7 +3,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: true
 
   def self.from_omniauth(auth) # rubocop:disable Metrics/AbcSize
-    find_by(provider: auth.provider, uid: auth.uid) ||
+    user = find_by(provider: auth.provider, uid: auth.uid) ||
       find_by(email: auth.info.email, uid: nil) ||
       create(
         provider: auth.provider,
@@ -13,5 +13,10 @@ class User < ApplicationRecord
         oauth_token: auth.credentials.token,
         oauth_expires_at: Time.zone.at(auth.credentials.expires_at),
       )
+    user.update(
+      oauth_token: auth.credentials.token,
+      oauth_expires_at: Time.zone.at(auth.credentials.expires_at),
+    )
+    user
   end
 end
