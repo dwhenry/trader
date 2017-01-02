@@ -8,6 +8,7 @@ end
 gem 'bootstrap', '~> 4.0.0.alpha5'
 gem 'jbuilder', '~> 2.5'
 gem 'jquery-rails'
+gem 'omniauth-google-oauth2'
 gem 'pg'
 gem 'puma', '~> 3.0'
 gem 'rails', '~> 5.0.1'
