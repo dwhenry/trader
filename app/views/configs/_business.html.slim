@@ -1,0 +1,7 @@
+.config-group
+  h2 Business
+
+  .row
+    .form_group.col-md-4
+      = label_tag :business_name
+      = text_field_tag :business_name, @business.name, class: 'form-control'

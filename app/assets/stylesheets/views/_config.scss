@@ -1,0 +1,12 @@
+.config {
+  margin-bottom: 20px;
+}
+
+.config-group {
+  border-top: 1px black solid;
+  padding: 10px 0;
+
+  &:last-child {
+    border-bottom: 1px black solid;
+  }
+}

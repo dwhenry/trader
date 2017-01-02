@@ -17,7 +17,7 @@ class NewTradePage < SitePrism::Page
     price.set 12.34
     currency.set 'AUD'
     security.set Security.first.name
-    public_send("direction_#{custom.fetch(:direction, 'buy')}")
+    public_send("direction_#{custom.fetch(:direction, 'buy')}").set true
   end
 
   def save

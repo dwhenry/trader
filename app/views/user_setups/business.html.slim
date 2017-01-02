@@ -13,13 +13,16 @@
       = f.fields_for(:business, UserSetup::ConfigField.new(name: :allow_negative_positions), index: nil) do |b|
         .form_group
           = b.label :value, 'Allow negative positions'
-          .radio
-            label
-              = b.radio_button :value, :yes
-              '  Yes
-            label
-              = b.radio_button :value, :no
-              |  No
+
+          label.custom-control.custom-radio
+            = radio_button_tag :value, :yes, nil, class: 'custom-control-input'
+            span.custom-control-indicator
+            span.custom-control-description Yes
+
+          label.custom-control.custom-radio
+            = radio_button_tag :value, :no, nil, class: 'custom-control-input'
+            span.custom-control-indicator
+            span.custom-control-description No
 
       .form_group
         = f.submit 'Next', class: 'btn btn-primary t-next-button'

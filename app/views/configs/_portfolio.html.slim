@@ -1,0 +1,10 @@
+= fields_for :portfolio, portfolio, index: portfolio.id do |p|
+  .config-group
+    h2
+      ' Portfolio:
+      = portfolio.name
+
+    .row
+      .form_group.col-md-4
+        = p.label :name, 'Portfolio name'
+        = p.text_field :name, class: 'form-control'

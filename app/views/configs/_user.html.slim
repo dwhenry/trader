@@ -1,0 +1,12 @@
+.config-group
+  h2 User
+
+  .row
+    .form_group.col-md-4
+      = label_tag :user_name
+      = text_field_tag :user_name, current_user.name, class: 'form-control'
+
+  .row
+    .form_group.col-md-6
+      = label_tag :new_users, 'New users:'
+      = text_field_tag :new_users, nil, placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal'
