@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.feature 'Creating a trade' do
   scenario 'with no customisation' do
     business = create(:business)
-    account = create(:account, business: business)
-    create(:user, bussiness: business)
+    portfolio = create(:portfolio, business: business)
+    create(:user, business: business)
 
-    page = Page::Account.new
-    page.load(account: account)
+    page = PortfolioPage.new
+    page.load(portfolio_id: portfolio.id)
 
     page.create_trade
 

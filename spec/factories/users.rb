@@ -1,11 +1,11 @@
 FactoryGirl.define do
   factory :user do
     business nil
-    provider 'MyString'
-    uid 'MyString'
-    name 'MyString'
-    email 'MyString'
-    oauth_token 'MyString'
-    oauth_expires_at '2017-01-02 01:42:56'
+    provider 'Google'
+    uid { SecureRandom.uuid }
+    name 'Primary User'
+    email 'primary@user.com'
+    oauth_token { SecureRandom.uuid }
+    oauth_expires_at { 1.week.from_now }
   end
 end
