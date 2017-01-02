@@ -1,5 +1,6 @@
 class BusinessesController < ApplicationController
   def show
-    render text: 'here'
+    @business = current_user.business
+    @portfolios = Portfolio.where(business_id: @business.id)
   end
 end
