@@ -1,0 +1,25 @@
+.row
+  .col-md-12
+    h1
+      = current_user.name
+      |: Business configuration
+    p
+      | All setting can be changed at a later date to meet your specific needs
+.row
+  .col-md-9
+    = form_for @user_setup, url: user_setup_path do |f|
+      = render 'fields', f: f, step: 'business'
+
+      = f.fields_for(:business, UserSetup::ConfigField.new(name: :allow_negative_positions), index: nil) do |b|
+        .form_group
+          = b.label :value, 'Allow negative positions'
+          .radio
+            label
+              = b.radio_button :value, :yes
+              '  Yes
+            label
+              = b.radio_button :value, :no
+              |  No
+
+      .form_group
+        = f.submit 'Next', class: 'btn btn-primary t-next-button'

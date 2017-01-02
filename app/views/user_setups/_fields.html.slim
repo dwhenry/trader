@@ -1,0 +1,17 @@
+= hidden_field_tag :step, step
+
+- if step != 'naming'
+  = f.hidden_field :business_name
+  = f.hidden_field :portfolio_name
+
+- if step != 'business'
+  - (@user_setup.business || []).each do |config|
+    = f.fields_for(:business, config, index: nil) do |b|
+      = b.hidden_field :name
+      = b.hidden_field :value
+
+- if step != 'portfolio'
+  - (@user_setup.portfolio || []).each do |config|
+    = f.fields_for(:portfolio, config, index: nil) do |b|
+      = b.hidden_field :name
+      = b.hidden_field :value

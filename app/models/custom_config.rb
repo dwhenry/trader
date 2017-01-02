@@ -1,0 +1,2 @@
+class CustomConfig < ApplicationRecord
+end

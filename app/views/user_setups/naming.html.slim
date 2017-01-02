@@ -1,0 +1,23 @@
+.row
+  .col-md-12
+    h1
+      = current_user.name
+      |: Naming
+    p
+      | All setting can be changed at a later date to meet your specific needs
+.row
+  .col-md-9
+    = form_for @user_setup, url: user_setup_path do |f|
+      = render 'fields', f: f, step: 'naming'
+      .form_group
+        = f.label :business_name
+        '
+        = f.text_field :business_name, required: true, class: 't-business-name'
+
+      .form_group
+        = f.label :portfolio_name, 'Primary portfolio name'
+        '
+        = f.text_field :portfolio_name, required: true, class: 't-portfolio-name'
+
+      .form_group
+        = f.submit 'Next', class: 'btn btn-primary t-next-button'
