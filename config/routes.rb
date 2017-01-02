@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   get 'signout', to: 'sessions#destroy', as: 'signout'
 
   resource :business, only: %i(show)
-  resources :portfolio, only: %i{show}
+  resources :portfolios, only: %i(show)
+  resources :trades, only: %i(new create)
 end

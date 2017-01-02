@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102014257) do
+ActiveRecord::Schema.define(version: 20170102104144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,29 @@ ActiveRecord::Schema.define(version: 20170102014257) do
     t.index ["business_id"], name: "index_portfolios_on_business_id", using: :btree
   end
 
+  create_table "securities", force: :cascade do |t|
+    t.string   "name"
+    t.string   "ticker"
+    t.string   "currency"
+    t.jsonb    "custom"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "trades", force: :cascade do |t|
+    t.integer  "quantity"
+    t.decimal  "price"
+    t.string   "currency"
+    t.date     "date"
+    t.integer  "security_id"
+    t.integer  "portfolio_id"
+    t.jsonb    "custom"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["portfolio_id"], name: "index_trades_on_portfolio_id", using: :btree
+    t.index ["security_id"], name: "index_trades_on_security_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.integer  "business_id"
     t.string   "provider"
@@ -43,5 +66,7 @@ ActiveRecord::Schema.define(version: 20170102014257) do
   end
 
   add_foreign_key "portfolios", "businesses"
+  add_foreign_key "trades", "portfolios"
+  add_foreign_key "trades", "securities"
   add_foreign_key "users", "businesses"
 end

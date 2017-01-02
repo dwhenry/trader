@@ -1,0 +1,22 @@
+.row
+  .col-md-12
+    h1
+      ' Portfolio:
+      = @portfolio.name
+
+.row
+  .col-md-4
+    .portfolio-stat__description Open positions:&nbsp;
+    .portfolio-stat__number 0
+
+  .col-md-4
+    .portfolio-stat__description Pending trades:&nbsp;
+    .portfolio-stat__number 0
+
+  .col-md-4
+    .portfolio-stat__description Position:&nbsp;
+    .portfolio-stat__number $0.00
+
+.row
+  .col-md-12
+    a.btn.btn-primary.t-book-trade href=new_trade_path(trade: { portfolio_id: @portfolio.id }) Book trade

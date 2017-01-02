@@ -6,9 +6,7 @@ class CurrentUser
       @finder || FromSession
     end
 
-    def get(controller)
-      finder.get(controller)
-    end
+    delegate :get, to: :finder
   end
 
   class FromSession

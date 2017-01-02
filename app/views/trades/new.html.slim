@@ -1,0 +1,42 @@
+.row
+  .col-md-12
+    h1 New Trade
+
+.row
+  .col-md-12
+    = form_for @trade do |f|
+      = f.hidden_field :portfolio_id
+
+      .form-group
+        = label_tag :direction
+        .radio
+          label
+            = radio_button_tag :direction, :buy, @trade.quantity.nil? ||  @trade.quantity.positive?, class: 't-direction-buy js-quantity-update js-direction'
+            '  Buy
+          label
+            = radio_button_tag :direction, :sell, @trade.quantity.present? &&  @trade.quantity.negative?, class: 't-direction-sell js-quantity-update js-direction'
+            |  Sell
+      .form-group
+        = f.label :date
+        '
+        = f.text_field :date, type: :date, class: 't-date'
+
+      .form-group
+        = label_tag :quantity
+        '
+        = text_field_tag :quantity, @trade.quantity&.abs, type: :number, min: '0', step: '1', required: true, class: 'integer-only t-quantity js-quantity-update js-quantity'
+        = f.hidden_field :quantity, class: 'js-quantity-submitted'
+
+      .form-group
+        = f.label :price
+        '
+        = f.text_field :price, type: :number, step: '0.01', class: 't-price'
+        = f.text_field :currency, class: 'form__currency t-currency'
+
+      .form-group
+        = f.label :security_id
+        '
+        = f.select :security_id, options_from_collection_for_select(Security.all, :id, :name), {}, allow_nil: true, class: 't-security'
+
+      .form-group
+        = f.submit 'Create', class: 'btn btn-primary t-create-trade'
