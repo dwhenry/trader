@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Creating a trade' do
-  scenario 'Can create a generic trade with no customisation' do
+  scenario 'with no customisation' do
     business = create(:business)
     account = create(:account, business: business)
     create(:user, bussiness: business)
@@ -11,6 +11,6 @@ RSpec.feature 'Creating a trade' do
 
     page.create_trade
 
-    expect(Trade,count).to eq(1)
+    expect(Trade.count).to eq(1)
   end
 end

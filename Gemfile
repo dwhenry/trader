@@ -15,9 +15,11 @@ gem 'turbolinks', '~> 5'
 gem 'uglifier', '>= 1.3.0'
 
 group :development, :test do
+  gem 'capybara'
+  gem 'factory_girl_rails'
   gem 'pry-byebug'
-  gem 'rubocop'
   gem 'rspec-rails'
+  gem 'rubocop'
 end
 
 group :development do
