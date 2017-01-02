@@ -1,0 +1,38 @@
+.form-group
+  = label_tag :direction
+  .radio
+    label.custom-control.custom-radio
+      = radio_button_tag :direction, :buy, @trade.quantity.nil? ||  @trade.quantity.positive?, class: 't-direction-buy js-quantity-update js-direction custom-control-input'
+      span.custom-control-indicator
+      span.custom-control-description Buy
+
+    label.custom-control.custom-radio
+      = radio_button_tag :direction, :sell, @trade.quantity.present? &&  @trade.quantity.negative?, class: 't-direction-sell js-quantity-update js-direction custom-control-input'
+      span.custom-control-indicator
+      span.custom-control-description Sell
+
+.row
+  .form-group.col-md-3
+    = f.label :date
+    = f.date_field :date, class: 't-date form-control'
+
+.row
+  .form-group.col-md-3
+    = label_tag :quantity
+    = text_field_tag :quantity, @trade.quantity&.abs, type: :number, min: '0', step: '1', required: true, class: 'integer-only t-quantity js-quantity-update js-quantity form-control'
+    = f.hidden_field :quantity, class: 'js-quantity-submitted'
+
+.row
+  .form-group.col-md-3
+    = f.label :price
+    .row
+      .col-xs-8
+        / TODO: make the step size configurable - maybe on the portfolio or business
+        = f.text_field :price, type: :number, step: '0.01', class: 't-price form-control'
+      .col-xs-4.pull-xs-1
+        = f.text_field :currency, class: 'form__currency t-currency form-control'
+
+.row
+  .form-group.col-md-6
+    = f.label :security_id
+    = f.collection_select :security_id, Security.all, :id, :name, { include_blank: true }, class: 't-security form-control'

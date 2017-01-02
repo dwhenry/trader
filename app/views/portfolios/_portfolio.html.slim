@@ -5,14 +5,53 @@
       = portfolio.name
 
 .row
-  .col-md-4
-    .portfolio-stat__description Open positions:&nbsp;
-    .portfolio-stat__number 0
+  .col-md-12
+    ul.nav.nav-tabs role="tablist"
+      li.nav-item
+        a.nav-link.active href="#positions" role="tab" data-toggle="tab"
+          .portfolio-stat__description Position:&nbsp;
+          .portfolio-stat__number 0
+      li.nav-item.t-pending-trades
+        a.nav-link href="#trades" role="tab" data-toggle="tab"
+          .portfolio-stat__description Pending trades:&nbsp;
+          .portfolio-stat__number 0
+      li.nav-item
+        a.nav-link href="#valuation" role="tab" data-toggle="tab"
+          .portfolio-stat__description Valuation:&nbsp;
+          .portfolio-stat__number $0.00
 
-  .col-md-4
-    .portfolio-stat__description Pending trades:&nbsp;
-    .portfolio-stat__number 0
+.row
+  .col-md-12
+    .tab-content
+      #position.tab-pane.portfolio-tab.fade.in.active role="tabpanel"
+        | Pending
 
-  .col-md-4
-    .portfolio-stat__description Position:&nbsp;
-    .portfolio-stat__number $0.00
+      #trades.tab-pane.portfolio-tab.fade role="tabpanel"
+        h2 Pending Trades
+
+        .table-responsive
+          table.table.table-striped.table-hover
+            thead
+              tr
+                th UID
+                th Trade Date
+                th Direction
+                th Quantity
+                th Price
+                th CCY
+                th Cost
+                th Security
+            tbody
+              - portfolio.trades.current.each do |trade|
+                tr.t-trade
+                  td= link_to trade.uid, edit_trade_path(trade.uid), class: 't-trade-uid'
+                  td= trade.date.to_s(:short)
+                  td= trade.quantity.positive? ? 'Buy' : 'Sell'
+                  td= trade.quantity
+                  td= trade.price
+                  td= trade.currency
+                  td= trade.price * trade.quantity
+                  td= trade.security.name
+
+      #valuation.tab-pane.portfolio-tab.fade role="tabpanel"
+        | Pending

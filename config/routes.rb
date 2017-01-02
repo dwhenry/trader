@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resource :business, only: %i(show)
   resources :portfolios, only: %i(show)
   resource :config, only: %i(show update)
-  resources :trades, only: %i(new create)
+  resources :trades, only: %i(new create edit update)
   resource :user_setup, only: %i(new create) do
     collection do
       get :business

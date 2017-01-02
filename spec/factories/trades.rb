@@ -3,6 +3,7 @@ FactoryGirl.define do
     quantity '10'
     price '10.01'
     currency 'AUD'
+    uid { Trade.next_uid }
     date { Time.zone.today }
   end
 

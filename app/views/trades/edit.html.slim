@@ -1,0 +1,15 @@
+.row
+  .col-md-12
+    h1
+      ' Edit Trade:
+      = @trade.uid
+
+.row
+  .col-md-12
+    = form_for @trade, url: trade_path(@trade.uid) do |f|
+      = f.hidden_field :uid
+      = f.hidden_field :portfolio_id
+      = render 'fields', f: f
+      .row
+        .form-group.col-md-2
+          = f.submit 'Update', class: 'btn btn-primary t-update-trade'

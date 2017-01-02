@@ -7,44 +7,7 @@
     = form_for @trade do |f|
       = f.hidden_field :portfolio_id
 
-      .form-group
-        = label_tag :direction
-        .radio
-          label.custom-control.custom-radio
-            = radio_button_tag :direction, :buy, @trade.quantity.nil? ||  @trade.quantity.positive?, class: 't-direction-buy js-quantity-update js-direction custom-control-input'
-            span.custom-control-indicator
-            span.custom-control-description Buy
-
-          label.custom-control.custom-radio
-            = radio_button_tag :direction, :sell, @trade.quantity.present? &&  @trade.quantity.negative?, class: 't-direction-sell js-quantity-update js-direction custom-control-input'
-            span.custom-control-indicator
-            span.custom-control-description Sell
-
-      .row
-        .form-group.col-md-3
-          = f.label :date
-          = f.text_field :date, type: :date, class: 't-date form-control'
-
-      .row
-        .form-group.col-md-3
-          = label_tag :quantity
-          '
-          = text_field_tag :quantity, @trade.quantity&.abs, type: :number, min: '0', step: '1', required: true, class: 'integer-only t-quantity js-quantity-update js-quantity form-control'
-          = f.hidden_field :quantity, class: 'js-quantity-submitted'
-
-      .row
-        .form-group.col-md-3
-          = f.label :price
-          .row
-            .col-md-8
-              = f.text_field :price, type: :number, step: '0.01', class: 't-price form-control'
-            .col-md-4.pull-md-1
-              = f.text_field :currency, class: 'form__currency t-currency form-control'
-
-      .row
-        .form-group.col-md-6
-          = f.label :security_id
-          = f.select :security_id, options_from_collection_for_select(Security.all, :id, :name), {}, allow_nil: true, class: 't-security form-control'
+      = render 'fields', f: f
 
       .row
         .form-group.col-md-2

@@ -4,3 +4,7 @@
 input[type=number] {
   text-align: right;
 }
+.field_with_errors input,
+.field_with_errors select {
+  border-color: red;
+}

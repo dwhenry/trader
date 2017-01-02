@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102145815) do
+ActiveRecord::Schema.define(version: 20170102201349) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,8 +54,12 @@ ActiveRecord::Schema.define(version: 20170102145815) do
     t.integer  "security_id"
     t.integer  "portfolio_id"
     t.jsonb    "custom"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "version",      default: 1,     null: false
+    t.string   "uid",          default: "",    null: false
+    t.boolean  "current",      default: true,  null: false
+    t.boolean  "offset_trade", default: false, null: false
     t.index ["portfolio_id"], name: "index_trades_on_portfolio_id", using: :btree
     t.index ["security_id"], name: "index_trades_on_security_id", using: :btree
   end
