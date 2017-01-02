@@ -1,4 +1,4 @@
-
+ruby IO.read('.ruby-version').strip
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'
