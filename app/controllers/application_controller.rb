@@ -8,7 +8,10 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user
-    redirect_to root_path unless current_user
-    redirect_to new_user_setup_path unless current_user.business
+    if current_user
+      redirect_to new_user_setup_path unless current_user.business
+    else
+      redirect_to root_path
+    end
   end
 end
