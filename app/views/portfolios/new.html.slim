@@ -1,15 +1,14 @@
 .row
-  .col-md-12
-    h1
-      = current_user.name
-      |: Portfolio configuration
-    p
-      | All setting can be changed at a later date to meet your specific needs
-.row
   .col-md-9
-    = form_for @user_setup, url: user_setup_path do |f|
-      = render 'fields', f: f, step: 'portfolio'
+    = form_for @user_setup, url: portfolios_path do |f|
+      h1 New Portfolio
+      .row
+        .field-group.col-md-4
+          = f.label :portfolio_name, 'Name'
+          = f.text_field :portfolio_name, class: 'form-control'
 
+      br
+      h2 Configuration
       - @user_setup.portfolio_configs.each do |portfolio_config|
         = f.fields_for(:portfolio_configs, portfolio_config, index: nil) do |b|
           .form_group
@@ -26,4 +25,4 @@
               span.custom-control-description No
 
       .form_group
-        = f.submit 'Save', class: 'btn btn-primary t-save-button'
+        = f.submit 'Create', class: 'btn btn-primary t-create-button'

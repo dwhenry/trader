@@ -11,8 +11,7 @@ class ConfigUpdater
       begin
         update_user
         update_business
-        return true
-        # update_portfolio
+        update_portfolio
       rescue
         raise ActiveRecord::Rollback
       end
@@ -27,14 +26,29 @@ class ConfigUpdater
 
     emails = @params[:new_users].split(',').map(&:trim)
     emails.each do |email|
-      record_error("User: #{email} already exists") if User.find_by(email: email)
-      record_error("Invalid email addres: #{email}") unless email =~ /.+@.+\..+/
-      record_error { User.create!(email: email) }
+      if User.find_by(email: email)
+        record_error("User: #{email} already exists")
+      elsif email !~ /.+@.+\..+/
+        record_error("Invalid email addres: #{email}")
+      else
+        record_error { User.create!(email: email) }
+      end
     end
   end
 
   def update_business
     record_error { @current_user.business.update!(name: @params[:business_name]) }
+  end
+
+  def update_portfolio
+    @params[:portfolio].each do |id, values|
+      portfolio = Portfolio.find_by(id: id)
+      if portfolio
+        record_error { portfolio.update!(values.permit(:name)) }
+      else
+        record_error('Invalid portfolio ID')
+      end
+    end
   end
 
   def record_error(msg = nil)

@@ -8,12 +8,12 @@
 .row
   .col-md-4
     .portfolio-stat__description Open positions:&nbsp;
-    .portfolio-stat__number 0
+    .portfolio-stat__number = portfolio.trades.current.group(:security_id).having('sum(quantity * price) != 0').count.count
 
   .col-md-4
     .portfolio-stat__description Pending trades:&nbsp;
-    .portfolio-stat__number 0
+    .portfolio-stat__number = portfolio.trades.current.count
 
   .col-md-4
     .portfolio-stat__description Position:&nbsp;
-    .portfolio-stat__number $0.00
+    .portfolio-stat__number = number_to_currency portfolio.trades.current.sum('quantity * price')

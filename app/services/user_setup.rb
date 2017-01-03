@@ -2,7 +2,7 @@ class UserSetup
   include ActiveModel::Model
 
   STEPS = %w(naming business portfolio).freeze
-  FIELDS = [:business_name, :portfolio_name, :business, :portfolio].freeze
+  FIELDS = [:business_name, :portfolio_name, :business].freeze
   attr_accessor *FIELDS
 
   def initialize(params, step = nil)
@@ -10,12 +10,20 @@ class UserSetup
     super(params)
   end
 
-  def business=(params)
-    @business = params&.map { |p| ConfigField.new(p) }
+  def business_configs=(params)
+    @business_configs ||= params&.map { |p| ConfigField.new(p) }
   end
 
-  def portfolio=(params)
-    @portfolio = params&.map { |p| ConfigField.new(p) }
+  def business_configs
+    @business_configs || [UserSetup::ConfigField.new(name: :allow_negative_positions)]
+  end
+
+  def portfolio_configs=(params)
+    @portfolio_configs ||= params&.map { |p| ConfigField.new(p) }
+  end
+
+  def portfolio_configs
+    @portfolio_configs || [UserSetup::ConfigField.new(name: :allow_negative_positions)]
   end
 
   def complete?
@@ -28,22 +36,28 @@ class UserSetup
       user_setup: {
         business_name: business_name,
         portfolio_name: portfolio_name,
-        business: obj_serialize(business),
-        portfolio: obj_serialize(portfolio),
+        portfolio_configs: obj_serialize(portfolio_configs),
+        portfolio_configs: obj_serialize(portfolio_configs),
       },
     }
   end
 
   def save(current_user) # rubocop:disable Metrics/AbcSize
     ApplicationRecord.transaction do
-      new_business = Business.create!(name: business_name)
-      new_portfolio = Portfolio.create!(business: new_business, name: portfolio_name)
+      begin
+        @business ||= Business.create!(name: business_name)
+        portfolio = Portfolio.create!(business: business, name: portfolio_name)
 
-      CustomConfig.create!(object_type: 'Business', object_id: new_business.id, config: obj_serialize(business))
-      CustomConfig.create!(object_type: 'Portfolio', object_id: new_portfolio.id, config: obj_serialize(portfolio))
+        CustomConfig.create!(object_type: 'Business', object_id: @business.id, config: obj_serialize(portfolio_configs))
+        CustomConfig.create!(object_type: 'Portfolio', object_id: portfolio.id, config: obj_serialize(portfolio_configs))
 
-      current_user.update!(business_id: new_business.id)
+        current_user.update!(business_id: @business.id)
+        return true
+      rescue
+        raise ActiveRecord::Rollback
+      end
     end
+    false
   end
 
   private
