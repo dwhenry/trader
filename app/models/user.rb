@@ -16,18 +16,18 @@ class User < ApplicationRecord
   end
 
   def self.from_email(auth)
-    find_by(email: auth.info.email, uid: nil).tap do |user|
-      user.update(
+    find_by(email: auth.info.email, uid: nil)&.tap do |user|
+      user.attributes = {
         provider: auth.provider,
         uid: auth.uid,
         name: auth.info.name,
         email: auth.info.email,
-      )
+      }
     end
   end
 
   def self.from_auth(auth)
-    create(
+    new(
       provider: auth.provider,
       uid: auth.uid,
       name: auth.info.name,

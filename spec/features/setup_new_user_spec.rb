@@ -6,9 +6,7 @@ RSpec.feature 'Set a new user up' do
       business_page = BusinessPage.new
       business_page.load
 
-      expect(business_page).not_to be_displayed
-
-      page = UserSetupPage.new
+      page = NewBusinessPage.new
       expect(page).to be_displayed
 
       page.setup

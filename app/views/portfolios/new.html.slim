@@ -1,28 +1,20 @@
 .row
-  .col-md-9
-    = form_for @user_setup, url: portfolios_path do |f|
+  .col-md-12
+    = form_for @portfolio, url: portfolios_path do |f|
       h1 New Portfolio
       .row
-        .field-group.col-md-4
-          = f.label :portfolio_name, 'Name'
-          = f.text_field :portfolio_name, class: 'form-control'
+        .form_group.col-md-6
+          = f.label :name do
+            b Portfolio name
+            |  - this will help group similar trades together, you can have as many portfolio's as you like.
+          = f.text_field :name, required: true, class: 't-portfolio-name form-control'
 
-      br
-      h2 Configuration
-      - @user_setup.portfolio_configs.each do |portfolio_config|
-        = f.fields_for(:portfolio_configs, portfolio_config, index: nil) do |b|
-          .form_group
-            = b.label :value, 'Allow negative positions'
-            br
-            label.custom-control.custom-radio
-              = b.radio_button :value, :yes, class: 'custom-control-input'
-              span.custom-control-indicator
-              span.custom-control-description Yes
-
-            label.custom-control.custom-radio
-              = b.radio_button :value, :no, class: 'custom-control-input'
-              span.custom-control-indicator
-              span.custom-control-description No
+      .row
+        .form_group.col-md-6
+          = f.label :configuration do
+            b Configuration
+            |  - copy the configuration from an existing portfolio.
+          = select_tag :configuration, options_for_select(@configuration_options, params[:configuration]), required: true, class: 't-portfolio-name form-control'
 
       .form_group
         = f.submit 'Create', class: 'btn btn-primary t-create-button'

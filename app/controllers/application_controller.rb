@@ -3,13 +3,15 @@ class ApplicationController < ActionController::Base
   before_action :require_user
   helper_method :current_user
 
+  private
+
   def current_user
     @current_user ||= CurrentUser.get(self)
   end
 
   def require_user
     if current_user
-      redirect_to new_user_setup_path unless current_user.business
+      redirect_to new_business_path unless current_user.business
     else
       redirect_to root_path
     end

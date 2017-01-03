@@ -4,16 +4,18 @@ class PortfoliosController < ApplicationController
   end
 
   def new
-    @user_setup = UserSetup.new(user_setup_params)
+    @portfolio = Portfolio.new
+    @configuration_options = [['Default', 0]] + Portfolio.where(business_id: current_user.business_id).pluck(:name, :id)
   end
 
   def create
-    @user_setup = UserSetup.new(user_setup_params.merge(business: current_user.business))
+    @portfolio = Portfolio.new(portfolio_params.merge(business: current_user.business))
 
-    if @user_setup.save(current_user)
-      flash[:info] = 'Successfully created portfolio'
+    if @portfolio.save
+      CustomConfig.create_for(@portfolio, Portfolio.find_by(id: params[:configuration]))
       redirect_to business_path
     else
+      @configuration_options = [nil, 'Default'] + Portfolio.where(business_id: current_user.business_id).pluck(:id, :name)
       flash[:warning] = 'Error creating portfolio'
       render :new
     end
@@ -21,8 +23,7 @@ class PortfoliosController < ApplicationController
 
   private
 
-  def user_setup_params
-    return {} unless params[:user_setup]
-    params.require(:user_setup).permit!
+  def portfolio_params
+    params.require(:portfolio).permit(:name)
   end
 end

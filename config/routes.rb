@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get 'signout', to: 'sessions#destroy', as: 'signout'
   get 'about', to: 'home#about', as: 'about'
 
-  resource :business, only: %i(show)
+  resource :business, only: %i(show new create)
   resources :portfolios, only: %i(show new create)
   resource :config, only: %i(show update)
   resources :trades, only: %i(new create edit update)
