@@ -7,14 +7,14 @@
 .row
   .col-md-12
     ul.nav.nav-tabs role="tablist"
-      li.nav-item
-        a.nav-link.active href="#positions" role="tab" data-toggle="tab"
-          .portfolio-stat__description Positions:&nbsp;
-          .portfolio-stat__number = portfolio.trades.current.group(:security_id).having('sum(quantity * price) != 0').count.count
       li.nav-item.t-pending-trades
-        a.nav-link href="#trades" role="tab" data-toggle="tab"
+        a.nav-link.active href="#trades" role="tab" data-toggle="tab"
           .portfolio-stat__description Pending trades:&nbsp;
           .portfolio-stat__number = portfolio.trades.current.count
+      li.nav-item
+        a.nav-link href="#positions" role="tab" data-toggle="tab"
+          .portfolio-stat__description Positions:&nbsp;
+          .portfolio-stat__number = portfolio.trades.current.group(:security_id).having('sum(quantity * price) != 0').count.count
       li.nav-item
         a.nav-link href="#valuation" role="tab" data-toggle="tab"
           .portfolio-stat__description Valuation:&nbsp;
@@ -23,10 +23,7 @@
 .row
   .col-md-12
     .tab-content
-      #position.tab-pane.portfolio-tab.fade.in.active role="tabpanel"
-        | Pending
-
-      #trades.tab-pane.portfolio-tab.fade role="tabpanel"
+      #trades.tab-pane.portfolio-tab.fade.in.active role="tabpanel"
         h2 Pending Trades
 
         .table-responsive
@@ -48,10 +45,13 @@
                   td= trade.date.to_s(:short)
                   td= trade.quantity.positive? ? 'Buy' : 'Sell'
                   td= trade.quantity.abs
-                  td= trade.price
+                  td= number_to_currency trade.price
                   td= trade.currency
-                  td= (trade.price * trade.quantity).abs
+                  td= number_to_currency (trade.price * trade.quantity).abs
                   td= trade.security.name
+
+      #position.tab-pane.portfolio-tab.fade role="tabpanel"
+        | Pending
 
       #valuation.tab-pane.portfolio-tab.fade role="tabpanel"
         | Pending

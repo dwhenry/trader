@@ -9,6 +9,9 @@ class EditTradePage < SitePrism::Page
   element :currency, '.t-currency'
   element :security, '.t-security'
 
+  # backoffice
+  element :state, '.t-state'
+
   element :update_trade, '.t-update-trade'
 
   def fill_in_trade(custom = {})
@@ -18,6 +21,9 @@ class EditTradePage < SitePrism::Page
     update(:currency, :set, custom, :currency)
     update(:security, :select, custom, :security)
     update("direction_#{custom[:direction]}", :select, custom, :direction)
+
+    update(:state, :set, custom, :state)
+
   end
 
   def update(field, method, data, key)

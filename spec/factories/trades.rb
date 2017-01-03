@@ -5,6 +5,8 @@ FactoryGirl.define do
     currency 'AUD'
     uid { Trade.next_uid }
     date { Time.zone.today }
+
+    after(:create) { |trade| Backoffice.create_from!(trade) }
   end
 
   trait :fully_setup do

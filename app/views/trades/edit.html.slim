@@ -4,12 +4,15 @@
       ' Edit Trade:
       = @trade.uid
 
-.row
-  .col-md-12
-    = form_for @trade, url: trade_path(@trade.uid) do |f|
+= form_for @trade, url: trade_path(@trade.uid), method: :put do |f|
+  .row
+    .col-md-6
       = f.hidden_field :uid
       = f.hidden_field :portfolio_id
       = render 'fields', f: f
       .row
         .form-group.col-md-2
           = f.submit 'Update', class: 'btn btn-primary t-update-trade'
+    .col-md-6
+      h2 Backoffice
+      = render 'backoffice', f: f

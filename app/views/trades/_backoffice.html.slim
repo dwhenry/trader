@@ -1,0 +1,10 @@
+= fields_for :backoffice, @backoffice do |b|
+  .row
+    .form-group.col-md-8
+      = b.label :state
+      = b.text_field :state, class: 'form-control t-state'
+
+  .row
+    .form-group.col-md-8
+      = b.label :settlement_date
+      = b.date_field :settlement_date, class: 'form-control'

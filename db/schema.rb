@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170102201349) do
+ActiveRecord::Schema.define(version: 20170103124400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "backoffices", force: :cascade do |t|
+    t.string   "trade_uid",                      null: false
+    t.integer  "trade_version",                  null: false
+    t.string   "state",                          null: false
+    t.date     "settlement_date"
+    t.integer  "version",         default: 1,    null: false
+    t.boolean  "current",         default: true, null: false
+    t.jsonb    "custom"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["trade_uid"], name: "index_backoffices_on_trade_uid", using: :btree
+    t.index ["trade_version"], name: "index_backoffices_on_trade_version", using: :btree
+  end
 
   create_table "businesses", force: :cascade do |t|
     t.string   "name"

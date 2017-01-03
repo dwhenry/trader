@@ -4,9 +4,10 @@ class TradesController < ApplicationController
   end
 
   def create
-    @trade = Trade.new(trade_params.merge(uid: Trade.next_uid))
-    if @trade.save
-      flash[:info] = 'Successfully saved trade'
+    @trade = Trade.new(uid: Trade.next_uid)
+    saver = Saver.new(@trade => trade_params)
+    if saver.save
+      flash[:info] = 'Successfully created trade'
       redirect_to portfolio_path(@trade.portfolio)
     else
       flash[:warning] = 'Trade could not be created'
@@ -16,29 +17,34 @@ class TradesController < ApplicationController
 
   def edit
     @trade = Trade.current.find_by!(uid: params[:id])
+    @backoffice = @trade.backoffice
   end
 
   def update
-    trade_edit = TradeEdit.new(trade_params)
-
-    return update_unchanged(trade_edit.uid) if trade_edit.unchanged?
-    return update_success(trade_edit.portfolio) if trade_edit.save
-
-    flash[:warning] = 'Trade could not be saved'
-    @trade = trade_edit.new_trade
-    render :edit
+    @trade = Trade.find_by!(uid: params[:id])
+    @backoffice = @trade.backoffice
+    saver = Saver.new(
+      @trade => trade_params,
+      @backoffice => backoffice_params,
+    )
+    if saver.save
+      flash[:info] = 'Successfully updated trade'
+      redirect_to edit_trade_path(@trade.uid)
+    else
+      flash[:warning] = 'Trade could not be saved'
+      render :edit
+    end
   end
 
   private
 
-  def update_unchanged(uid)
-    flash[:info] = 'Trade has not been modified'
-    redirect_to edit_trade_path(uid)
-  end
-
-  def update_success(portfolio)
-    flash[:info] = 'Successfully updated trade'
-    redirect_to portfolio_path(portfolio)
+  def backoffice_params
+    params
+      .require(:backoffice)
+      .permit(
+        :state,
+        :settlement_date
+      )
   end
 
   def trade_params # rubocop:disable Metrics/MethodLength

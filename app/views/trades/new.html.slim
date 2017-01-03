@@ -3,12 +3,12 @@
     h1 New Trade
 
 .row
-  .col-md-12
+  .col-md-6
     = form_for @trade do |f|
       = f.hidden_field :portfolio_id
 
       = render 'fields', f: f
 
       .row
-        .form-group.col-md-2
+        .form-group.col-md-4
           = f.submit 'Create', class: 'btn btn-primary t-create-trade'
