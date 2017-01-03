@@ -36,9 +36,10 @@ RSpec.feature 'Business configuration' do
 
       # can update the portfolio and portfolio config
       page.tab("portfolio's")
-      page.portfolio_name.set('Bobs trades')
-      page.allow_negative_positions.set true
-      page.save.click
+      portfolio_section = page.portfolios.first
+      portfolio_section.portfolio_name.set('Bobs trades')
+      portfolio_section.allow_negative_positions.set true
+      portfolio_section.save.click
 
       portfolio.reload
       expect(portfolio.name).to eq('Bobs trades')

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170104084419) do
+ActiveRecord::Schema.define(version: 20170104235911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,23 @@ ActiveRecord::Schema.define(version: 20170104084419) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "config_type"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.integer  "trade_id"
+    t.integer  "portfolio_id"
+    t.integer  "business_id"
+    t.integer  "user_id"
+    t.string   "event_type"
+    t.jsonb    "details"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "object_type",  null: false
+    t.integer  "parent_id"
+    t.index ["business_id"], name: "index_events_on_business_id", using: :btree
+    t.index ["portfolio_id"], name: "index_events_on_portfolio_id", using: :btree
+    t.index ["trade_id"], name: "index_events_on_trade_id", using: :btree
+    t.index ["user_id"], name: "index_events_on_user_id", using: :btree
   end
 
   create_table "portfolios", force: :cascade do |t|
@@ -93,6 +110,10 @@ ActiveRecord::Schema.define(version: 20170104084419) do
     t.index ["business_id"], name: "index_users_on_business_id", using: :btree
   end
 
+  add_foreign_key "events", "businesses"
+  add_foreign_key "events", "portfolios"
+  add_foreign_key "events", "trades"
+  add_foreign_key "events", "users"
   add_foreign_key "portfolios", "businesses"
   add_foreign_key "trades", "portfolios"
   add_foreign_key "trades", "securities"

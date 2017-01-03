@@ -3,17 +3,11 @@ class PortfoliosController < ApplicationController
     @portfolio = Portfolio.find(params[:id])
   end
 
-  def new
-    @portfolio = Portfolio.new
-    @configuration_options = [['Default', 0]] + Portfolio.where(business_id: current_user.business_id).pluck(:name, :id)
-  end
-
   def create
     @portfolio = Portfolio.new(portfolio_params.merge(business: current_user.business))
 
-    if @portfolio.save
-      CustomConfig.create_for(@portfolio, Portfolio.find_by(id: params[:configuration]))
-      redirect_to business_path
+    if save_with_events(@portfolio, CustomConfig.build_for(@portfolio, Portfolio.find_by(id: params[:configuration])))
+      redirect_to config_path(tab: :portfolios, anchor: "portfolio-#{@portfolio.id}")
     else
       @configuration_options = [nil, 'Default'] + Portfolio.where(business_id: current_user.business_id).pluck(:id, :name)
       flash[:warning] = 'Error creating portfolio'
@@ -23,7 +17,10 @@ class PortfoliosController < ApplicationController
 
   def update
     @portfolio = Portfolio.find(params[:id])
-    if @portfolio.update(portfolio_params) && CustomConfig.find_for(@portfolio).update(config: config_params(@portfolio))
+    @portfolio.assign_attributes(portfolio_params)
+
+    if save_with_events(@portfolio, CustomConfig.assign_for(@portfolio, config_params(@portfolio)))
+      # Event.create_portfolio(@portfolio, current_user)
       redirect_to config_path(tab: :portfolios, anchor: "portfolio-#{@portfolio.id}")
     else
       @tab = 'portfolios'

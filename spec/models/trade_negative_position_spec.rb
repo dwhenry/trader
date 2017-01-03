@@ -11,7 +11,7 @@ RSpec.describe Trade do
 
   context 'when the portfolio disallows negative positions' do
     before do
-      CustomConfig.create_for(trade.portfolio)
+      CustomConfig.build_for(trade.portfolio).save
     end
 
     context 'and no other trades exist' do

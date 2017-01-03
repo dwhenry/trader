@@ -14,12 +14,10 @@ class BusinessesController < ApplicationController
 
   def create
     @business = Business.new(business_params)
-    @portfolio = @business.portfolios.new(portfolio_params)
+    @portfolio = Portfolio.new(portfolio_params.merge(business: @buiness))
+    current_user.assign_attributes(business: @business)
 
-    if @business.save
-      CustomConfig.create_for(@business)
-      CustomConfig.create_for(@portfolio)
-      current_user.update(business: @business)
+    if save_with_events(@business, @portfolio, CustomConfig.build_for(@business), CustomConfig.build_for(@portfolio), current_user)
       redirect_to business_path
     else
       flash[:warning] = 'Error creating business'
@@ -29,7 +27,8 @@ class BusinessesController < ApplicationController
 
   def update
     @business = current_user.business
-    if @business.update(business_params) && CustomConfig.find_for(@business).update(config: config_params)
+    @business.assign_attributes(business_params)
+    if save_with_events(@business, CustomConfig.assign_for(@business, config_params))
       redirect_to config_path(tab: :business)
     else
       @tab = 'business'

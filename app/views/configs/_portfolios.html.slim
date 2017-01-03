@@ -1,6 +1,5 @@
-
-- current_user.business.portfolios.each do |portfolio|
-  .config-group id="portfolio-#{portfolio.id}"
+- Portfolio.where(business: current_user.business).each do |portfolio|
+  .config-group.t-portfolio id="portfolio-#{portfolio.id}"
     - current_portfolio = @portfolio&.id == portfolio.id ? @portfolio : portfolio
     = form_for current_portfolio, url: config_portfolio_path(current_portfolio) do |f|
       .row
@@ -18,3 +17,25 @@
       .row
         .form_group.col-md-12
           = f.submit 'Update', class: 'btn btn-primary t-save'
+
+config-group
+  .row
+    .col-md-12
+      = form_for Portfolio.new, url: config_portfolios_path do |f|
+        h1 New Portfolio
+        .row
+          .form_group.col-md-6
+            = f.label :name do
+              b Portfolio name
+              |  - this will help group similar trades together, you can have as many portfolio's as you like.
+              = f.text_field :name, required: true, class: 't-new-portfolio-name form-control'
+
+        .row
+          .form_group.col-md-6
+            = f.label :configuration do
+              b Configuration
+              |  - copy the configuration from an existing portfolio.
+              = select_tag :configuration, options_for_select(configuration_options), required: true, class: 'form-control'
+
+        .form_group
+          = f.submit 'Create', class: 'btn btn-primary t-add'

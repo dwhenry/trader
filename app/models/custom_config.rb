@@ -13,18 +13,24 @@ class CustomConfig < ApplicationRecord
     reporting_currency: { type: :select, options: %w(AUD USD) }
   }.freeze
 
+  belongs_to :object, polymorphic: true
   validates :config_type,
             uniqueness: { scope: [:object_type, :object_id] },
             presence: { in: CONFIG_TYPES }
 
   class << self
-    def create_for(object, clone=nil)
-      create(
-        object_type: object.class.to_s,
-        object_id: object.id,
+    def build_for(object, clone=nil)
+      new(
+        object: object,
         config_type: SETTINGS,
         config: find_for(clone)&.config || defaults(object)
       )
+    end
+
+    def assign_for(object, config)
+      find_for(object).tap do |custom_config|
+        custom_config.assign_attributes(config: config)
+      end
     end
 
     def find_for(object)
