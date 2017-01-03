@@ -19,21 +19,27 @@ class TradesController < ApplicationController
   end
 
   def update
-    trade = Trade.current.find_by!(uid: params[:id])
-    @trade = Trade.new(trade_params)
-    if @trade == trade
-      flash[:info] = 'Trade has not been modified'
-      redirect_to edit_trade_path(@trade.uid)
-    elsif @trade.save_new_version
-      flash[:info] = 'Successfully updated trade'
-      redirect_to portfolio_path(@trade.portfolio)
-    else
-      flash[:warning] = 'Trade could not be saved'
-      render :edit
-    end
+    trade_edit = TradeEdit.new(trade_params)
+
+    return update_unchanged(trade_edit.uid) if trade_edit.unchanged?
+    return update_success(trade_edit.portfolio) if trade_edit.save
+
+    flash[:warning] = 'Trade could not be saved'
+    @trade = trade_edit.new_trade
+    render :edit
   end
 
   private
+
+  def update_unchanged(uid)
+    flash[:info] = 'Trade has not been modified'
+    redirect_to edit_trade_path(uid)
+  end
+
+  def update_success(portfolio)
+    flash[:info] = 'Successfully updated trade'
+    redirect_to portfolio_path(portfolio)
+  end
 
   def trade_params # rubocop:disable Metrics/MethodLength
     return {} unless params[:trade]
