@@ -23,7 +23,6 @@ class EditTradePage < SitePrism::Page
     update("direction_#{custom[:direction]}", :select, custom, :direction)
 
     update(:state, :set, custom, :state)
-
   end
 
   def update(field, method, data, key)

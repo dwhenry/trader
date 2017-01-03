@@ -23,10 +23,8 @@ class TradesController < ApplicationController
   def update
     @trade = Trade.find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
-    saver = Saver.new(
-      @trade => trade_params,
-      @backoffice => backoffice_params,
-    )
+
+    saver = Saver.new(@trade => trade_params, @backoffice => backoffice_params)
     if saver.save
       flash[:info] = 'Successfully updated trade'
       redirect_to edit_trade_path(@trade.uid)
@@ -43,7 +41,7 @@ class TradesController < ApplicationController
       .require(:backoffice)
       .permit(
         :state,
-        :settlement_date
+        :settlement_date,
       )
   end
 

@@ -11,14 +11,11 @@ class Saver
         object.attributes = changes
         object
       end
-      if @objects.all?(&:valid?)
-        @objects = @objects.map do |object|
-          object.changed? ? update(object) : object
-        end
-        true
-      else
-        false
-      end
+
+      return unless @objects.all?(&:valid?)
+
+      @objects.map! { |object| object.changed? ? update(object) : object }
+      true
     end
   end
 

@@ -13,7 +13,7 @@ class Backoffice < ApplicationRecord
       trade_version: trade.version,
       state: 'Pending',
       version: (where(trade_uid: trade.uid).maximum(:version) || 0) + 1,
-      current: true
+      current: true,
     )
   end
 end

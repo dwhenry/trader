@@ -4,9 +4,9 @@ class Trade < ApplicationRecord
   belongs_to :security
   belongs_to :portfolio
   has_one :backoffice,
-    ->(trade) { where(trade_version: trade.version).current },
-    foreign_key: :trade_uid,
-    primary_key: :uid
+          ->(trade) { where(trade_version: trade.version).current },
+          foreign_key: :trade_uid,
+          primary_key: :uid
 
   validates :currency, presence: true
   validates :current, uniqueness: { scope: :uid, if: ->(t) { t.current } }
@@ -40,13 +40,13 @@ class Trade < ApplicationRecord
     Trade.find_by(uid: uid) ? next_uid : uid
   end
 
-  def self.make_offset!(trade) # rubocop:disable Metrics/MethodLength
+  def self.make_offset!(trade)
     return unless trade
     offset = trade.dup
     offset.update(
       quantity: -trade.quantity,
       version: trade.version + 1,
-      offset_trade: true
+      offset_trade: true,
     )
   end
 end
