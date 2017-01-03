@@ -36,20 +36,28 @@ class UserSetup
       user_setup: {
         business_name: business_name,
         portfolio_name: portfolio_name,
-        portfolio_configs: obj_serialize(portfolio_configs),
+        business_configs: obj_serialize(business_configs),
         portfolio_configs: obj_serialize(portfolio_configs),
       },
     }
   end
 
-  def save(current_user) # rubocop:disable Metrics/AbcSize
+  def save(current_user) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     ApplicationRecord.transaction do
       begin
         @business ||= Business.create!(name: business_name)
         portfolio = Portfolio.create!(business: business, name: portfolio_name)
 
-        CustomConfig.create!(object_type: 'Business', object_id: @business.id, config: obj_serialize(portfolio_configs))
-        CustomConfig.create!(object_type: 'Portfolio', object_id: portfolio.id, config: obj_serialize(portfolio_configs))
+        CustomConfig.create!(
+          object_type: 'Business',
+          object_id: @business.id,
+          config: business_configs.map(&:serialize),
+        )
+        CustomConfig.create!(
+          object_type: 'Portfolio',
+          object_id: portfolio.id,
+          config: portfolio_configs.map(&:serialize),
+        )
 
         current_user.update!(business_id: @business.id)
         return true

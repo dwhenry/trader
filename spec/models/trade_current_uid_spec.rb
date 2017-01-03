@@ -9,7 +9,7 @@ RSpec.describe Trade do
       security: trade.security,
       portfolio: trade.portfolio,
       uid: trade.uid,
-      current: true
+      current: true,
     )
     expect(new_trade).not_to be_valid
   end
@@ -19,7 +19,7 @@ RSpec.describe Trade do
       :trade,
       security: trade.security,
       portfolio: trade.portfolio,
-      current: true
+      current: true,
     )
     expect(new_trade).to be_valid
   end

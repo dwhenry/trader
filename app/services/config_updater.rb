@@ -24,8 +24,7 @@ class ConfigUpdater
   def update_user
     record_error { @current_user.update!(name: @params[:user_name]) }
 
-    emails = @params[:new_users].split(',').map(&:trim)
-    emails.each do |email|
+    new_user_emails.each do |email|
       if User.find_by(email: email)
         record_error("User: #{email} already exists")
       elsif email !~ /.+@.+\..+/
@@ -34,6 +33,10 @@ class ConfigUpdater
         record_error { User.create!(email: email) }
       end
     end
+  end
+
+  def new_user_emails
+    @params[:new_users].split(',').map(&:trim)
   end
 
   def update_business

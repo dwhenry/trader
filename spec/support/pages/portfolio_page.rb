@@ -19,7 +19,7 @@ class PortfolioPage < SitePrism::Page
   def edit_trade(trade_uid, changes = {})
     pending_trades.click
 
-    trade = trades.detect { |trade| trade.uid.text == trade_uid }
+    trade = trades.detect { |t| t.uid.text == trade_uid }
     trade.uid.click
 
     page = EditTradePage.new

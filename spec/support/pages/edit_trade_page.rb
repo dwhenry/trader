@@ -11,7 +11,7 @@ class EditTradePage < SitePrism::Page
 
   element :update_trade, '.t-update-trade'
 
-  def fill_in_trade(custom = {}) # rubocop:disable Metrics/AbcSize
+  def fill_in_trade(custom = {})
     update(:date, :set, custom, :date)
     update(:quantity, :set, custom, :quantity)
     update(:price, :set, custom, :price)

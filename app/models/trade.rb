@@ -19,14 +19,14 @@ class Trade < ApplicationRecord
     [self, portfolio, portfolio.business]
   end
 
-  def ==(trade)
-    uid == trade.uid &&
-      date == trade.date &&
-      quantity == trade.quantity &&
-      price == trade.price &&
-      currency == trade.currency &&
-      portfolio_id == trade.portfolio_id &&
-      security_id == trade.security_id
+  def ==(other)
+    uid == other.uid &&
+      date == other.date &&
+      quantity == other.quantity &&
+      price == other.price &&
+      currency == other.currency &&
+      portfolio_id == other.portfolio_id &&
+      security_id == other.security_id
   end
 
   def save_new_version
@@ -67,7 +67,7 @@ class Trade < ApplicationRecord
     )
   end
 
-  CHARS = [*'A'..'Z', *'a'..'z', *'0'..'9']
+  CHARS = [*'A'..'Z', *'a'..'z', *'0'..'9'].freeze
   def self.next_uid
     uid = (0..7).map { CHARS.sample }.join
     Trade.find_by(uid: uid) ? next_uid : uid
