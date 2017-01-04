@@ -16,14 +16,15 @@ class User < ApplicationRecord
   end
 
   def self.from_email(auth)
-    find_by(email: auth.info.email, uid: nil)&.tap do |user|
-      user.attributes = {
-        provider: auth.provider,
-        uid: auth.uid,
-        name: auth.info.name,
-        email: auth.info.email,
-      }
-    end
+    user = find_by(email: auth.info.email, uid: nil)
+    return nil unless user
+    user.attributes = {
+      provider: auth.provider,
+      uid: auth.uid,
+      name: auth.info.name,
+      email: auth.info.email,
+    }
+    user
   end
 
   def self.from_auth(auth)
