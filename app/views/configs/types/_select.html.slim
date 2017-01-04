@@ -1,0 +1,4 @@
+.row
+  .form_group.col-md-8
+    = f.label key
+    = f.select key, CustomConfig::CONFIG_OPTIONS[key.to_sym][:options], {}, required: true, class: 'form-control'

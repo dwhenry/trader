@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :portfolios, only: %i(show new create)
   resource :config, only: %i(show update) do
     resources :users, only: %i(update create)
+    resource :business, only: %i(update)
   end
   resources :trades, only: %i(new create edit update)
   resource :user_setup, only: %i(new create) do

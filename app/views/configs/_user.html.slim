@@ -1,6 +1,6 @@
 .row
-  .col-md-6
-    = form_for current_user, url: config_user_path(current_user) do |f|
+  .col-lg-6
+    = form_for @user || current_user, url: config_user_path(@user || current_user) do |f|
       .row
         .form_group.col-md-8
           = f.label :name
@@ -11,7 +11,7 @@
           = f.submit 'Update', class: 'btn btn-primary'
 
     = form_tag config_users_path do
-      h2 Add new user(s)
+      h2 Add user(s)
       .row
         .form_group.col-md-12
           = label_tag :emails, 'Email(s)'
@@ -24,9 +24,9 @@
 
       .row
         .form_group.col-md-12
-          = submit_tag 'Create', class: 'btn btn-primary'
+          = submit_tag 'Add', class: 'btn btn-primary'
 
-  .col-md-6
+  .col-lg-6
     h2 Users
 
     .table-responsive

@@ -5,7 +5,7 @@
 .row
   .col-md-12
     ul.nav.nav-tabs role="tablist"
-      - tab_options.each do |id, name|
+      - config_tab_options.each do |id, name|
         li.nav-item
           a.nav-link href=config_path(tab: id) class=(@tab == id ? 'active' : '')
             = name
@@ -14,4 +14,4 @@
   .col-md-12
     .tab-content
       tab-pane.portfolio-tab.active role="tabpanel"
-        = render @tab
+        = render "configs/#{@tab}"

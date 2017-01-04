@@ -17,11 +17,23 @@ class BusinessesController < ApplicationController
     @portfolio = @business.portfolios.new(portfolio_params)
 
     if @business.save
+      CustomConfig.create_for(@business)
+      CustomConfig.create_for(@portfolio)
       current_user.update(business: @business)
       redirect_to business_path
     else
       flash[:warning] = 'Error creating business'
       render :new
+    end
+  end
+
+  def update
+    @business = current_user.business
+    if @business.update(business_params) && CustomConfig.find_for(@business).update(config: config_params)
+      redirect_to config_path(tab: :business)
+    else
+      @tab = 'business'
+      render 'configs/show'
     end
   end
 
@@ -33,6 +45,10 @@ class BusinessesController < ApplicationController
 
   def portfolio_params
     params.require(:portfolio).permit(:name)
+  end
+
+  def config_params
+    params.require(:config).permit(CustomConfig.defaults(current_user.business).keys)
   end
 
   def one_business_only

@@ -1,7 +1,17 @@
-.config-group
-  h2 Business
+= form_for @business || current_user.business, url: config_business_path do |f|
+  .row
+    .col-lg-6
+      .row
+        .form_group.col-md-8
+          = f.label :name
+          = f.text_field :name, required: true, class: 'form-control'
+
+    - config = params[:config] || CustomConfig.config_for(current_user.business)
+    = fields_for :config, OpenStruct.new(config) do |f|
+      - config.each do |key, _|
+        .col-lg-6
+          = render "configs/types/#{CustomConfig::CONFIG_OPTIONS[key.to_sym][:type]}", f: f, key: key
 
   .row
-    .form_group.col-md-4
-      = label_tag :business_name
-      = text_field_tag :business_name, @business.name, class: 'form-control'
+    .form_group.col-md-12
+      = f.submit 'Update', class: 'btn btn-primary'
