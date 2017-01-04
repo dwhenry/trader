@@ -7,10 +7,10 @@ FactoryGirl.define do
     date { Time.zone.today }
 
     after(:create) { |trade| Backoffice.create_from!(trade) }
-  end
 
-  trait :fully_setup do
-    portfolio { create(:portfolio, business: create(:business)) }
-    security { create(:security) }
+    trait :fully_setup do
+      portfolio { create(:portfolio, business: create(:business)) }
+      security { create(:security) }
+    end
   end
 end

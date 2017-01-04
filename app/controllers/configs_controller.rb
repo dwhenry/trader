@@ -1,6 +1,6 @@
 class ConfigsController < ApplicationController
   def show
-    @tab = params[:tab] || config_tab_options.keys.first
+    @tab = params[:tab] || view_context.config_tab_options.keys.first
     @business = current_user.business
   end
 

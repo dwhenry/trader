@@ -11,11 +11,7 @@ RSpec.describe Trade do
 
   context 'when the portfolio disallows negative positions' do
     before do
-      CustomConfig.create!(
-        object_type: 'Portfolio',
-        object_id: trade.portfolio_id,
-        config: [{ 'name' => 'allow_negative_positions', 'value' => 'no' }],
-      )
+      CustomConfig.create_for(trade.portfolio)
     end
 
     context 'and no other trades exist' do
@@ -42,23 +38,6 @@ RSpec.describe Trade do
 
       it 'does not allow the trade to be booked' do
         expect(trade).not_to be_valid
-      end
-    end
-  end
-
-  context 'when the busines disallows negative positions' do
-    before do
-      CustomConfig.create!(
-        object_type: 'Business',
-        object_id: trade.portfolio.business_id,
-        config: [{ 'name' => 'allow_negative_positions', 'value' => 'no' }],
-      )
-    end
-
-    context 'and no other trades exist' do
-      it 'does not allow the trade to be booked' do
-        expect(trade).not_to be_valid
-        expect(trade.errors[:quantity]).to include('Generates a negative position')
       end
     end
   end

@@ -4,10 +4,10 @@
       .row
         .form_group.col-md-8
           = f.label :name
-          = f.text_field :name, required: true, class: 'form-control'
+          = f.text_field :name, required: true, class: 'form-control t-business-name'
 
     = render 'fields', config: params[:config] || CustomConfig.config_for(current_user.business)
 
   .row
     .form_group.col-md-12
-      = f.submit 'Update', class: 'btn btn-primary'
+      = f.submit 'Update', class: 'btn btn-primary t-save'

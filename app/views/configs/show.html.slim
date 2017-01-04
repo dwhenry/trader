@@ -7,7 +7,7 @@
     ul.nav.nav-tabs role="tablist"
       - config_tab_options.each do |id, name|
         li.nav-item
-          a.nav-link href=config_path(tab: id) class=(@tab == id ? 'active' : '')
+          a.nav-link.t-tab href=config_path(tab: id) class=(@tab == id ? 'active' : '')
             = name
 
 .row

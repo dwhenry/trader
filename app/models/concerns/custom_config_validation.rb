@@ -9,12 +9,11 @@ module CustomConfigValidation
 
   def _custom_config_validation
     validatables.each do |validatable|
-      configs = CustomConfig.where(object_type: validatable.class.to_s, object_id: [nil, validatable.id])
-      configs.each do |config|
-        config.config.each do |validation|
-          validator = BaseValidator.get(validation['name'])
-          validator&.validate(self, validation['value'])
-        end
+      custom_config = CustomConfig.find_for(validatable)
+      next unless custom_config
+      custom_config.config.each do |name, value|
+        validator = BaseValidator.get(name)
+        validator&.validate(self, value)
       end
     end
   end

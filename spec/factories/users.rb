@@ -7,5 +7,6 @@ FactoryGirl.define do
     email 'primary@user.com'
     oauth_token { SecureRandom.uuid }
     oauth_expires_at { 1.week.from_now }
+    role 'admin'
   end
 end

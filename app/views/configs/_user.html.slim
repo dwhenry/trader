@@ -4,18 +4,18 @@
       .row
         .form_group.col-md-8
           = f.label :name
-          = f.text_field :name, required: true, class: 'form-control'
+          = f.text_field :name, required: true, class: 'form-control t-user-name'
 
       .row
         .form_group.col-md-12
-          = f.submit 'Update', class: 'btn btn-primary'
+          = f.submit 'Update', class: 'btn btn-primary t-save'
 
     = form_tag config_users_path do
       h2 Add user(s)
       .row
         .form_group.col-md-12
           = label_tag :emails, 'Email(s)'
-          = text_field_tag :emails, params[:emails], placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal'
+          = text_field_tag :emails, params[:emails], placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal t-emails'
 
       .row
         .form_group.col-md-6
@@ -24,7 +24,7 @@
 
       .row
         .form_group.col-md-12
-          = submit_tag 'Add', class: 'btn btn-primary'
+          = submit_tag 'Add', class: 'btn btn-primary t-add'
 
   .col-lg-6
     h2 Users
