@@ -5,11 +5,11 @@ class CustomConfig < ApplicationRecord
 
   DEFAULT_CONFIG = {
     'Business' => { reporting_currency: 'USD' },
-    'Portfolio' => { allow_negative_position: false },
+    'Portfolio' => { allow_negative_position: 'no' },
   }.freeze
 
   CONFIG_OPTIONS = {
-    allow_negative_position: { type: :boolean },
+    allow_negative_position: { type: :radio, options: %w(yes no) },
     reporting_currency: { type: :select, options: %w(AUD USD) }
   }.freeze
 

@@ -21,9 +21,23 @@ class PortfoliosController < ApplicationController
     end
   end
 
+  def update
+    @portfolio = Portfolio.find(params[:id])
+    if @portfolio.update(portfolio_params) && CustomConfig.find_for(@portfolio).update(config: config_params(@portfolio))
+      redirect_to config_path(tab: :portfolios, anchor: "portfolio-#{@portfolio.id}")
+    else
+      @tab = 'portfolios'
+      render 'configs/show'
+    end
+  end
+
   private
 
   def portfolio_params
     params.require(:portfolio).permit(:name)
+  end
+
+  def config_params(portfolio)
+    params.require(:config).permit(CustomConfig.defaults(portfolio).keys)
   end
 end

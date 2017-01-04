@@ -1,10 +1,20 @@
-= fields_for :portfolio, portfolio, index: portfolio.id do |p|
-  .config-group
-    h2
-      ' Portfolio:
-      = portfolio.name
 
-    .row
-      .form_group.col-md-4
-        = p.label :name, 'Portfolio name'
-        = p.text_field :name, class: 'form-control'
+- current_user.business.portfolios.each do |portfolio|
+  .config-group id="portfolio-#{portfolio.id}"
+    - current_portfolio = @portfolio&.id == portfolio.id ? @portfolio : portfolio
+    = form_for current_portfolio, url: config_portfolio_path(current_portfolio) do |f|
+      .row
+        .col-lg-12
+          h3= current_portfolio.name
+      .row
+        .col-lg-6
+          .row
+            .form_group.col-md-8
+              = f.label :name
+              = f.text_field :name, required: true, class: 'form-control'
+
+        = render 'fields', config: @portfolio&.id == portfolio.id ? params[:config] : CustomConfig.config_for(current_portfolio)
+
+      .row
+        .form_group.col-md-12
+          = f.submit 'Update', class: 'btn btn-primary'

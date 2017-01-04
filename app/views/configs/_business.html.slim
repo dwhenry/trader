@@ -6,11 +6,7 @@
           = f.label :name
           = f.text_field :name, required: true, class: 'form-control'
 
-    - config = params[:config] || CustomConfig.config_for(current_user.business)
-    = fields_for :config, OpenStruct.new(config) do |f|
-      - config.each do |key, _|
-        .col-lg-6
-          = render "configs/types/#{CustomConfig::CONFIG_OPTIONS[key.to_sym][:type]}", f: f, key: key
+    = render 'fields', config: params[:config] || CustomConfig.config_for(current_user.business)
 
   .row
     .form_group.col-md-12
