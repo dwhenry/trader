@@ -1,23 +1,17 @@
 .row
   .col-md-12
-    h1
-      ' Settings for business:
-      = @business.name
+    h1 Config
 
-- if @errors&.any?
-  .row
-    .col-md-12
-      ul.errors
-        - @errors.each do |error|
-          li= error
 .row
   .col-md-12
-    = form_tag config_path, method: :put do
-      .config
-        = render 'business', business: @business
-        = render 'user'
-        - Portfolio.where(business_id: @business.id).each do |portfolio|
-          = render 'portfolio', portfolio: portfolio
+    ul.nav.nav-tabs role="tablist"
+      - tab_options.each do |id, name|
+        li.nav-item
+          a.nav-link href=config_path(tab: id) class=(@tab == id ? 'active' : '')
+            = name
 
-      .form-group
-        = submit_tag 'Update', class: 'btn btn-primary'
+.row
+  .col-md-12
+    .tab-content
+      tab-pane.portfolio-tab.active role="tabpanel"
+        = render @tab

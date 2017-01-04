@@ -1,5 +1,8 @@
 class ConfigsController < ApplicationController
+  helper_method :tab_options
+
   def show
+    @tab = params[:tab] || tab_options.keys.first
     @business = current_user.business
   end
 
@@ -14,5 +17,11 @@ class ConfigsController < ApplicationController
       @business = current_user.business
       render :show
     end
+  end
+
+  private
+
+  def tab_options
+    { 'business' => 'Business', 'user' => 'User', 'portfolios' => "Portfolio's" }
   end
 end

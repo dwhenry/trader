@@ -1,12 +1,46 @@
-.config-group
-  h2 User
+.row
+  .col-md-6
+    = form_for current_user, url: config_user_path(current_user) do |f|
+      .row
+        .form_group.col-md-8
+          = f.label :name
+          = f.text_field :name, required: true, class: 'form-control'
 
-  .row
-    .form_group.col-md-4
-      = label_tag :user_name
-      = text_field_tag :user_name, current_user.name, class: 'form-control'
+      .row
+        .form_group.col-md-12
+          = f.submit 'Update', class: 'btn btn-primary'
 
-  .row
-    .form_group.col-md-6
-      = label_tag :new_users, 'New users:'
-      = text_field_tag :new_users, nil, placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal'
+    = form_tag config_users_path do
+      h2 Add new user(s)
+      .row
+        .form_group.col-md-12
+          = label_tag :emails, 'Email(s)'
+          = text_field_tag :emails, params[:emails], placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal'
+
+      .row
+        .form_group.col-md-6
+          = label_tag :role, 'Role'
+          = select_tag :role, options_for_select(%w(admin trader backoffice).map { |r| [r.titlecase, r] }, [:role]), class: 'form-control input-normal'
+
+      .row
+        .form_group.col-md-12
+          = submit_tag 'Create', class: 'btn btn-primary'
+
+  .col-md-6
+    h2 Users
+
+    .table-responsive
+      table.table.table-hover
+        thead
+          tr
+            th Name
+            th Email
+            th Role
+            th Last Access
+        tbody
+          - User.where(business: current_user.business).each do |user|
+            tr
+              td= user.name
+              td= user.email
+              td= user.role.titlecase
+              td= user.uid ? user.updated_at.to_s(:short) : 'Never'

@@ -8,7 +8,9 @@ Rails.application.routes.draw do
 
   resource :business, only: %i(show new create)
   resources :portfolios, only: %i(show new create)
-  resource :config, only: %i(show update)
+  resource :config, only: %i(show update) do
+    resources :users, only: %i(update create)
+  end
   resources :trades, only: %i(new create edit update)
   resource :user_setup, only: %i(new create) do
     collection do
