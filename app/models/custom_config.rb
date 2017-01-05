@@ -16,7 +16,7 @@ class CustomConfig < ApplicationRecord
   belongs_to :object, polymorphic: true
   validates :config_type,
             uniqueness: { scope: [:object_type, :object_id] },
-            presence: { in: CONFIG_TYPES }
+            inclusion: { in: CONFIG_TYPES }
 
   class << self
     def build_for(object, clone=nil)

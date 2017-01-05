@@ -1,12 +1,13 @@
 class TradesController < ApplicationController
+  include SaveWithVersions
+
   def new
     @trade = Trade.new(trade_params)
   end
 
   def create
     @trade = Trade.new(uid: Trade.next_uid)
-    saver = Saver.new(@trade => trade_params)
-    if saver.save
+    if save_with_versions(@trade => trade_params)
       flash[:info] = 'Successfully created trade'
       redirect_to portfolio_path(@trade.portfolio)
     else
@@ -24,12 +25,11 @@ class TradesController < ApplicationController
     @trade = Trade.find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
 
-    saver = Saver.new(@trade => trade_params, @backoffice => backoffice_params)
-    if saver.save
+    if save_with_versions(@trade => trade_params, @backoffice => backoffice_params)
       flash[:info] = 'Successfully updated trade'
       redirect_to edit_trade_path(@trade.uid)
     else
-      flash[:warning] = 'Trade could not be saved'
+      flash[:warning] ||= 'Trade could not be saved'
       render :edit
     end
   end

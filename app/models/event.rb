@@ -1,5 +1,5 @@
 class Event < ApplicationRecord
-  belongs_to :trade, required: false
+  belongs_to :trade, required: false, foreign_key: :trade_uid, primary_key: :uid
   belongs_to :portfolio, required: false
   belongs_to :business
   belongs_to :user
