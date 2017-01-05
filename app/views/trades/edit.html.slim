@@ -16,3 +16,8 @@
     .col-md-6
       h2 Backoffice
       = render 'backoffice', f: f
+
+  .row
+    .col-xl-12
+      h3 Events
+      .js-ajax-load data-url=events_path(trade_uid: @trade.uid, portfolio_id: @trade.portfolio_id)

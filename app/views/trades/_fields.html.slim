@@ -12,18 +12,18 @@
       span.custom-control-description Sell
 
 .row
-  .form-group.col-md-6
+  .form-group.col-md-8.col-xl-6
     = f.label :date
     = f.date_field :date, class: 't-date form-control'
 
 .row
-  .form-group.col-md-6
+  .form-group.col-md-8.col-xl-6
     = label_tag :quantity
     = text_field_tag :quantity, @trade.quantity&.abs, type: :number, min: '0', step: '1', required: true, class: 'integer-only t-quantity js-quantity-update js-quantity form-control'
     = f.hidden_field :quantity, class: 'js-quantity-submitted'
 
 .row
-  .form-group.col-md-6
+  .form-group.col-md-8.col-xl-6
     = f.label :price
     .row
       .col-xs-8

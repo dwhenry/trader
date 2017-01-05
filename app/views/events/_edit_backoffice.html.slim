@@ -1,0 +1,25 @@
+a.activity.card-header data-toggle="collapse" data-parent="#events" href="#event-#{event.id}"
+  .activity-details
+    span.glyphicon.glyphicon-calendar aria-hidden="true"
+    b= event.user.name
+    '  edited
+    b Trade
+    |  settlement details
+  .activity-badge
+    em.tag.tag-pill.tag-default #{event.created_at.to_s(:short)} (#{time_ago_in_words(event.created_at)} ago)
+
+.collapse id="event-#{event.id}"
+  .card-block
+    table.table.table-hover.table-sm
+      thead
+        tr
+          th Field
+          th Old value
+          th New value
+      tbody
+        - event.details.sort.each do |key, (from, to)|
+          - next if %(trade_uid trade_version).include?(key)
+          tr
+            td= key.humanize
+            td= from
+            td= to

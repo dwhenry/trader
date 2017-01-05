@@ -1,0 +1,4 @@
+.panel-group#events aria-expanded="true"
+  - @events.each do |event|
+    .card
+      = render "#{event.event_type}_#{event.object_type}".underscore, event: event
