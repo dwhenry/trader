@@ -36,8 +36,14 @@ module SaveWithVersions
         object.version_create_callback!(@object == object ? nil : @object)
         parent_event = @saver.save(object, changes, nil)
         backoffice = @object.backoffice
-        backoffice.attributes = object.backoffice.attributes
-        @saver.save(object.backoffice, backoffice.changes, parent_event)
+        backoffice_changes = if object.backoffice.version == 1
+                               Backoffice.new(backoffice.attributes).changes
+                             else
+                               backoffice = @object.backoffice
+                               backoffice.attributes = object.backoffice.attributes
+                               backoffice.changes
+                             end
+        @saver.save(object.backoffice, backoffice_changes, parent_event)
       else
         object.save!
         @saver.save(object, changes, nil)

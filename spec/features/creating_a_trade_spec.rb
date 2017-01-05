@@ -16,7 +16,9 @@ RSpec.feature 'Creating a trade' do
       expect(Trade.count).to eq(1)
 
       trade = Trade.last
-      expect(Event.last).to have_attributes(
+      expect(Event.count).to eq(2)
+      trade_event = Event.find_by(object_type: 'Trade', event_type: 'create')
+      expect(trade_event).to have_attributes(
         trade_uid: trade.uid,
         portfolio_id: portfolio.id,
         event_type: 'create',
@@ -33,6 +35,18 @@ RSpec.feature 'Creating a trade' do
           'security_id' => [nil, security.id],
           'portfolio_id' => [nil, portfolio.id]
         }
+      )
+      backoffice_event = Event.find_by(object_type: 'Backoffice', event_type: 'create')
+      expect(backoffice_event).to have_attributes(
+        trade_uid: trade.uid,
+        portfolio_id: portfolio.id,
+        user_id: user.id,
+        object_id: trade.backoffice.id,
+        parent_id: trade_event.id,
+        details: {
+          'state' => [nil, 'Pending'], 
+          'trade_uid' => [nil, trade.uid],
+          'trade_version' => [nil, 1]}
       )
     end
   end
