@@ -12,7 +12,7 @@ class AddConfigType < ActiveRecord::Migration[5.0]
       config.save
     end
 
-    Business.all.each { |b| CustomConfig.create_for(b) }
-    Portfolio.all.each { |p| CustomConfig.create_for(p) }
+    Business.all.each { |b| CustomConfig.build_for(b).save }
+    Portfolio.all.each { |p| CustomConfig.build_for(p).save }
   end
 end
