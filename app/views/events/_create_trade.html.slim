@@ -25,7 +25,7 @@ a.activity.card-header data-toggle="collapse" data-parent="#events" href="#event
           th Field
           th Value
       tbody
-        - event.children.first.details.sort.each do |key, (_from, to)|
+        - event.children.first.details.each do |key, (_from, to)|
           - next if %(trade_uid trade_version).include?(key)
           tr
             td= key.humanize

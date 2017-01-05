@@ -33,6 +33,7 @@ class User < ApplicationRecord
       uid: auth.uid,
       name: auth.info.name,
       email: auth.info.email,
+      role: 'admin',
     )
   end
 end

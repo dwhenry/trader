@@ -14,10 +14,10 @@ class BusinessesController < ApplicationController
 
   def create
     @business = Business.new(business_params)
-    @portfolio = Portfolio.new(portfolio_params.merge(business: @buiness))
+    @portfolio = Portfolio.new(portfolio_params.merge(business: @business))
     current_user.assign_attributes(business: @business)
 
-    if save_with_events(@business, @portfolio, CustomConfig.build_for(@business), CustomConfig.build_for(@portfolio), current_user)
+    if save_with_events([@business, CustomConfig.build_for(@business)], [@portfolio, CustomConfig.build_for(@portfolio)], [current_user])
       redirect_to business_path
     else
       flash[:warning] = 'Error creating business'

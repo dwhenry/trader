@@ -2,10 +2,9 @@ a.activity.card-header data-toggle="collapse" data-parent="#events" href="#event
   .activity-details
     span.glyphicon.glyphicon-calendar aria-hidden="true"
     b= event.user.name
-    '  edited
-    b Trade
-    '  fields -
-    = event.details.keys.map(&:humanize).to_sentence
+    '  opened
+    b= event.current(:name)
+    |  for trading
   .activity-badge
     em.tag.tag-pill.tag-default #{event.created_at.to_s(:short)} (#{time_ago_in_words(event.created_at)} ago)
 
@@ -15,11 +14,9 @@ a.activity.card-header data-toggle="collapse" data-parent="#events" href="#event
       thead
         tr
           th Field
-          th Old value
-          th New value
+          th Value
       tbody
-        - event.filtered_details.merge(event.children.first.filtered_details).sort.each do |key, (from, to)|
+        - event.children.first.filtered_details.each do |key, (_from, to)|
           tr
             td= key.humanize
-            td= from
             td= to
