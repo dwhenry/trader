@@ -1,0 +1,45 @@
+.row
+  .col-md-12
+    h1 Yahoo Security Search
+.row
+  = form_tag yahoo_security_search_path, method: :get do
+    .col-xl-6
+      .row
+        .form-group.col-md-8
+          = label_tag :ticker
+          = text_field_tag :ticker, params[:ticker], class: 'form-control'
+
+      .row
+        .form-group.col-md-8
+          = submit_tag 'Search', class:'btn btn-primary'
+
+      - if @security
+        .row
+          .col-md-12
+            h3 Details
+
+        .row
+          .col-md-12
+            .table-responsive
+              table.table.table-reflow
+                thead
+                  tr
+                    - @security.first.each do |field|
+                      th= field.humanize
+                tbody
+                  - @security[1..-1].each do |row|
+                    tr
+                      - row.each do |value|
+                        td= value
+
+    .col-xl-6
+
+      - YahooSearch::FIELDS.each do |group, fields|
+        h3 #{group} Fields
+        = fields_for :fields, OpenStruct.new(@fields) do |f|
+          - fields.each do |key, name|
+            .form-group
+              label.custom-control.custom-checkbox
+                = f.check_box key, class: "custom-control-input"
+                span.custom-control-indicator
+                span.custom-control-description= name

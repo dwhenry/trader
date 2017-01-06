@@ -20,6 +20,10 @@
       <div class="container">
         <div class="navbar-header page-scroll">
           <a class="navbar-brand" href="/business">Trader</a>
+          <% if current_user %>
+            <span><a href="<%= business_path %>">Home</a></span>
+            <span><a href="<%= yahoo_security_search_path %>">Security search</a></span>
+          <% end %>
         </div>
 
         <ul class="nav navbar-nav" style="float: right">

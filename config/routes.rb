@@ -21,4 +21,5 @@ Rails.application.routes.draw do
       get :portfolio
     end
   end
+  resource :yahoo_security_search, only: %i(show create)
 end
