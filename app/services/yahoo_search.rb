@@ -6,10 +6,12 @@ class YahooSearch
 
   class Api
     def self.find(ticker, fields)
-      url = "http://download.finance.yahoo.com/d/quotes.csv?s=#{ticker}&f=s#{fields.join}"
-      puts "Getting: #{url}"
+      read "http://download.finance.yahoo.com/d/quotes.csv?s=#{ticker}&f=s#{fields.join}"
+    end
+
+    def self.read(url, headers = false)
       open url do |f|
-        CSV.parse(f)
+        CSV.parse(f, headers: headers)
       end
     end
   end
