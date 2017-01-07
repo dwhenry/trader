@@ -2,26 +2,39 @@ require 'csv'
 require 'open-uri'
 
 class YahooSearch
-  def self.find(ticker, fields)
-    new(ticker).find(fields)
-  end
+  cattr_accessor :api
 
-  def initialize(ticker)
-    @ticker = ticker
-  end
-
-  def find(fields)
-
-    url = "http://download.finance.yahoo.com/d/quotes.csv?s=#{@ticker}&f=#{fields.join}"
-    puts "Getting: #{url}"
-    open url do |f|
-      [headers(fields)] + CSV.parse(f)
+  class Api
+    def self.find(ticker, fields)
+      url = "http://download.finance.yahoo.com/d/quotes.csv?s=#{ticker}&f=s#{fields.join}"
+      puts "Getting: #{url}"
+      open url do |f|
+        CSV.parse(f)
+      end
     end
   end
 
-  def headers(fields)
+  class StubApi
+    def self.find(*args)
+      [["N/A", "N/A", "Alphabet Inc.", "GOOG"], ["N/A", "N/A", "APPELL PETE CORP", "APPL"]]
+    end
+  end
+
+  def self.find(ticker, fields)
+    results = api.find(ticker, fields)
+    [headers(fields)] + results
+  end
+
+  def self.headers(fields)
     field_map = FIELDS.values.inject(&:merge)
     fields.map { |f| field_map[f.to_sym] }
+  end
+
+  def self.fields
+    # as the select fields needs the value then the key..
+    FIELDS.map do |group, entries|
+      [group, entries.map { |k, v| [v.humanize, k] }]
+    end
   end
 
   FIELDS = {
@@ -101,7 +114,7 @@ class YahooSearch
       f6: 'float shares',
       n: 'name',
       n4: 'notes',
-      s: 'symbol',
+      # s: 'symbol',
       s1: 'shares owned',
       x: 'stock exchange',
       j2: 'shares outstanding',

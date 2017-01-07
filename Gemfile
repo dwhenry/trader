@@ -18,6 +18,7 @@ source 'https://rubygems.org' do
   gem 'puma', '~> 3.0'
   gem 'rails', '~> 5.0.1'
   gem 'sass-rails', '~> 5.0'
+  gem 'select2-rails'
   gem 'slim'
   gem 'turbolinks', '~> 5'
   gem 'uglifier', '>= 1.3.0'
