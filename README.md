@@ -1,24 +1,6 @@
-# README
+# Trader
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A simple portfolio management tool.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+`/about` contains details of completed and pending work items for the current stage of development.
+ 
