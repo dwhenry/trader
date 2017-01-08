@@ -17,8 +17,6 @@ module SaveWithVersions
     end
   end
 
-  private
-
   class Updater
     def initialize(object, user)
       @object = object
@@ -33,21 +31,25 @@ module SaveWithVersions
 
       case object
       when Trade
-        object.version_create_callback!(@object == object ? nil : @object)
-        parent_event = @saver.save(object, changes, nil)
-        backoffice = @object.backoffice
-        backoffice_changes = if object.backoffice.version == 1
-                               Backoffice.new(backoffice.attributes).changes
-                             else
-                               backoffice = @object.backoffice
-                               backoffice.attributes = object.backoffice.attributes
-                               backoffice.changes
-                             end
-        @saver.save(object.backoffice, backoffice_changes, parent_event)
+        save_trade(object, changes)
       else
         object.save!
         @saver.save(object, changes, nil)
       end
+    end
+
+    def save_trade(object, changes)
+      object.version_create_callback!(@object == object ? nil : @object)
+      parent_event = @saver.save(object, changes, nil)
+      backoffice = @object.backoffice
+      backoffice_changes = if object.backoffice.version == 1
+                             Backoffice.new(backoffice.attributes).changes
+                           else
+                             backoffice = @object.backoffice
+                             backoffice.attributes = object.backoffice.attributes
+                             backoffice.changes
+                           end
+      @saver.save(object.backoffice, backoffice_changes, parent_event)
     end
 
     def retire_current_object

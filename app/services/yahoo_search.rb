@@ -1,7 +1,7 @@
 require 'csv'
 require 'open-uri'
 
-class YahooSearch
+class YahooSearch # rubocop:disable Metrics/ClassLength
   cattr_accessor :api
 
   class Api
@@ -17,8 +17,8 @@ class YahooSearch
   end
 
   class StubApi
-    def self.find(*args)
-      [["N/A", "N/A", "Alphabet Inc.", "GOOG"], ["N/A", "N/A", "APPELL PETE CORP", "APPL"]]
+    def self.find(*)
+      [['N/A', 'N/A', 'Alphabet Inc.', 'GOOG'], ['N/A', 'N/A', 'APPELL PETE CORP', 'APPL']]
     end
   end
 
@@ -144,5 +144,5 @@ class YahooSearch
       r7: 'price /eps estimate next year',
       s7: 'short ratio',
     },
-  }
+  }.freeze
 end

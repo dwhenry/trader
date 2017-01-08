@@ -27,7 +27,7 @@ RSpec.feature 'Editing a trade' do
         user_id: user.id,
         object_id: trade.id,
         parent_id: nil,
-        details: { 'quantity' => [10, 200] }
+        details: { 'quantity' => [10, 200] },
       )
       backoffice_event = Event.find_by(object_type: 'Backoffice', event_type: 'edit')
       expect(backoffice_event).to have_attributes(
@@ -36,9 +36,8 @@ RSpec.feature 'Editing a trade' do
         user_id: user.id,
         object_id: trade.backoffice.id,
         parent_id: trade_event.id,
-        details: { 'trade_version' => [1, 2] }
+        details: { 'trade_version' => [1, 2] },
       )
-
     end
   end
 
@@ -68,7 +67,7 @@ RSpec.feature 'Editing a trade' do
         user_id: user.id,
         object_id: trade.backoffice.id,
         parent_id: nil,
-        details: { 'state' => ['Pending', 'Settled'] }
+        details: { 'state' => %w(Pending Settled) },
       )
     end
   end

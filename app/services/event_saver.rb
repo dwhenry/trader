@@ -3,17 +3,17 @@ class EventSaver
     @user = user
   end
 
-  def save(object, changes, parent_event)
+  def save(object, changes, parent_event) # rubocop:disable Metrics/MethodLength
     return if changes.empty?
     Event.create!(
       object_to_logables(object).merge(
         event_type: get_event_type(object),
-        details: changes.except(*%w(id version created_at updated_at)),
+        details: changes.except('id', 'version', 'created_at', 'updated_at'),
         user: @user,
         object_type: object.class,
         object_id: object.id,
-        parent: parent_event
-      )
+        parent: parent_event,
+      ),
     )
   end
 

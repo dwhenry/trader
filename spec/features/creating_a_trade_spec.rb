@@ -28,13 +28,13 @@ RSpec.feature 'Creating a trade' do
         parent_id: nil,
         details: {
           'uid' => ['', trade.uid],
-          'date' => [nil, Date.today.to_s],
+          'date' => [nil, Time.zone.today.strftime('%Y-%m-%d')],
           'price' => [nil, '12.34'],
           'currency' => [nil, 'AUD'],
           'quantity' => [nil, 100],
           'security_id' => [nil, security.id],
-          'portfolio_id' => [nil, portfolio.id]
-        }
+          'portfolio_id' => [nil, portfolio.id],
+        },
       )
       backoffice_event = Event.find_by(object_type: 'Backoffice', event_type: 'create')
       expect(backoffice_event).to have_attributes(
@@ -44,9 +44,10 @@ RSpec.feature 'Creating a trade' do
         object_id: trade.backoffice.id,
         parent_id: trade_event.id,
         details: {
-          'state' => [nil, 'Pending'], 
+          'state' => [nil, 'Pending'],
           'trade_uid' => [nil, trade.uid],
-          'trade_version' => [nil, 1]}
+          'trade_version' => [nil, 1],
+        },
       )
     end
   end

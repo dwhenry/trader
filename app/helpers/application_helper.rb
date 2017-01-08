@@ -6,5 +6,4 @@ module ApplicationHelper
   def configuration_options
     [['Use default options', 0]] + Portfolio.where(business_id: current_user.business_id).pluck(:name, :id)
   end
-
 end

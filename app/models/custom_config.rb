@@ -1,6 +1,6 @@
 class CustomConfig < ApplicationRecord
   CONFIG_TYPES = [
-    SETTINGS = 'settings'
+    SETTINGS = 'settings'.freeze,
   ].freeze
 
   DEFAULT_CONFIG = {
@@ -10,7 +10,7 @@ class CustomConfig < ApplicationRecord
 
   CONFIG_OPTIONS = {
     allow_negative_positions: { type: :radio, options: %w(yes no) },
-    reporting_currency: { type: :select, options: %w(AUD USD) }
+    reporting_currency: { type: :select, options: %w(AUD USD) },
   }.freeze
 
   belongs_to :object, polymorphic: true
@@ -19,11 +19,11 @@ class CustomConfig < ApplicationRecord
             inclusion: { in: CONFIG_TYPES }
 
   class << self
-    def build_for(object, clone=nil)
+    def build_for(object, clone = nil)
       new(
         object: object,
         config_type: SETTINGS,
-        config: find_for(clone)&.config || defaults(object)
+        config: find_for(clone)&.config || defaults(object),
       )
     end
 

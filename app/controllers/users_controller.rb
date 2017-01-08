@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
   def create
-    emails = params[:emails].split(',').map(&:strip).uniq
-    if emails.all? { |email| User.find_by(email: email).nil? && User.new(email: email).valid? }
-      emails.each { |email| User.create!(business: current_user.business, email: email, role: params[:role]) }
+    user_creator = UserCreator.new(current_user, params[:emails], params[:role])
+    if user_creator.save
       redirect_to config_path(tab: :user)
     else
       @tab = 'user'

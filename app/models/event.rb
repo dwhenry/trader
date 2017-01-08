@@ -24,7 +24,7 @@ class Event < ApplicationRecord
   end
 
   def filtered_details
-    filtered = details.except(*%w(trade_uid trade_version object_type config_type))
+    filtered = details.except('trade_uid', 'trade_version', 'object_type', 'config_type')
 
     return filtered.sort unless filtered['config']
 

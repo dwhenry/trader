@@ -26,7 +26,7 @@ module SaveWithEvents
       ApplicationRecord.transaction do
         # this allow different events to be grouped even when they are all saved together
         if objects.first.is_a?(Array)
-          objects.each { |grouped_objects| save_objects(grouped_objects)}
+          objects.each { |grouped_objects| save_objects(grouped_objects) }
         else
           save_objects(objects)
         end

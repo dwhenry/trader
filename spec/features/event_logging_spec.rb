@@ -6,7 +6,6 @@ RSpec.feature 'Successfully logs events' do
     create(:portfolio, :with_config, business: business)
     user = create(:user, business: business)
 
-
     with_user(user) do
       page = ConfigPage.new
       page.load
@@ -32,16 +31,28 @@ RSpec.feature 'Successfully logs events' do
           [portfolio.id, 'create', user.id, 'CustomConfig', portfolio_config_id, portfolio_create_event_id],
           [portfolio.id, 'edit', user.id, 'Portfolio', portfolio.id, nil],
           [portfolio.id, 'edit', user.id, 'CustomConfig', portfolio_config_id, portfolio_edit_event_id],
-        ]
+        ],
       )
 
       expect(Event.pluck(:event_type, :object_type, :details)).to eq(
         [
-          ['create', 'Portfolio', { 'name' => [nil, 'Bobs trades'], 'business_id'=>[nil, business.id] }],
-          ['create', 'CustomConfig', { 'config' => [nil, {'allow_negative_positions' => 'no' }], 'config_type' => [nil, 'settings'], 'object_type' => [nil, 'Portfolio'] }],
-          ['edit', 'Portfolio', { 'name' => ['Bobs trades', 'Dans trades']}],
-          ['edit', 'CustomConfig', { 'config' => [{ 'allow_negative_positions'=>'no' }, { 'allow_negative_positions'=>'yes' }] }]
-        ]
+          ['create', 'Portfolio', { 'name' => [nil, 'Bobs trades'], 'business_id' => [nil, business.id] }],
+          [
+            'create',
+            'CustomConfig',
+            {
+              'config' => [nil, { 'allow_negative_positions' => 'no' }],
+              'config_type' => [nil, 'settings'],
+              'object_type' => [nil, 'Portfolio'],
+            },
+          ],
+          ['edit', 'Portfolio', { 'name' => ['Bobs trades', 'Dans trades'] }],
+          [
+            'edit',
+            'CustomConfig',
+            { 'config' => [{ 'allow_negative_positions' => 'no' }, { 'allow_negative_positions' => 'yes' }] },
+          ],
+        ],
       )
     end
   end

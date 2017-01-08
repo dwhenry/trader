@@ -9,7 +9,8 @@ class PortfoliosController < ApplicationController
     if save_with_events(@portfolio, CustomConfig.build_for(@portfolio, Portfolio.find_by(id: params[:configuration])))
       redirect_to config_path(tab: :portfolios, anchor: "portfolio-#{@portfolio.id}")
     else
-      @configuration_options = [nil, 'Default'] + Portfolio.where(business_id: current_user.business_id).pluck(:id, :name)
+      @configuration_options = [nil, 'Default'] +
+                               Portfolio.where(business_id: current_user.business_id).pluck(:id, :name)
       flash[:warning] = 'Error creating portfolio'
       render :new
     end
