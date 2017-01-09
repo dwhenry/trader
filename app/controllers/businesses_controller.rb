@@ -12,14 +12,14 @@ class BusinessesController < ApplicationController
     @portfolio = Portfolio.new
   end
 
-  def create
+  def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @business = Business.new(business_params)
     @portfolio = Portfolio.new(portfolio_params.merge(business: @business))
     current_user.assign_attributes(business: @business)
 
     if save_with_events(
-      [@business, CustomConfig.build_for(@business)],
-      [@portfolio, CustomConfig.build_for(@portfolio)],
+      [@business, config_for(@business)],
+      [@portfolio, config_for(@portfolio)],
       [current_user],
     )
       redirect_to business_path
@@ -32,7 +32,7 @@ class BusinessesController < ApplicationController
   def update
     @business = current_user.business
     @business.assign_attributes(business_params)
-    if save_with_events(@business, CustomConfig.assign_for(@business, config_params))
+    if save_with_events(@business, config_for(@business, params: config_params))
       redirect_to config_path(tab: :business)
     else
       @tab = 'business'
@@ -56,9 +56,7 @@ class BusinessesController < ApplicationController
 
   def one_business_only
     if current_user
-      if current_user.business
-        redirect_to business_path
-      end
+      redirect_to business_path if current_user.business
     else
       redirect_to root_path
     end

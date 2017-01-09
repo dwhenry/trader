@@ -12,7 +12,7 @@
               = f.label :name
               = f.text_field :name, required: true, class: 'form-control t-portfolio-name'
 
-        = render 'fields', config: @portfolio&.id == portfolio.id ? params[:config] : CustomConfig.config_for(current_portfolio)
+        = render 'configs/fields', config: @portfolio&.id == portfolio.id ? params[:config] : config_for(current_portfolio)&.config
 
       .row
         .form_group.col-md-12
@@ -21,7 +21,8 @@
 config-group
   .row
     .col-md-12
-      = form_for Portfolio.new, url: config_portfolios_path do |f|
+      - portfolio = @new_portfolio || Portfolio.new
+      = form_for portfolio, url: config_portfolios_path do |f|
         h1 New Portfolio
         .row
           .form_group.col-md-6

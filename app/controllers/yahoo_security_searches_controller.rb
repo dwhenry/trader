@@ -1,15 +1,23 @@
 class YahooSecuritySearchesController < ApplicationController
+  DEFAULT_FIELDS = %w(n b s).freeze
+
   def show
-    if params[:fields]
-      @fields = params[:fields]
-      session['yahoo_search_params'] = @fields.to_json if @fields.any?
-    else
-      @fields = JSON.parse(session['yahoo_search_params'])
-    end
+    @fields = remember_fields(params[:fields])
 
     return unless params[:ticker]
 
-    params[:ticker] = params[:ticker].split(/[, ]+/).uniq.reject(&:blank?).compact.join(',').upcase
+    params[:ticker] = clean(params[:ticker])
     @security = YahooSearch.find(params[:ticker], @fields)
+  end
+
+  private
+
+  def remember_fields(fields)
+    session['yahoo_search_params'] = fields if fields.any?
+    session['yahoo_search_params'] || DEFAULT_FIELDS
+  end
+
+  def clean_ticker(ticker)
+    ticker.split(/[, ]+/).uniq.reject(&:blank?).compact.join(',').upcase
   end
 end

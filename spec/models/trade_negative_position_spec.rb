@@ -10,9 +10,7 @@ RSpec.describe Trade do
   end
 
   context 'when the portfolio disallows negative positions' do
-    before do
-      CustomConfig.build_for(trade.portfolio).save
-    end
+    before { ConfigBuilder.new(trade.portfolio).save }
 
     context 'and no other trades exist' do
       it 'does not allow the trade to be booked' do

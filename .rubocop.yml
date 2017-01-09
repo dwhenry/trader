@@ -42,3 +42,6 @@ Style/TrailingCommaInArguments:
 
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: comma
+
+Rails/NotNullColumn:
+  Enabled: false

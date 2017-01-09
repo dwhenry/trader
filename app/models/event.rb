@@ -10,6 +10,8 @@ class Event < ApplicationRecord
   belongs_to :parent, class_name: 'Event', required: false
   has_many :children, foreign_key: :parent_id, class_name: 'Event'
 
+  scope :last_n, ->(n) { order(created_at: :desc).limit(n) }
+
   def current(field)
     details[field.to_s][CURRENT_POS]
   end

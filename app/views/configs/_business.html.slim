@@ -6,7 +6,7 @@
           = f.label :name
           = f.text_field :name, required: true, class: 'form-control t-business-name'
 
-    = render 'fields', config: params[:config] || CustomConfig.config_for(current_user.business)
+    = render 'fields', config: params[:config] || config_for(current_user.business).config
 
   .row
     .form_group.col-md-12

@@ -19,27 +19,14 @@ class CustomConfig < ApplicationRecord
             inclusion: { in: CONFIG_TYPES }
 
   class << self
-    def build_for(object, clone = nil)
-      new(
-        object: object,
-        config_type: SETTINGS,
-        config: find_for(clone)&.config || defaults(object),
-      )
-    end
-
-    def assign_for(object, config)
-      find_for(object).tap do |custom_config|
-        custom_config.assign_attributes(config: config)
-      end
-    end
-
     def find_for(object)
       return nil unless object
       find_by(object_type: object.class.to_s, object_id: object.id, config_type: SETTINGS)
     end
 
-    def config_for(object)
-      defaults(object).merge(find_for(object)&.config || {})
+    def find_or_initialize_for(object)
+      return nil unless object
+      find_or_initialize_by(object_type: object.class.to_s, object_id: object.id, config_type: SETTINGS)
     end
 
     def defaults(object)

@@ -7,10 +7,8 @@ class EventsController < ApplicationController
       business_id: current_user.business_id,
     }
 
-    @events = Event.where(criteria).includes(:children).order(created_at: :desc).limit(10)
+    @events = Event.where(criteria).includes(:children).last_n(10)
 
-    return unelss request.xhr?
-
-    render 'index', layout: false
+    request.xhr? || render('index', layout: false)
   end
 end
