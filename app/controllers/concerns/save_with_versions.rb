@@ -11,11 +11,11 @@ module SaveWithVersions
     end
     return false unless objects.all?(&:valid?)
 
-    Updater.update_all(objects)
+    Updater.update_all(objects, current_user)
   end
 
   class Updater
-    def self.update_all(objects)
+    def self.update_all(objects, current_user)
       ApplicationRecord.transaction do
         objects.each { |object| Updater.new(object, current_user).update }
         true
@@ -33,32 +33,11 @@ module SaveWithVersions
 
       object = retire_current_object
 
-      case object
-      when Trade
+      if object.is_a?(Trade)
         save_trade(object, changes)
       else
         object.save!
         @saver.save(object, changes, nil)
-      end
-    end
-
-    def save_trade(object, changes)
-      object.version_create_callback!(@object == object ? nil : @object)
-      parent_event = @saver.save(object, changes, nil)
-      @saver.save!(
-        object.backoffice,
-        backoffice_changes(@object.backoffice),
-        parent_event,
-      )
-    end
-
-    def backoffice_changes(backoffice)
-      if object.backoffice.version == 1
-        Backoffice.new(backoffice.attributes).changes
-      else
-        backoffice = @object.backoffice
-        backoffice.attributes = object.backoffice.attributes
-        backoffice.changes
       end
     end
 
@@ -75,5 +54,27 @@ module SaveWithVersions
 
       new_object
     end
+
+    # object specific saving - potentially extract this to a separate class if more than one is required
+
+    def save_trade(object, changes)
+      object.version_create_callback!(@object == object ? nil : @object)
+      parent_event = @saver.save(object, changes, nil)
+      @saver.save(
+        object.backoffice,
+        backoffice_changes(@object.backoffice, object.backoffice),
+        parent_event,
+      )
+    end
+
+    def backoffice_changes(old_backoffice, new_backoffice)
+      if new_backoffice.version == 1
+        Backoffice.new(new_backoffice.attributes).changes
+      else
+        old_backoffice.attributes = new_backoffice.attributes
+        old_backoffice.changes
+      end
+    end
+
   end
 end

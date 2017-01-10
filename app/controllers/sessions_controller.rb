@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_action :require_user
 
   def create
-    user = User.from_omniauth(env['omniauth.auth'])
+    user = User.from_omniauth(request.env['omniauth.auth'])
     session[:user_id] = user.id
     redirect_to business_path
   end
