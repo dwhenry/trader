@@ -3,4 +3,11 @@
 
 require_relative 'config/application'
 
+begin
+  # Rubocop is not available in envs other than development and test.
+  require 'rubocop/rake_task'
+  RuboCop::RakeTask.new(:default)
+rescue LoadError
+end
+
 Rails.application.load_tasks
