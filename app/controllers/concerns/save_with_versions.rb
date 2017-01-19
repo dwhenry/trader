@@ -75,6 +75,5 @@ module SaveWithVersions
         old_backoffice.changes
       end
     end
-
   end
 end

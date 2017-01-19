@@ -4,7 +4,7 @@ RSpec.feature 'Creating a trade' do
   scenario 'with no customisation' do
     business = create(:business)
     portfolio = create(:portfolio, business: business)
-    security = create(:security)
+    security = create(:security, business: business)
     user = create(:user, business: business)
 
     with_user(user) do
@@ -55,7 +55,7 @@ RSpec.feature 'Creating a trade' do
   scenario 'when a sell trade' do
     business = create(:business)
     portfolio = create(:portfolio, business: business)
-    create(:security)
+    create(:security, business: business)
 
     with_user(create(:user, business: business)) do
       page = PortfolioPage.new

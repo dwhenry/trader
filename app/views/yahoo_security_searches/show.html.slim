@@ -7,11 +7,11 @@
       .row
         .form-group.col-md-8
           = label_tag :ticker
-          = text_field_tag :ticker, params[:ticker], class: 'form-control'
+          = text_field_tag :ticker, params[:ticker], class: 'form-control t-ticker'
 
       .row
         .form-group.col-md-8
-          = submit_tag 'Search', class:'btn btn-primary'
+          = submit_tag 'Search', class:'btn btn-primary t-search'
 
 
     .col-xl-6
@@ -20,7 +20,7 @@
           = label_tag :fields
           = select_tag :fields, grouped_options_for_select(YahooSearch.fields, params[:fields]), class: 'form-control js-enable-select', multiple: true
 
-- if @security
+- if @securities
   .row
     .col-md-12
       h3 Details
@@ -30,12 +30,18 @@
         table.table.table-hover.table-sm
           thead
             tr
-              th Symbol
-              - @security.first.each do |field|
+              th Track
+              - @headers.each do |field|
                 th= field.humanize
           tbody
-            - @security[1..-1].each do |row|
-              tr
+            - @securities.each do |row|
+              tr.t-security
+                td
+                  = form_for Security.find_or_initialize_by(ticker: row[0], business_id: current_user.business_id) do |f|
+                    = f.hidden_field :business_id
+                    = f.hidden_field :ticker
+                    = f.hidden_field :track, class: 'tracking--value'
+                    = f.submit 'Track', class: 'btn btn-link tacking--button t-tracking'
                 - row.each do |value|
                   td= value
 

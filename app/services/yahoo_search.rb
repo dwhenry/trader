@@ -18,7 +18,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   class StubApi
     def self.find(*)
-      [['N/A', 'N/A', 'Alphabet Inc.', 'GOOG'], ['N/A', 'N/A', 'APPELL PETE CORP', 'APPL']]
+      [['GOOG', 'N/A', 'Alphabet Inc.', 'GOOG'], ['APPL', 'N/A', 'APPELL PETE CORP', 'APPL']]
     end
   end
 
@@ -29,7 +29,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   def self.headers(fields)
     field_map = FIELDS.values.inject(&:merge)
-    fields.map { |f| field_map[f.to_sym] }
+    ['symbol'] + fields.map { |f| field_map[f.to_sym] }
   end
 
   def self.fields

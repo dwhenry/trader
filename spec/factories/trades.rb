@@ -10,7 +10,7 @@ FactoryGirl.define do
 
     trait :fully_setup do
       portfolio { create(:portfolio, business: create(:business)) }
-      security { create(:security) }
+      security { create(:security, business: create(:business)) }
     end
   end
 end

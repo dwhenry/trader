@@ -1,0 +1,19 @@
+row
+  .col-md-12
+    h1
+      = @security.name
+
+.row
+  .col-md-12
+    = form_for @security do |f|
+      .form_group
+        = f.label :ticker
+        = f.text_field :ticker, class: 'form-control', disabled: true
+
+      .form_group
+        = f.label :name
+        = f.text_field :name, class: 'form-control', disabled: true
+
+      .form_group
+        = f.label :currency
+        = f.text_field :currency, class: 'form-control'

@@ -9,7 +9,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-source 'https://rubygems.org' do
+source 'https://rubygems.org' do # rubocop:disable Metrics/BlockLength
   gem 'bootstrap', '~> 4.0.0.alpha5'
   gem 'jbuilder', '~> 2.5'
   gem 'jquery-rails'
@@ -30,6 +30,8 @@ source 'https://rubygems.org' do
     gem 'rspec-rails'
     gem 'rubocop'
     gem 'site_prism'
+    gem 'vcr'
+    gem 'webmock'
   end
 
   group :development do

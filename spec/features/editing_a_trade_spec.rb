@@ -4,7 +4,7 @@ RSpec.feature 'Editing a trade' do
   scenario 'works as expected' do
     business = create(:business)
     portfolio = create(:portfolio, business: business)
-    security = create(:security)
+    security = create(:security, business: business)
     trade = create(:trade, portfolio: portfolio, security: security)
     user = create(:user, business: business)
 
@@ -44,7 +44,7 @@ RSpec.feature 'Editing a trade' do
   scenario 'can update a backoffice field' do
     business = create(:business)
     portfolio = create(:portfolio, business: business)
-    security = create(:security)
+    security = create(:security, business: business)
     trade = create(:trade, portfolio: portfolio, security: security)
     user = create(:user, business: business)
 
@@ -75,7 +75,7 @@ RSpec.feature 'Editing a trade' do
   scenario "can't edit both trade and backoffice record" do
     business = create(:business)
     portfolio = create(:portfolio, business: business)
-    security = create(:security)
+    security = create(:security, business: business)
     trade = create(:trade, portfolio: portfolio, security: security)
     user = create(:user, business: business)
 
