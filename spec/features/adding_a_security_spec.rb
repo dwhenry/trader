@@ -9,7 +9,7 @@ RSpec.feature 'Adding a security' do
         given_i_search_for_a_security
         when_i_add_the_security_for_tracking
         then_the_security_is_be_tracked_going_forward
-        # and_historical_price_data_has_been_imported
+        and_historical_price_data_has_been_imported
       end
     end
   end
@@ -23,8 +23,10 @@ RSpec.feature 'Adding a security' do
   end
 
   def when_i_add_the_security_for_tracking
-    security = @page.securities.first
-    security.tracking.click
+    perform_enqueued_jobs do
+      security = @page.securities.first
+      security.tracking.click
+    end
   end
 
   def then_the_security_is_be_tracked_going_forward
@@ -38,8 +40,8 @@ RSpec.feature 'Adding a security' do
     )
   end
 
-  # def and_historical_price_data_has_been_imported
-  #   security = Security.first
-  #   expect(security.prices).not_to be_empty
-  # end
+  def and_historical_price_data_has_been_imported
+    security = Security.first
+    expect(security.prices).not_to be_empty
+  end
 end

@@ -45,3 +45,7 @@ Style/TrailingCommaInLiteral:
 
 Rails/NotNullColumn:
   Enabled: false
+
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/*

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170118222646) do
+ActiveRecord::Schema.define(version: 20170119234202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,21 @@ ActiveRecord::Schema.define(version: 20170118222646) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["business_id"], name: "index_portfolios_on_business_id", using: :btree
+  end
+
+  create_table "prices", force: :cascade do |t|
+    t.string   "ticker"
+    t.date     "date"
+    t.decimal  "open"
+    t.decimal  "close"
+    t.decimal  "high"
+    t.decimal  "low"
+    t.integer  "volume"
+    t.decimal  "adj_close"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_prices_on_date", using: :btree
+    t.index ["ticker"], name: "index_prices_on_ticker", using: :btree
   end
 
   create_table "securities", force: :cascade do |t|

@@ -9,6 +9,17 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
       read "http://download.finance.yahoo.com/d/quotes.csv?s=#{ticker}&f=s#{fields.join}"
     end
 
+    # def self.dividends(ticker)
+    #   read "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}&g=v", true
+    # end
+
+    def self.prices(ticker, from: nil, to: nil)
+      date_filter = ''
+      date_filter << from.strftime('&a=%d&b=%m&c=%Y') if from
+      date_filter << to.strftime('&d=%d&e=%m&f=%Y') if to
+      read "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}#{date_filter}", true
+    end
+
     def self.read(url, headers = false)
       open url do |f|
         CSV.parse(f, headers: headers)
@@ -20,11 +31,19 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
     def self.find(*)
       [['GOOG', 'N/A', 'Alphabet Inc.', 'GOOG'], ['APPL', 'N/A', 'APPELL PETE CORP', 'APPL']]
     end
+
+    def self.prices(*)
+      []
+    end
   end
 
   def self.find(ticker, fields)
     results = api.find(ticker, fields)
     [headers(fields)] + results
+  end
+
+  def self.prices(*args)
+    api.prices(*args)
   end
 
   def self.headers(fields)
