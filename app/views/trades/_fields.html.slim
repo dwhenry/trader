@@ -35,4 +35,4 @@
 .row
   .form-group.col-md-12
     = f.label :security_id
-    = f.collection_select :security_id, Security.all, :id, :name, { include_blank: true }, class: 't-security form-control'
+    = f.collection_select :security_id, Security.where(business_id: current_user.busines_id), :id, :name, { include_blank: true }, class: 't-security form-control'

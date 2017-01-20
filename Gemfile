@@ -19,6 +19,7 @@ source 'https://rubygems.org' do # rubocop:disable Metrics/BlockLength
   gem 'rails', '~> 5.0.1'
   gem 'sass-rails', '~> 5.0'
   gem 'select2-rails'
+  gem 'sidekiq'
   gem 'slim'
   gem 'turbolinks', '~> 5'
   gem 'uglifier', '>= 1.3.0'
