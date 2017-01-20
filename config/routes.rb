@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   end
   resources :events, only: %i(index)
   resources :portfolios, only: %i(show)
-  resources :securities, only: %i(create show)
+  resources :securities, only: %i(create show) do
+    resources :prices, only: %i(index)
+  end
   resources :trades, only: %i(new create edit update)
   resource :user_setup, only: %i(new create) do
     collection do
