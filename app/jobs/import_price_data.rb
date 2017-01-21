@@ -38,9 +38,7 @@ class ImportPriceData < ApplicationJob
 
   def to(period)
     case period.to_s
-    when 'all'
-      nil
-    when 'yesterday'
+    when 'all', 'yesterday'
       Date.yesterday
     else
       raise "unknown period: #{period}"

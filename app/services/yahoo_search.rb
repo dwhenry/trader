@@ -13,11 +13,12 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
     #   read "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}&g=v", true
     # end
 
-    def self.prices(ticker, from: nil, to: nil)
+    def self.prices(ticker, from:, to:)
       date_filter = ''
-      date_filter << from.strftime('&a=%d&b=%m&c=%Y') if from
-      date_filter << to.strftime('&d=%d&e=%m&f=%Y') if to
-      read "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}#{date_filter}", true
+      date_filter << '&a=' << (from.month - 1).to_s << from.strftime('&b=%d&c=%Y')
+      date_filter << '&d=' << (to.month - 1).to_s << to.strftime('&e=%d&f=%Y')
+      puts "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}#{date_filter}&g=d&ignore=.csv"
+      read "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}#{date_filter}&g=d&ignore=.csv", true
     end
 
     def self.read(url, headers = false)
