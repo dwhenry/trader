@@ -17,4 +17,11 @@
 //= require bootstrap
 //= require select2
 
-//= require_tree .
+//= require vendor/amcharts/amcharts
+//= require vendor/amcharts/serial
+//= require vendor/amcharts/amstock
+
+//= require_tree ./channels/.
+//= require_tree ./components/.
+
+//= require stock-price.js.erb

@@ -28,6 +28,8 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
     end
   end
 
+  self.api = Api
+
   class StubApi
     def self.find(*)
       [['GOOG', 'N/A', 'Alphabet Inc.', 'GOOG'], ['APPL', 'N/A', 'APPELL PETE CORP', 'APPL']]

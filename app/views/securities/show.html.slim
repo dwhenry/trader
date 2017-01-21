@@ -17,3 +17,10 @@ row
       .form_group
         = f.label :currency
         = f.text_field :currency, class: 'form-control'
+
+.row
+  .col-md-12
+    h3 Price data
+
+  .col-md-12
+    #chartdiv.stock-price-chart data-url=security_prices_path(@security) data-name=@security.name style="width:100%; height:300px;"
