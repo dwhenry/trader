@@ -12,7 +12,7 @@ class ImportPriceData < ApplicationJob
   end
 
   def find_and_update(ticker, price_record)
-    Price.find_or_initialize_by(ticker: ticker, date: price_record['Date'])
+    Price.find_or_initialize_by(ticker: ticker, date: Date.parse(price_record['Date']))
          .update(
            open: price_record['Open'],
            close: price_record['Close'],
