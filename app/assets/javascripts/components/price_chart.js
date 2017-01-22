@@ -1,11 +1,12 @@
+/*global window, google, clearTimeout, setTimeout, jQuery*/
 (function ($) {
-  'use strict';
+  "use strict";
 
   var PriceCharts = {
     element: null,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 10),
     to: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1),
-    period: 'last 10 days',
+    period: "last 10 days",
     init: function (element) {
       this.element = element;
       var self = this;
@@ -21,10 +22,11 @@
     },
 
     callbacks: function () {
-      var self = this, doit;
-      $('[data-chart-period]').on('click', function () {
-        self.from = new Date($(this).data('from'));
-        self.to = new Date($(this).data('to'));
+      var doit;
+      var self = this;
+      $("[data-chart-period]").on("click", function () {
+        self.from = new Date($(this).data("from"));
+        self.to = new Date($(this).data("to"));
         self.render();
       });
 
@@ -41,7 +43,7 @@
     loadCharts: function () {
       var chartsLoaded = $.Deferred();
 
-      google.charts.load('current', {'packages': ['corechart']});
+      google.charts.load("current", {"packages": ["corechart"]});
       google.charts.setOnLoadCallback(function () {
         chartsLoaded.resolve();
       });
@@ -55,15 +57,14 @@
         data = [];
 
       $.get(
-        self.element.data('url'),
+        self.element.data("url"),
         function (results) {
           $.each(results, function (i, r) {
             data.push([new Date(r.date), r.low, r.open, r.close, r.high]);
           });
-
           dataLoaded.resolve(data);
         },
-        'json'
+        "json"
       );
 
       return dataLoaded;
@@ -76,12 +77,12 @@
       this.data().done(function (data) {
 
         dataTable = new google.visualization.DataTable();
-        dataTable.addColumn('date');
-        dataTable.addColumn('number');
-        dataTable.addColumn('number');
-        dataTable.addColumn('number');
-        dataTable.addColumn('number');
-        dataTable.addColumn({type: 'string', role: 'tooltip', p: { 'html': true }});
+        dataTable.addColumn("date");
+        dataTable.addColumn("number");
+        dataTable.addColumn("number");
+        dataTable.addColumn("number");
+        dataTable.addColumn("number");
+        dataTable.addColumn({type: "string", role: "tooltip", p: { "html": true }});
 
         // var dataTable = google.visualization.arrayToDataTable(self.filter(data), true);
 
@@ -94,12 +95,12 @@
         );
 
         var options = {
-          'animation.duration': 1000,
-          'animation.startup': true,
-          legend: 'none',
+          "animation.duration": 1000,
+          "animation.startup": true,
+          legend: "none",
           candlestick: {
-            fallingColor: { stroke: '#a52714' }, // red
-            risingColor: { stroke: '#999', fill: '#999' }   // green
+            fallingColor: { stroke: "#a52714" }, // red
+            risingColor: { stroke: "#999", fill: "#999" }   // green
           },
           chartArea: {
             left: 50,
@@ -107,8 +108,8 @@
             width: self.element.width() - 50, // left
             height: 300 - 20 - 30 // top and bottom
           },
-          focusTarget: 'category',
-          series: [{color: '#000'}],
+          focusTarget: "category",
+          series: [{color: "#000"}],
           // title: self.period
           tooltip: { showColorCode: false, isHtml: true }
         },
@@ -134,8 +135,9 @@
         results = [];
 
       function format(number) {
-        var parts = ('' + number + '.').split('.');
-        return '$' + parts[0] + '.' + (parts[1] + '00').substr(0, 2);
+        var parts = (number.toString() + ".").split("."),
+          decimal = (parts[1] + "00");
+        return "$" + parts[0] + "." + decimal.substr(0, 2);
       }
 
       $.each(data, function (i, row) {
@@ -147,11 +149,10 @@
             '<div class="price-tooltip--values" style="width: 50px; display: inline-block; font-weight: bold">' +
               '<div>' + format(row[2]) + "</div><div>" + format(row[1]) + "</div><div>" + format(row[4]) + "</div><div>" + format(row[3]) + "</div>" +
             '</div>' +
-          '</div>'
+          '</div>';
 
         results.push([row[0], row[1], row[2], row[3], row[4], tooltip]);
       });
-
       return results;
     },
 
@@ -172,23 +173,23 @@
           var rows = grouped[key];
           return [
             rows[0][0],
-            Math.min(...rows.map((x) => { return x[1] })),
+            Math.max.apply(null, rows.map(function (x) { return x[1]; })),
             rows[0][2],
-            rows[rows.length-1][3],
-            Math.max(...rows.map((x) => { return x[1] }))
-          ]
-        })
+            rows[rows.length - 1][3],
+            Math.max.apply(null, rows.map(function (x) { return x[4]; }))
+          ];
+        });
       }
 
       var mutilplier = this.element.width() > 1000 ? 8 : (this.element.width() > 700 ? 4 : 2);
       if(data.length > 7 * mutilplier * mutilplier) {
         // months
-        return groupBy((date) => {
+        return groupBy(function (date) {
           return new Date(date.getFullYear(), date.getMonth(), 1);
         });
       } else if(data.length > 7 * mutilplier) {
         // weeks
-        return groupBy((date) => {
+        return groupBy(function (date) {
           return new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
         });
       } else {
