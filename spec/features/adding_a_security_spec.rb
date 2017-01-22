@@ -4,12 +4,14 @@ RSpec.feature 'Adding a security' do
   scenario 'can add a new security', vcr: true do
     user = create(:user, business: create(:business))
 
-    with_yahoo_finance_data do
-      with_user(user) do
-        given_i_search_for_a_security
-        when_i_add_the_security_for_tracking
-        then_the_security_is_be_tracked_going_forward
-        and_historical_price_data_has_been_imported
+    travel_to(Date.new(2017, 1, 20)) do
+      with_yahoo_finance_data do
+        with_user(user) do
+          given_i_search_for_a_security
+          when_i_add_the_security_for_tracking
+          then_the_security_is_be_tracked_going_forward
+          and_historical_price_data_has_been_imported
+        end
       end
     end
   end

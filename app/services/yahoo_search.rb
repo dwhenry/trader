@@ -17,7 +17,6 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
       date_filter = ''
       date_filter << '&a=' << (from.month - 1).to_s << from.strftime('&b=%d&c=%Y')
       date_filter << '&d=' << (to.month - 1).to_s << to.strftime('&e=%d&f=%Y')
-      puts "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}#{date_filter}&g=d&ignore=.csv"
       read "http://ichart.finance.yahoo.com/table.csv?s=#{ticker}#{date_filter}&g=d&ignore=.csv", true
     end
 
