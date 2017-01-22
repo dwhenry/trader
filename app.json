@@ -5,7 +5,7 @@
     "postdeploy": "./bin/setup"
   },
   "env": {
-    "YAHOO_SEARCH_ENABLED": "true"
+    "YAHOO_SEARCH_ENABLED": "true",
     "GOOGLE_CLIENT_ID": {
       "required": true
     },

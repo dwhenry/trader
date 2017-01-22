@@ -17,3 +17,25 @@ row
       .form_group
         = f.label :currency
         = f.text_field :currency, class: 'form-control'
+
+.row
+  .col-md-12
+    .period
+      = label_tag do
+        = radio_button_tag :period, :ten_days, true, class: 'period--selector', data: { 'chart-period' => true, from: 10.days.ago.strftime('%Y-%m-%d'), to: Date.today.strftime('%Y-%m-%d') }
+        .period--label Last 10 days
+
+      = label_tag do
+        = radio_button_tag :period, :month, false, class: 'period--selector', data: { 'chart-period' => true, from: 1.month.ago.strftime('%Y-%m-%d'), to: Date.today.strftime('%Y-%m-%d') }
+        .period--label Last month
+
+      = label_tag do
+        = radio_button_tag :period, :year, false, class: 'period--selector', data: { 'chart-period' => true, from: 1.years.ago.strftime('%Y-%m-%d'), to: Date.today.strftime('%Y-%m-%d') }
+        .period--label Last year
+
+      = label_tag do
+        = radio_button_tag :period, :all, false, class: 'period--selector', data: { 'chart-period' => true, from: 10.years.ago.strftime('%Y-%m-%d'), to: Date.today.strftime('%Y-%m-%d') }
+        .period--label All
+
+  .col-md-12
+    #chart_div style="width: 100%; height: 300px;" data-url=security_prices_path(@security)
