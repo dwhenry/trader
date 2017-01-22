@@ -9,6 +9,6 @@ class EventsController < ApplicationController
 
     @events = Event.where(criteria).includes(:children).last_n(10)
 
-    request.xhr? || render('index', layout: false)
+    request.xhr? && render('index', layout: false)
   end
 end

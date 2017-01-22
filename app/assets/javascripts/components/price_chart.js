@@ -201,7 +201,7 @@
   window.PriceCharts = PriceCharts;
 
   var chart = $('#chart_div');
-  if(chart) {
+  if(chart.length > 0) {
     PriceCharts.init(chart);
   }
 })(jQuery);

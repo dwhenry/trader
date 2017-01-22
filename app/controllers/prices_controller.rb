@@ -1,5 +1,5 @@
 class PricesController < ApplicationController
-  def index
+  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     prices = Security.find(params[:security_id]).prices.order(:date).map do |price|
       {
         date: price.date,

@@ -17,5 +17,5 @@
 //= require bootstrap
 //= require select2
 
-//= require_tree ./vendor
-//= require_tree .
+//= require_tree ./components
+//= require_tree ./theme

@@ -1,78 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<!doctype html>
+<html class="no-js" lang="en">
 
-    <title>Trader</title>
-    <%= csrf_meta_tags %>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <title>Trader</title>
+  <%= csrf_meta_tags %>
 
-  </head>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
 
-  <body class="index">
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-      <div class="container">
-        <div class="navbar-header page-scroll">
-          <a class="navbar-brand" href="/business">Trader</a>
+<body>
+<div class="main-wrapper">
+  <div class="app" id="app">
+    <header class="header">
+      <div class="header-block header-block-collapse hidden-lg-up"> <button class="collapse-btn" id="sidebar-collapse-btn">
+        <i class="fa fa-bars"></i>
+      </button> </div>
+      <!--<div class="header-block header-block-search hidden-sm-down">-->
+        <!--<form role="search">-->
+          <!--<div class="input-container"> <i class="fa fa-search"></i> <input type="search" placeholder="Search">-->
+            <!--<div class="underline"></div>-->
+          <!--</div>-->
+        <!--</form>-->
+      <!--</div>-->
+      <div class="header-block header-block-nav">
+        <ul class="nav-profile">
+          <!--<li class="notifications new">-->
+            <!--<a href="" data-toggle="dropdown"> <i class="fa fa-bell-o"></i> <sup>-->
+              <!--<span class="counter">8</span>-->
+            <!--</sup> </a>-->
+            <!--<div class="dropdown-menu notifications-dropdown-menu">-->
+              <!--<ul class="notifications-container">-->
+                <!--<li>-->
+                  <!--<a href="" class="notification-item">-->
+                    <!--<div class="img-col">-->
+                      <!--<div class="img" style="background-image: url('assets/faces/3.jpg')"></div>-->
+                    <!--</div>-->
+                    <!--<div class="body-col">-->
+                      <!--<p> <span class="accent">Zack Alien</span> pushed new commit: <span class="accent">Fix page load performance issue</span>. </p>-->
+                    <!--</div>-->
+                  <!--</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<a href="" class="notification-item">-->
+                    <!--<div class="img-col">-->
+                      <!--<div class="img" style="background-image: url('assets/faces/5.jpg')"></div>-->
+                    <!--</div>-->
+                    <!--<div class="body-col">-->
+                      <!--<p> <span class="accent">Amaya Hatsumi</span> started new task: <span class="accent">Dashboard UI design.</span>. </p>-->
+                    <!--</div>-->
+                  <!--</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<a href="" class="notification-item">-->
+                    <!--<div class="img-col">-->
+                      <!--<div class="img" style="background-image: url('assets/faces/8.jpg')"></div>-->
+                    <!--</div>-->
+                    <!--<div class="body-col">-->
+                      <!--<p> <span class="accent">Andy Nouman</span> deployed new version of <span class="accent">NodeJS REST Api V3</span> </p>-->
+                    <!--</div>-->
+                  <!--</a>-->
+                <!--</li>-->
+              <!--</ul>-->
+              <!--<footer>-->
+                <!--<ul>-->
+                  <!--<li> <a href="">-->
+                    <!--View All-->
+                  <!--</a> </li>-->
+                <!--</ul>-->
+              <!--</footer>-->
+            <!--</div>-->
+          <!--</li>-->
           <% if current_user %>
-            <span><a href="<%= business_path %>">Home</a></span>
-            <span><a href="<%= yahoo_security_search_path %>">Security search</a></span>
-          <% end %>
-        </div>
-
-        <ul class="nav navbar-nav" style="float: right">
-          <% if current_user %>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.name %><span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><%= link_to 'Setting', config_path %></li>
-                <li><%= link_to 'About', about_path %></li>
-                <li><%= link_to 'Logout', signout_path %></li>
-              </ul>
+            <li class="profile dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <div class="img" style="background-image: url('https://avatars3.githubusercontent.com/u/3959008?v=3&s=40')"> </div> <span class="name">
+                  <%= current_user.name %>
+                </span> </a>
+              <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
+                <!--<a class="dropdown-item" href="#"> <i class="fa fa-user icon"></i> Profile </a>-->
+                <a class="dropdown-item" href="/about"> <i class="fa fa-bell icon"></i> About </a>
+                <!--<a class="dropdown-item" href="#"> <i class="fa fa-gear icon"></i> Settings </a>-->
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="<%= signout_path %>"> <i class="fa fa-power-off icon"></i> Logout </a>
+              </div>
             </li>
-          <% else %>
-            <li><%= link_to 'Login', '/auth/google_oauth2' %></li>
           <% end %>
         </ul>
       </div>
-    </nav>
-
-    <% if flash.any? %>
-      <section id="flash">
-        <% flash.each do |level, msg| %>
-          <div class="alert alert-<%= level %>">
-            <%= msg %>
-          </div>
-        <% end %>
-      </section>
-    <% end %>
-
-    <section>
-      <div class="container">
-        <%= yield %>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-center">
-      <div class="footer-below">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              Copyright &copy; Trader 2016
-            </div>
-          </div>
+    </header>
+    <aside class="sidebar">
+      <div class="sidebar-container">
+        <div class="sidebar-header">
+          <div class="brand">
+            <div class="logo"> <span class="l l1"></span> <span class="l l2"></span> <span class="l l3"></span> <span class="l l4"></span> <span class="l l5"></span> </div> Trader </div>
         </div>
+        <%= render 'layouts/nav' if current_user %>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <article class="content dashboard-page">
+      <% if flash.any? %>
+        <section id="flash">
+          <div class="row sameheight-container">
+            <% flash.each do |level, msg| %>
+              <div class="alert alert-<%= level %>">
+                <%= msg %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
+      <section class="section">
+        <div class="row sameheight-container">
+          <%= yield %>
+        </div>
+      </section>
+    </article>
+    <footer class="footer">
+      <!--<div class="footer-block buttons"> <iframe class="footer-github-btn" src="https://ghbtns.com/github-btn.html?user=modularcode&repo=modular-admin-html&type=star&count=true" frameborder="0" scrolling="0" width="140px" height="20px"></iframe> </div>-->
+      <div class="footer-block author">
+        <ul>
+          <li>
+            created by <a href="https://github.com/dwhenry">David Henry</a> </li>
+          <li>Copyright &copy; Trader 2016</li>
+        </ul>
       </div>
     </footer>
 
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </body>
+  </div>
+</div>
+<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</body>
 
-</html>
