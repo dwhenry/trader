@@ -30,7 +30,9 @@ class ImportPriceData < ApplicationJob
     when 'all'
       1.year.ago.to_date
     when 'yesterday'
-      Date.yesterday
+      Time.zone.yesterday
+    when 'today'
+      Time.zone.today
     else
       raise "unknown period: #{period}"
     end
@@ -38,8 +40,10 @@ class ImportPriceData < ApplicationJob
 
   def to(period)
     case period.to_s
-    when 'all', 'yesterday'
-      Date.yesterday
+    when 'yesterday'
+      Time.zone.yesterday
+    when 'all', 'today'
+      Time.zone.today
     else
       raise "unknown period: #{period}"
     end
