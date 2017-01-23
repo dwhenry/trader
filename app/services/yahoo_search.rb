@@ -6,7 +6,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   class Api
     def self.find(ticker, fields)
-      read "http://download.finance.yahoo.com/d/quotes.csv?s=#{ticker}&f=s#{fields.join}"
+      read "http://download.finance.yahoo.com/d/quotes.csv?sn=#{ticker}&f=s#{fields.join}"
     end
 
     # def self.dividends(ticker)
@@ -38,7 +38,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   def self.find(ticker, fields)
     results = api.find(ticker, fields)
-    [headers(fields)] + results
+    [headers(fields)] + results.reject { |row| row[1] = 'N/A' }
   end
 
   def self.prices(*args)
@@ -47,7 +47,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   def self.headers(fields)
     field_map = FIELDS.values.inject(&:merge)
-    ['symbol'] + fields.map { |f| field_map[f.to_sym] }
+    ['symbol', 'name'] + fields.map { |f| field_map[f.to_sym] }
   end
 
   def self.fields
@@ -132,7 +132,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
       j1: 'market capitalization',
       j3: 'market cap (realtime)',
       f6: 'float shares',
-      n: 'name',
+      # n: 'name',
       n4: 'notes',
       # s: 'symbol',
       s1: 'shares owned',
