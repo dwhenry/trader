@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://download.finance.yahoo.com/d/quotes.csv?f=sabn&s=GOOG
+    uri: http://download.finance.yahoo.com/d/quotes.csv?f=snab&s=GOOG
     body:
       encoding: US-ASCII
       string: ''

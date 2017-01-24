@@ -6,7 +6,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   class Api
     def self.find(ticker, fields)
-      read "http://download.finance.yahoo.com/d/quotes.csv?sn=#{ticker}&f=s#{fields.join}"
+      read "http://download.finance.yahoo.com/d/quotes.csv?s=#{ticker}&f=sn#{fields.join}"
     end
 
     # def self.dividends(ticker)
@@ -28,7 +28,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   class StubApi
     def self.find(*)
-      [['GOOG', 'N/A', 'Alphabet Inc.', 'GOOG'], ['APPL', 'N/A', 'APPELL PETE CORP', 'APPL']]
+      [['GOOG', 'Alphabet Inc.', '10.5'], ['APPL', 'APPELL PETE CORP', '12.4']]
     end
 
     def self.prices(*)

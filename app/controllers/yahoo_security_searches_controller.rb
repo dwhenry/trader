@@ -1,5 +1,5 @@
 class YahooSecuritySearchesController < ApplicationController
-  DEFAULT_FIELDS = %w(a b n).freeze
+  DEFAULT_FIELDS = %w(a b).freeze
 
   def show
     @fields = params[:fields] = remember_fields(params[:fields])
