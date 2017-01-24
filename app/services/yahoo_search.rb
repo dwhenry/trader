@@ -38,7 +38,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   def self.find(ticker, fields)
     results = api.find(ticker, fields)
-    [headers(fields)] + results.reject { |row| row[1] = 'N/A' }
+    [headers(fields)] + results.reject { |row| row[1] == 'N/A' }
   end
 
   def self.prices(*args)
@@ -47,7 +47,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   def self.headers(fields)
     field_map = FIELDS.values.inject(&:merge)
-    ['symbol', 'name'] + fields.map { |f| field_map[f.to_sym] }
+    %w(symbol name) + fields.map { |f| field_map[f.to_sym] }
   end
 
   def self.fields

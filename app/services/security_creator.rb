@@ -1,6 +1,6 @@
 class SecurityCreator
   def self.from_yahoo(business_id, ticker) # rubocop:disable Metrics/MethodLength
-    results = YahooSearch.find(ticker, %w(n x))
+    results = YahooSearch.find(ticker, %w(x))
     hash = Hash[results[0].zip(results[1])]
 
     ImportPriceData.perform_later(hash['symbol'], period: 'all')
