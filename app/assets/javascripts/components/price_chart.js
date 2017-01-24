@@ -173,7 +173,7 @@
           var rows = grouped[key];
           return [
             rows[0][0],
-            Math.max.apply(null, rows.map(function (x) { return x[1]; })),
+            Math.min.apply(null, rows.map(function (x) { return x[1]; })),
             rows[0][2],
             rows[rows.length - 1][3],
             Math.max.apply(null, rows.map(function (x) { return x[4]; }))
