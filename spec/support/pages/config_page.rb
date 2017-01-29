@@ -14,6 +14,7 @@ class ConfigPage < SitePrism::Page
     element :allow_negative_positions, '.t-allow-negative-positions-yes'
 
     element :save, '.t-save'
+    element :add_field, '.t-add-field-config'
   end
 
   element :new_portfolio_name, '.t-new-portfolio-name'

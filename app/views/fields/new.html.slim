@@ -1,0 +1,52 @@
+.row
+  .col-md-12
+    h1 New Field
+
+.row
+  .col-lg-6
+    = form_for @field, url: config_fields_path do |f|
+      = f.hidden_field :config_id
+
+      .row
+        .form-group.col-md-8.col-xl-6
+          = f.label :name
+          = f.text_field :name, class: 't-name form-control'
+
+      .row
+        .form-group.col-md-8.col-xl-6
+          = f.label :default
+          = f.text_field :default, class: 't-default form-control'
+
+      .row
+        .form-group.col-md-12
+          = f.label :type, 'Type:'
+
+          .form_control
+            .form-check.form-check-inline
+              label.form-check-label
+                = f.radio_button :type, :string, class: 'form-check-input t-text'
+                '  Text
+            .form-check.form-check-inline
+              label.form-check-label
+                = f.radio_button :type, :list, class: 'form-check-input t-lookup'
+                '  Lookup
+            .form-check.form-check-inline
+              label.form-check-label
+                = f.radio_button :type, :boolean, class: 'form-check-input t-choice'
+                '  Choice
+      .row
+        .form-group.col-md-8.col-xl-6
+          .form-check
+            label.form-check-label
+              = f.check_box :validate_presence, class: 't-presence form-check-input'
+              | Validate presence
+      .row
+        .form-group.col-md-8.col-xl-6
+          .form-check
+            label.form-check-label
+              = f.check_box :validate_inclusion, class: 't-presence form-check-input'
+              | Validate inclusion in
+
+      .row
+        .form-group.col-md-4
+          = f.submit 'Create', class: 'btn btn-primary t-create'

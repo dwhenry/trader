@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resource :business, only: %i(update)
     resources :portfolios, only: %i(update create)
     resources :users, only: %i(update create)
+    resources :fields, only: %i(new create)
   end
   resources :events, only: %i(index)
   resources :portfolios, only: %i(show)

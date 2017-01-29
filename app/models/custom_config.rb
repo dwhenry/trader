@@ -20,6 +20,11 @@ class CustomConfig < ApplicationRecord
             inclusion: { in: CONFIG_TYPES }
 
   class << self
+    def fields_for(object)
+      return nil unless object
+      find_by(object_type: object.class.to_s, object_id: object.id, config_type: FIELDS)
+    end
+
     def find_for(object)
       return nil unless object
       find_by(object_type: object.class.to_s, object_id: object.id, config_type: SETTINGS)
