@@ -36,7 +36,7 @@ config-group
             = f.label :configuration do
               b Configuration
               |  - copy the configuration from an existing portfolio.
-              = select_tag :configuration, options_for_select(configuration_options), required: true, class: 'form-control'
+              = select_tag :configuration, options_for_select(copy_portfolio_config_options), required: true, class: 'form-control'
 
         .form_group
           = f.submit 'Create', class: 'btn btn-primary t-add'
