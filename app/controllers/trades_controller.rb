@@ -58,6 +58,7 @@ class TradesController < ApplicationController
         :price,
         :currency,
         :security_id,
+        custom_instance: [:description]
       )
   end
 

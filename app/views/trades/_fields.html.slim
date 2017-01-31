@@ -32,6 +32,13 @@
       .col-xs-4.pull-xs-1
         = f.text_field :currency, class: 'form__currency t-currency form-control'
 
+= f.fields_for(:custom_instance, f.object.custom_instance) do |c|
+  - c.object.each do |cf|
+    .row
+      .form-group.col-md-8.col-xl-6
+        = c.label cf.name
+        = c.text_field cf.name, class: 't-custom-field form-control'
+
 .row
   .form-group.col-md-12
     = f.label :security_id
