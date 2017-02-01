@@ -10,7 +10,7 @@ module CustomFields
   end
 
   def custom_instance=(hash)
-    self.custom = custom_class.new(hash).as_json.reject { |_, b| b.blank? }.presence
+    self.custom = custom_class.clean(hash)
   end
 
   module ClassMethods
@@ -24,12 +24,12 @@ module CustomFields
     end
 
     def custom_class(key_id)
-      name = "CustomTrade#{key_id}"
-      return self.class.const_get(name) if self.class.const_defined?(name)
+      name = "Custom#{key_id}"
+      return const_get(name) if const_defined?(name)
 
       config = CustomConfig.find_by(object_id: key_id, object_type: @_custom_field_class.to_s, config_type: 'fields')
       return CustomField if config.nil?
-      self.class.const_set(name, build_class(config))
+      const_set(name, build_class(config))
     end
 
     private
@@ -49,6 +49,7 @@ module CustomFields
     class << self
       def add_field(name, field_config)
         attr_accessor name
+        private "#{name}="
         fields << OpenStruct.new(name: name)
         set_default(name, field_config['default']) if field_config['default']
       end
@@ -56,6 +57,12 @@ module CustomFields
       def fields
         @fields ||= []
       end
+
+      def clean(hash)
+        new(hash).as_json.reject { |_, v| v.blank? }.presence
+      end
+
+      private
 
       def set_default(name, default)
         define_method :initialize do |*args|
@@ -65,8 +72,23 @@ module CustomFields
       end
     end
 
+    def initialize(*)
+      # accessors need to be public for creation, but are made public
+      # afterwards to try and enforce immutability
+      accessor_methods = self.class.fields.map { |f| "#{f.name}=" }
+      self.class.send :public, *accessor_methods
+      super
+      self.class.send :private, *accessor_methods
+    end
+
     def each(&block)
       self.class.fields.each(&block)
+    end
+
+    def as_json(*)
+      self.class.fields.each_with_object({}) do |field, hash|
+        hash[field.name] = public_send(field.name)
+      end
     end
   end
 end
