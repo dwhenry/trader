@@ -58,7 +58,7 @@ class TradesController < ApplicationController
         :price,
         :currency,
         :security_id,
-        custom_instance: [:description]
+        custom_instance: Trade.custom_class(params[:trade][:portfolio_id]).fields.map(&:name),
       )
   end
 

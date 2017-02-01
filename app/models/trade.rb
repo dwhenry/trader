@@ -1,5 +1,7 @@
 class Trade < ApplicationRecord
   include CustomConfigValidation
+  include CustomFields
+  setup_custom_field :portfolio_id
 
   belongs_to :security
   belongs_to :portfolio
@@ -18,28 +20,6 @@ class Trade < ApplicationRecord
   validates :uid, presence: true, length: { is: 8 }
 
   scope :current, -> { where(current: true) }
-
-  class CustomField
-    include ActiveModel::Model
-
-    attr_accessor :description
-
-    def each(&block)
-      [OpenStruct.new(name: 'description')].each(&block)
-    end
-  end
-
-  def custom_class
-    CustomField
-  end
-
-  def custom_instance
-    custom_class.new(custom)
-  end
-
-  def custom_instance=(hash)
-    self.custom = CustomField.new(hash).as_json.reject { |_, b| b.blank? }.presence
-  end
 
   def validatables
     [self, portfolio, portfolio.business]

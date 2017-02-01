@@ -13,7 +13,7 @@ class NewTradePage < SitePrism::Page
 
   elements :custom_fields, '.t-custom-field'
 
-  def fill_in_trade(custom = {}) # rubocop:disable Metrics/AbcSize
+  def fill_in_trade(custom = {}) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     date.set Time.zone.today
     quantity.set 100
     price.set 12.34

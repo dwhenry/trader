@@ -46,10 +46,11 @@ Style/TrailingCommaInLiteral:
 Rails/NotNullColumn:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
 Metrics/MethodLength:
   Exclude:
     - db/migrate/*
 
-Metrics/BlockLength:
-  Exclude:
-    - spec/*
