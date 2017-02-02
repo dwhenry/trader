@@ -34,6 +34,23 @@ RSpec.feature 'Trade with simple custom string field' do
     end
   end
 
+  scenario 'can override default value' do
+    fields = {
+      animals: FieldConfig.new(
+        name: 'Animal',
+        type: 'string',
+        default: 'Bear',
+      ),
+    }
+
+    new_trade(fields) do |page|
+      page.create_trade(animals: 'Override default')
+
+      expect(Trade.count).to eq(1)
+      expect(Trade.first.custom_instance).to have_attributes(animals: 'Override default')
+    end
+  end
+
   class FieldConfig < OpenStruct
     def as_json(*)
       {

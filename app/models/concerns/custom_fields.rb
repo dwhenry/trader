@@ -40,8 +40,8 @@ module CustomFields
 
     def build_class(config)
       Class.new(CustomField) do
-        config.config.each do |field, field_config|
-          add_field(field, field_config)
+        config.config.each do |key, field_config|
+          add_field(key, field_config)
         end
       end
     end
@@ -51,13 +51,12 @@ module CustomFields
     include ActiveModel::Model
 
     class << self
-      def add_field(name, field_config)
-        attr_accessor name
-        private "#{name}="
-        fields << OpenStruct.new(name: name)
-        set_type(name, field_config['type']) if field_config['type']
-        set_default(name, field_config['default']) if field_config['default']
-        set_validation(name, field_config['validations']) if field_config['validations']
+      def add_field(key, field_config)
+        attr_accessor key
+        private "#{key}="
+        fields << OpenStruct.new(field_config.merge(key: key))
+        set_type(key, field_config['type']) if field_config['type']
+        set_validation(key, field_config['validations']) if field_config['validations']
       end
 
       def fields
@@ -77,13 +76,6 @@ module CustomFields
         end
       end
 
-      def set_default(name, default)
-        define_method :initialize do |*args|
-          super(*args)
-          instance_variable_set("@#{name}", instance_variable_get("@#{name}") || default)
-        end
-      end
-
       def set_validation(name, validations)
         validates name, validations
       end
@@ -92,9 +84,10 @@ module CustomFields
     def initialize(*)
       # accessors need to be public for creation, but are made public
       # afterwards to try and enforce immutability
-      accessor_methods = self.class.fields.map { |f| "#{f.name}=" }
+      accessor_methods = fields.map { |f| "#{f.key}=" }
       self.class.send :public, *accessor_methods
       super
+      fields.each { |field| send("#{field.key}=", send(field.key) || field.default) }
       self.class.send :private, *accessor_methods
     end
 
@@ -103,9 +96,15 @@ module CustomFields
     end
 
     def as_json(*)
-      self.class.fields.each_with_object({}) do |field, hash|
-        hash[field.name] = public_send(field.name)
+      fields.each_with_object({}) do |field, hash|
+        hash[field.key] = public_send(field.key)
       end
+    end
+
+    private
+
+    def fields
+      self.class.fields
     end
   end
 end

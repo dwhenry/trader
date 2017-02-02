@@ -1,9 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe CustomFields do
+  before do
+    expect(CustomConfig).to receive(:find_by).and_return(custom_config)
+  end
   let(:key_id) { SecureRandom.uuid.tr('-', '_') }
   let(:alternative_key_id) { SecureRandom.uuid.tr('-', '_') }
-
+  let(:custom_config) { build(:custom_config, config: config) }
   let(:test_class) do
     self.class.const_set(
       "A#{SecureRandom.uuid}".tr('-', ''),
@@ -17,13 +20,10 @@ RSpec.describe CustomFields do
   end
 
   describe '#custom_class' do
-    before do
-      expect(CustomConfig).to receive(:find_by).and_return(config)
-    end
     subject { test_class.new(key_id: 8).custom_instance }
 
     context 'when no configuration is provided' do
-      let(:config) { nil }
+      let(:custom_config) { nil }
 
       it 'uses the base class' do
         expect(test_class.custom_class(10)).to eq(CustomFields::CustomField)
@@ -31,7 +31,7 @@ RSpec.describe CustomFields do
     end
 
     context 'when configuration does exist' do
-      let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit' } }) }
+      let(:config) { { fruit: { name: 'Fruit' } } }
 
       it 'uses a custom class' do
         expect(test_class.custom_class(10)).not_to eq(CustomFields::CustomField)
@@ -44,11 +44,8 @@ RSpec.describe CustomFields do
   end
 
   describe '#custom_instance' do
-    before do
-      expect(CustomConfig).to receive(:find_by).and_return(config)
-    end
     subject { test_class.new(key_id: 8, custom: custom).custom_instance }
-    let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit' } }) }
+    let(:config) { { fruit: { name: 'Fruit' } } }
     let(:custom) { nil }
 
     it 'create an instance of the custom_class' do
@@ -76,10 +73,21 @@ RSpec.describe CustomFields do
     end
 
     context 'when the field has a default value' do
-      let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit', default: 'pears' } }) }
+      let(:config) { { fruit: { name: 'Fruit', default: 'pears' } } }
 
       it 'initializes with the default' do
         expect(subject.fruit).to eq('pears')
+      end
+    end
+
+    context 'multiple fields with default value' do
+      let(:config) { { fruit: { default: 'pears' }, animal: { default: 'bear' } } }
+
+      it 'initializes with the default' do
+        expect(subject).to have_attributes(
+          fruit: 'pears',
+          animal: 'bear',
+        )
       end
     end
 
@@ -89,11 +97,8 @@ RSpec.describe CustomFields do
   end
 
   describe '#custom_instance=' do
-    before do
-      expect(CustomConfig).to receive(:find_by).and_return(config)
-    end
     subject { test_class.new(key_id: 6) }
-    let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit' } }) }
+    let(:config) { { fruit: { name: 'Fruit' } } }
 
     it 'will only accepts know fields' do
       expect { subject.custom_instance = { animals: 'bears' } }.to raise_error(ActiveModel::UnknownAttributeError)
@@ -111,11 +116,8 @@ RSpec.describe CustomFields do
   end
 
   describe 'validations' do
-    before do
-      expect(CustomConfig).to receive(:find_by).and_return(config)
-    end
     subject { test_class.new(key_id: 6) }
-    let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit', validations: validations } }) }
+    let(:config) { { fruit: { name: 'Fruit', validations: validations } } }
 
     describe 'presence' do
       let(:validations) { { presence: true } }
@@ -141,13 +143,10 @@ RSpec.describe CustomFields do
   end
 
   describe 'types of fields' do
-    before do
-      expect(CustomConfig).to receive(:find_by).and_return(config)
-    end
     subject { test_class.new(key_id: 6) }
 
     context 'number' do
-      let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit', type: 'number' } }) }
+      let(:config) { { fruit: { name: 'Fruit', type: 'number' } } }
 
       it 'automatically adds a numerically validator' do
         subject.custom_instance = { fruit: 'apples' }
