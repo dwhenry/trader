@@ -1,6 +1,7 @@
 class CustomConfig < ApplicationRecord
   CONFIG_TYPES = [
     SETTINGS = 'settings'.freeze,
+    FIELDS = 'fields'.freeze,
   ].freeze
 
   DEFAULT_CONFIG = {

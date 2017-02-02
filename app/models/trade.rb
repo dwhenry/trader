@@ -1,5 +1,7 @@
 class Trade < ApplicationRecord
   include CustomConfigValidation
+  include CustomFields
+  setup_custom_field :portfolio_id
 
   belongs_to :security
   belongs_to :portfolio
