@@ -1,6 +1,10 @@
 module CustomFields
   extend ActiveSupport::Concern
 
+  included do
+    validates_with ActiveRecord::Validations::AssociatedValidator, attributes: [:custom_instance]
+  end
+
   def custom_class
     @custom_class ||= self.class.custom_class(public_send(self.class.custom_field_key))
   end
@@ -52,6 +56,7 @@ module CustomFields
         private "#{name}="
         fields << OpenStruct.new(name: name)
         set_default(name, field_config['default']) if field_config['default']
+        set_validation(name, field_config['validations']) if field_config['validations']
       end
 
       def fields
@@ -69,6 +74,10 @@ module CustomFields
           super(*args)
           instance_variable_set("@#{name}", instance_variable_get("@#{name}") || default)
         end
+      end
+
+      def set_validation(name, validations)
+        validates name, validations
       end
     end
 
