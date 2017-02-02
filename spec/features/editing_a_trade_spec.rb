@@ -36,8 +36,9 @@ RSpec.feature 'Editing a trade' do
         user_id: user.id,
         object_id: trade.backoffice.id,
         parent_id: trade_event.id,
-        details: { 'trade_version' => [1, 2] },
+        details: { 'trade_version' => [1, 3] },
       )
+      expect(Trade.pluck(:version)).to include(1, 2, 3)
     end
   end
 
