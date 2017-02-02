@@ -5,17 +5,22 @@ RSpec.describe CustomFields do
   let(:alternative_key_id) { SecureRandom.uuid.tr('-', '_') }
 
   let(:test_class) do
-    Class.new(Struct.new(:key_id, :custom)) do
-      include CustomFields
-      setup_custom_field :key_id
-    end
+    self.class.const_set(
+      "A#{SecureRandom.uuid}".tr('-', ''),
+      Class.new do
+        include ActiveModel::Model
+        attr_accessor :key_id, :custom
+        include CustomFields
+        setup_custom_field :key_id
+      end,
+    )
   end
 
   describe '#custom_class' do
     before do
       expect(CustomConfig).to receive(:find_by).and_return(config)
     end
-    subject { test_class.new(8).custom_instance }
+    subject { test_class.new(key_id: 8).custom_instance }
 
     context 'when no configuration is provided' do
       let(:config) { nil }
@@ -42,7 +47,7 @@ RSpec.describe CustomFields do
     before do
       expect(CustomConfig).to receive(:find_by).and_return(config)
     end
-    subject { test_class.new(8, custom).custom_instance }
+    subject { test_class.new(key_id: 8, custom: custom).custom_instance }
     let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit' } }) }
     let(:custom) { nil }
 
@@ -87,7 +92,7 @@ RSpec.describe CustomFields do
     before do
       expect(CustomConfig).to receive(:find_by).and_return(config)
     end
-    subject { test_class.new(8) }
+    subject { test_class.new(key_id: 6) }
     let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit' } }) }
 
     it 'will only accepts know fields' do
@@ -102,6 +107,55 @@ RSpec.describe CustomFields do
     it 'writes know fields to the custom field when using text keys' do
       subject.custom_instance = { 'fruit' => 'melon' }
       expect(subject.custom).to eq('fruit' => 'melon')
+    end
+  end
+
+  describe 'validations' do
+    before do
+      expect(CustomConfig).to receive(:find_by).and_return(config)
+    end
+    subject { test_class.new(key_id: 6) }
+    let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit', validations: validations } }) }
+
+    describe 'presence' do
+      let(:validations) { { presence: true } }
+
+      it 'invalid when field is blank' do
+        expect(subject.custom_instance).not_to be_valid
+      end
+
+      it 'valid when field is set' do
+        subject.custom_instance = { fruit: 'apples' }
+        expect(subject.custom_instance).to be_valid
+      end
+
+      it 'makes the base object invalid as well' do
+        expect(subject).not_to be_valid
+      end
+
+      it 'puts error on the base class' do
+        subject.valid?
+        expect(subject.errors.full_messages).to eq(['Custom instance is invalid'])
+      end
+    end
+  end
+
+  describe 'types of fields' do
+    before do
+      expect(CustomConfig).to receive(:find_by).and_return(config)
+    end
+    subject { test_class.new(key_id: 6) }
+
+    context 'number' do
+      let(:config) { build(:custom_config, config: { fruit: { name: 'Fruit', type: 'number' } }) }
+
+      it 'automatically adds a numerically validator' do
+        subject.custom_instance = { fruit: 'apples' }
+        expect(subject.custom_instance).not_to be_valid
+
+        subject.custom_instance = { fruit: 10 }
+        expect(subject.custom_instance).to be_valid
+      end
     end
   end
 end

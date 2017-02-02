@@ -55,6 +55,7 @@ module CustomFields
         attr_accessor name
         private "#{name}="
         fields << OpenStruct.new(name: name)
+        set_type(name, field_config['type']) if field_config['type']
         set_default(name, field_config['default']) if field_config['default']
         set_validation(name, field_config['validations']) if field_config['validations']
       end
@@ -68,6 +69,13 @@ module CustomFields
       end
 
       private
+
+      def set_type(name, type)
+        case type
+        when 'number'
+          set_validation name, numericality: true
+        end
+      end
 
       def set_default(name, default)
         define_method :initialize do |*args|
