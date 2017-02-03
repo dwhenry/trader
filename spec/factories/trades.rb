@@ -9,8 +9,11 @@ FactoryGirl.define do
     after(:create) { |trade| Backoffice.create_from!(trade) }
 
     trait :fully_setup do
-      portfolio { create(:portfolio, business: create(:business)) }
-      security { create(:security, business: create(:business)) }
+      ignore do
+        business { create(:business, name: 'shared') }
+      end
+      portfolio { create(:portfolio, business: business) }
+      security { create(:security, business: business) }
     end
   end
 end

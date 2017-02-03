@@ -46,7 +46,9 @@ RSpec.feature 'Custom config field' do
   scenario 'adding a field to a portfolio with trades will generate a new portfolio version' do
     pending
     new_field_config do |page, portfolio|
-      create(:trade, portfolio: portfolio)
+      security = create(:security, business: portfolio.business)
+      create(:trade, portfolio: portfolio, security: security)
+
       config_page = ConfigFieldPage.new
       config_page.add_fruit_field
 
