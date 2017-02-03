@@ -27,21 +27,6 @@ class Event < ApplicationRecord
 
   def filtered_details
     filtered = details.except('trade_uid', 'trade_version', 'object_type', 'config_type')
-
-    return filtered.sort unless filtered['config']
-
-    hash = {}
-    build_config_history(filtered['config'][OLD_POS], hash, OLD_POS)
-    build_config_history(filtered['config'][CURRENT_POS], hash, CURRENT_POS)
-    filtered.delete('config')
-    filtered.merge(hash).sort
-  end
-
-  def build_config_history(records, hash, index)
-    return unless records
-    records.each do |key, value|
-      hash[key] ||= [nil, nil]
-      hash[key][index] = value
-    end
+    filtered.sort
   end
 end

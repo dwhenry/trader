@@ -10,10 +10,11 @@ module CustomFields
   end
 
   def custom_instance
-    custom_class.new(custom)
+    @custom_instance ||= custom_class.new(custom)
   end
 
   def custom_instance=(hash)
+    @custom_instance = nil
     self.custom = custom_class.clean(hash)
   end
 

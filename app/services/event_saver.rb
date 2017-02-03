@@ -57,7 +57,7 @@ class EventSaver
   def clean(changes)
     changes = changes.except('id', 'version', 'created_at', 'updated_at')
 
-    %w(config).each do |key|
+    %w(config custom).each do |key|
       next unless changes.key?(key)
       changes = changes.except('object_id', 'object_type', 'config_type')
       changes.merge!(transform_field(*changes.delete(key)))
