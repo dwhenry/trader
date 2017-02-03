@@ -40,17 +40,13 @@ RSpec.feature 'Successfully logs events' do
           [
             'create',
             'CustomConfig',
-            {
-              'config' => [nil, { 'allow_negative_positions' => 'no' }],
-              'config_type' => [nil, 'settings'],
-              'object_type' => [nil, 'Portfolio'],
-            },
+            'allow_negative_positions' => [nil, 'no'],
           ],
           ['edit', 'Portfolio', { 'name' => ['Bobs trades', 'Dans trades'] }],
           [
             'edit',
             'CustomConfig',
-            { 'config' => [{ 'allow_negative_positions' => 'no' }, { 'allow_negative_positions' => 'yes' }] },
+            'allow_negative_positions' => %w(no yes),
           ],
         ],
       )

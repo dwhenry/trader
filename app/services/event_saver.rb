@@ -8,7 +8,7 @@ class EventSaver
     Event.create!(
       object_to_logables(object).merge(
         event_type: get_event_type(object),
-        details: changes.except('id', 'version', 'created_at', 'updated_at'),
+        details: clean(changes),
         user: @user,
         object_type: object.class,
         object_id: object.id,
@@ -52,5 +52,25 @@ class EventSaver
     return object if object.is_a?(Business)
     return object.object if object.is_a?(CustomConfig) && object.object.is_a?(Business)
     nil
+  end
+
+  def clean(changes)
+    changes = changes.except('id', 'version', 'created_at', 'updated_at')
+
+    %w(config).each do |key|
+      next unless changes.key?(key)
+      changes = changes.except('object_id', 'object_type', 'config_type')
+      changes.merge!(transform_field(*changes.delete(key)))
+    end
+    changes
+  end
+
+  def transform_field(from, to)
+    from ||= {}
+    to ||= {}
+    fields = from.keys | to.keys
+    fields.each_with_object({}) do |field, hash|
+      hash[field] = [from[field], to[field]]
+    end
   end
 end

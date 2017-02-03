@@ -4,9 +4,9 @@
 
 .row
   .col-lg-6
-    = form_for @field, url: config_fields_path do |f|
-      = f.hidden_field :config_id
-
+    = form_for @field, as: :field_form, url: config_fields_path do |f|
+      = f.hidden_field :object_id
+      = f.hidden_field :object_type
       .row
         .form-group.col-md-8.col-xl-6
           = f.label :name
@@ -19,34 +19,25 @@
 
       .row
         .form-group.col-md-12
-          = f.label :type, 'Type:'
+          h3 Field Type
 
           .form_control
             .form-check.form-check-inline
               label.form-check-label
-                = f.radio_button :type, :string, class: 'form-check-input t-text'
+                = f.radio_button :type, :string, class: 'form-check-input t-type'
                 '  Text
             .form-check.form-check-inline
               label.form-check-label
-                = f.radio_button :type, :list, class: 'form-check-input t-lookup'
-                '  Lookup
-            .form-check.form-check-inline
-              label.form-check-label
-                = f.radio_button :type, :boolean, class: 'form-check-input t-choice'
-                '  Choice
+                = f.radio_button :type, :number, class: 'form-check-input t-type'
+                '  Number
       .row
         .form-group.col-md-8.col-xl-6
+          h3 Validations
           .form-check
             label.form-check-label
-              = f.check_box :validate_presence, class: 't-presence form-check-input'
-              | Validate presence
-      .row
-        .form-group.col-md-8.col-xl-6
-          .form-check
-            label.form-check-label
-              = f.check_box :validate_inclusion, class: 't-presence form-check-input'
-              | Validate inclusion in
+              = f.check_box :validates_presence, class: 't-validates-presence form-check-input'
+              | Presence
 
       .row
         .form-group.col-md-4
-          = f.submit 'Create', class: 'btn btn-primary t-create'
+          = f.submit 'Save', class: 'btn btn-primary t-save-button'

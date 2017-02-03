@@ -30,9 +30,9 @@ class CustomConfig < ApplicationRecord
       find_by(object_type: object.class.to_s, object_id: object.id, config_type: SETTINGS)
     end
 
-    def find_or_initialize_for(object)
+    def find_or_initialize_for(object, config_type: SETTINGS)
       return nil unless object
-      find_or_initialize_by(object_type: object.class.to_s, object_id: object.id, config_type: SETTINGS)
+      find_or_initialize_by(object_type: object.class.to_s, object_id: object.id, config_type: config_type)
     end
 
     def defaults(object)

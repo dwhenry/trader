@@ -2,7 +2,7 @@ module CustomFields
   class FieldDefinition
     attr_reader :default, :key, :type, :validations
 
-    def initialize(options={})
+    def initialize(options = {})
       options = options.with_indifferent_access
       @default = options[:default]
       @key = options.fetch(:key)

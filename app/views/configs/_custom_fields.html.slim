@@ -1,0 +1,18 @@
+.col-md-12
+  h3 Trade fields
+.col-md-12
+  .table-responsive
+    table.table.table-striped
+      thead
+        tr
+          th Name
+          th Default
+          th Type
+          th Validations
+      tbody
+        - config.each do |key, details|
+          tr.t-field
+            td= details['name']
+            td= details['default']
+            td= details['type'].humanize
+            td= details['validations'] && details['validations'].keys.to_sentence.humanize

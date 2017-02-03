@@ -9,9 +9,9 @@ Rails.application.routes.draw do
   resource :business, only: %i(show new create)
   resource :config, only: %i(show update) do
     resource :business, only: %i(update)
+    resources :fields, only: %i(new create)
     resources :portfolios, only: %i(update create)
     resources :users, only: %i(update create)
-    resources :fields, only: %i(new create)
   end
   resources :events, only: %i(index)
   resources :portfolios, only: %i(show)
