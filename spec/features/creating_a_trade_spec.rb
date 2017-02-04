@@ -27,7 +27,6 @@ RSpec.feature 'Creating a trade' do
         object_id: trade.id,
         parent_id: nil,
         details: {
-          'uid' => ['', trade.uid],
           'date' => [nil, Time.zone.today.strftime('%Y-%m-%d')],
           'price' => [nil, '12.34'],
           'currency' => [nil, 'AUD'],

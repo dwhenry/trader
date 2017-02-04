@@ -55,7 +55,7 @@ class EventSaver
   end
 
   def clean(changes)
-    changes = changes.except('id', 'version', 'created_at', 'updated_at')
+    changes = changes.except('uid', 'id', 'version', 'created_at', 'updated_at')
 
     %w(config custom).each do |key|
       next unless changes.key?(key)

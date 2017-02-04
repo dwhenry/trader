@@ -38,21 +38,37 @@ class FieldsController < ApplicationController
   end
 
   def update_config(field)
-    if portfolio.trades.any?
-      # clone portfolio
-      raise 'not here'
-    else
-      custom_config.config ||= {}
-      custom_config.config.merge!(field.as_json)
-      save_with_events(custom_config)
-    end
+    new_portfolio = portfolio.trades.any? ? clone_portfolio(portfolio) : portfolio
+
+    custom_config = custom_config(new_portfolio)
+    custom_config.config ||= {}
+    custom_config.config.merge!(field.as_json)
+    save_with_events(custom_config)
   end
 
-  def custom_config
-    @custom_config ||= CustomConfig.find_or_initialize_by(config_params)
+  def custom_config(portfolio)
+    CustomConfig.find_or_initialize_by(
+      object_id: portfolio.id,
+      object_type: 'Portfolio',
+      config_type: CustomConfig::FIELDS,
+    )
   end
 
   def portfolio
-    @portfolio ||= custom_config.object
+    @portfolio ||= Portfolio.find(config_params[:object_id])
+  end
+
+  def clone_portfolio(portfolio)
+    new_portfolio = portfolio.dup
+    new_portfolio.version += 1
+    portfolio.update!(current: false)
+    new_portfolio.save!
+
+    CustomConfig.where(object_id: portfolio.id, object_type: 'Portfolio').each do |config|
+      new_config = config.dup
+      new_config.object_id = new_portfolio.id
+      new_config.save!
+    end
+    new_portfolio
   end
 end

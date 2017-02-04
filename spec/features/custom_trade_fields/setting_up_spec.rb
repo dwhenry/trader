@@ -44,7 +44,6 @@ RSpec.feature 'Custom config field' do
   end
 
   scenario 'adding a field to a portfolio with trades will generate a new portfolio version' do
-    pending
     new_field_config do |page, portfolio|
       security = create(:security, business: portfolio.business)
       create(:trade, portfolio: portfolio, security: security)
@@ -54,8 +53,9 @@ RSpec.feature 'Custom config field' do
 
       expect(page.portfolios.first.fields.count).to eq(1)
 
-      expect(Portfolio.count).to eq(2)
-      expect(Portfolio.uniq.pluck(:uid).count).to eq(1)
+      expect(Portfolio.unscope(:where).count).to eq(2)
+      expect(Portfolio.unscope(:where).distinct.pluck(:uid).count).to eq(1)
+      expect(Event.find_by(object_type: 'Portfolio', event_type: 'edit')).to be_nil
     end
   end
 

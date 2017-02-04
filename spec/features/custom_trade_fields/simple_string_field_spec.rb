@@ -18,7 +18,6 @@ RSpec.feature 'Trade with simple custom string field' do
       trade_event = Event.find_by(object_type: 'Trade', event_type: 'create')
       expect(trade_event).to have_attributes(
         details: {
-          'uid' => ['', trade_event.trade.uid],
           'date' => [nil, Time.zone.today.strftime('%Y-%m-%d')],
           'price' => [nil, '12.34'],
           'currency' => [nil, 'AUD'],
