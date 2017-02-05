@@ -23,7 +23,7 @@ class EventSaver
     business = get_business(portfolio, object)
     {
       trade: trade,
-      portfolio: portfolio,
+      portfolio_uid: portfolio&.uid,
       business: business,
     }
   end

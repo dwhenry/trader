@@ -25,12 +25,12 @@ RSpec.feature 'Successfully logs events' do
       portfolio_edit_event_id = Event.find_by(event_type: 'edit', object_type: 'Portfolio').id
       portfolio_config_id = CustomConfig.find_for(portfolio).id
 
-      expect(Event.pluck(:portfolio_id, :event_type, :user_id, :object_type, :object_id, :parent_id)).to eq(
+      expect(Event.pluck(:portfolio_uid, :event_type, :user_id, :object_type, :object_id, :parent_id)).to eq(
         [
-          [portfolio.id, 'create', user.id, 'Portfolio', portfolio.id, nil],
-          [portfolio.id, 'create', user.id, 'CustomConfig', portfolio_config_id, portfolio_create_event_id],
-          [portfolio.id, 'edit', user.id, 'Portfolio', portfolio.id, nil],
-          [portfolio.id, 'edit', user.id, 'CustomConfig', portfolio_config_id, portfolio_edit_event_id],
+          [portfolio.uid, 'create', user.id, 'Portfolio', portfolio.id, nil],
+          [portfolio.uid, 'create', user.id, 'CustomConfig', portfolio_config_id, portfolio_create_event_id],
+          [portfolio.uid, 'edit', user.id, 'Portfolio', portfolio.id, nil],
+          [portfolio.uid, 'edit', user.id, 'CustomConfig', portfolio_config_id, portfolio_edit_event_id],
         ],
       )
 

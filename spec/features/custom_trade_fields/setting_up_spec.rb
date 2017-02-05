@@ -37,7 +37,7 @@ RSpec.feature 'Custom config field' do
         event_type: 'create',
         object_type: 'CustomConfig',
         parent_id: nil,
-        portfolio_id: portfolio.id,
+        portfolio_uid: portfolio.uid,
         trade_uid: nil,
       )
     end
