@@ -59,9 +59,47 @@ RSpec.feature 'Custom config field' do
     end
   end
 
-  def new_field_config
+  scenario 'edit a custom field with existing trades' do
+    new_field_config(fruit_field: { name: 'Old fruit' }) do |page, portfolio|
+      security = create(:security, business: portfolio.business)
+      create(:trade, portfolio: portfolio, security: security)
+
+      config_page = ConfigFieldPage.new
+      config_page.add_fruit_field
+
+      expect(page.portfolios.first.fields.count).to eq(1)
+
+      event = Event.find_by(object_type: 'CustomConfig', event_type: 'edit')
+      expect(event).to have_attributes(
+        details: {
+          'fruit_field' => [
+            { 'name' => 'Old fruit' },
+            {
+              'name' => 'Fruit field',
+              'type' => 'string',
+              'default' => 'apples',
+              'validations' => { 'presence' => true },
+            },
+          ],
+        },
+      )
+    end
+  end
+
+  def new_field_config(field_config = nil) # rubocop:disable Metrics/MethodLength
     business = create(:business, :with_config)
     portfolio = create(:portfolio, :with_config, business: business)
+
+    if field_config
+      create(
+        :custom_config,
+        object_id: portfolio.id,
+        object_type: 'Portfolio',
+        config_type: CustomConfig::FIELDS,
+        config: field_config,
+      )
+    end
+
     user = create(:user, business: business)
 
     with_user(user) do

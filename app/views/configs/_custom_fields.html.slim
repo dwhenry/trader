@@ -14,5 +14,5 @@
           tr.t-field
             td= details['name']
             td= details['default']
-            td= details['type'].humanize
+            td= (details['type'] || '').humanize
             td= details['validations'] && details['validations'].keys.to_sentence.humanize

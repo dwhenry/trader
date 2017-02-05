@@ -1,4 +1,5 @@
 class FieldForm
+  TYPES = %w(string number).freeze
   include ActiveModel::Model
 
   attr_accessor :object_id, :object_type, :config_type, :name, :type, :default
@@ -6,7 +7,7 @@ class FieldForm
 
   validates :object_id, :object_type, presence: true
   validates :name, presence: true
-  validates :type, presence: true
+  validates :type, presence: true, inclusion: TYPES
 
   def as_json
     hash = {
