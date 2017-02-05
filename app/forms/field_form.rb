@@ -2,10 +2,10 @@ class FieldForm
   TYPES = %w(string number).freeze
   include ActiveModel::Model
 
-  attr_accessor :object_id, :object_type, :config_type, :name, :type, :default
+  attr_accessor :owner_id, :owner_type, :config_type, :name, :type, :default
   attr_accessor :validates_presence
 
-  validates :object_id, :object_type, presence: true
+  validates :owner_id, :owner_type, presence: true
   validates :name, presence: true
   validates :type, presence: true, inclusion: TYPES
 

@@ -14,25 +14,25 @@ class CustomConfig < ApplicationRecord
     reporting_currency: { type: :select, options: %w(AUD USD) },
   }.freeze
 
-  belongs_to :object, polymorphic: true
+  belongs_to :owner, polymorphic: true
   validates :config_type,
-            uniqueness: { scope: [:object_type, :object_id] },
+            uniqueness: { scope: [:owner_type, :owner_id] },
             inclusion: { in: CONFIG_TYPES }
 
   class << self
     def fields_for(object)
       return nil unless object
-      find_by(object_type: object.class.to_s, object_id: object.id, config_type: FIELDS)
+      find_by(owner_type: object.class.to_s, owner_id: object.id, config_type: FIELDS)
     end
 
     def find_for(object)
       return nil unless object
-      find_by(object_type: object.class.to_s, object_id: object.id, config_type: SETTINGS)
+      find_by(owner_type: object.class.to_s, owner_id: object.id, config_type: SETTINGS)
     end
 
-    def find_or_initialize_for(object, config_type: SETTINGS)
-      return nil unless object
-      find_or_initialize_by(object_type: object.class.to_s, object_id: object.id, config_type: config_type)
+    def find_or_initialize_for(owner, config_type: SETTINGS)
+      return nil unless owner
+      find_or_initialize_by(owner_type: owner.class.to_s, owner_id: owner.id, config_type: config_type)
     end
 
     def defaults(object)

@@ -7,12 +7,12 @@ module BuildConfig
 
   private
 
-  def config_for(object, clone_id: nil, params: {}, config_type: CustomConfig::SETTINGS)
-    config = CustomConfig.find_or_initialize_for(object, config_type: config_type)
-    config.object = object
-    clone = object.class.find_by(id: clone_id)
+  def config_for(owner, clone_id: nil, params: {}, config_type: CustomConfig::SETTINGS)
+    config = CustomConfig.find_or_initialize_for(owner, config_type: config_type)
+    config.owner = owner # needed for a new portfolio ID is nil, this is then updated when it is saved.
+    clone = owner.class.find_by(id: clone_id)
     attributes = if config_type == CustomConfig::SETTINGS
-                   CustomConfig.find_for(clone)&.config || CustomConfig.defaults(object) || {}
+                   CustomConfig.find_for(clone)&.config || CustomConfig.defaults(owner) || {}
                  else
                    {}
                  end

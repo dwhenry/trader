@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170205222235) do
+ActiveRecord::Schema.define(version: 20170205225310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(version: 20170205222235) do
   end
 
   create_table "custom_configs", force: :cascade do |t|
-    t.string   "object_type"
-    t.string   "object_id"
+    t.string   "owner_type"
+    t.string   "owner_id"
     t.jsonb    "config"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
@@ -51,9 +51,9 @@ ActiveRecord::Schema.define(version: 20170205222235) do
     t.jsonb    "details"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
-    t.string   "object_type",   null: false
+    t.string   "owner_type",    null: false
     t.integer  "parent_id"
-    t.integer  "object_id"
+    t.integer  "owner_id"
     t.string   "trade_uid"
     t.string   "portfolio_uid"
     t.index ["business_id"], name: "index_events_on_business_id", using: :btree

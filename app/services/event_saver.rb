@@ -10,8 +10,8 @@ class EventSaver
         event_type: get_event_type(object),
         details: clean(changes),
         user: @user,
-        object_type: object.class,
-        object_id: object.id,
+        owner_type: object.class,
+        owner_id: object.id,
         parent: parent_event,
       ),
     )
@@ -43,14 +43,14 @@ class EventSaver
     return trade.portfolio if trade
     return object if object.is_a?(Portfolio)
     return object.portfolio if object.respond_to?(:portfolio)
-    return object.object if object.is_a?(CustomConfig) && object.object.is_a?(Portfolio)
+    return object.owner if object.is_a?(CustomConfig) && object.owner.is_a?(Portfolio)
     nil
   end
 
   def get_business(portfolio, object)
     return portfolio.business if portfolio
     return object if object.is_a?(Business)
-    return object.object if object.is_a?(CustomConfig) && object.object.is_a?(Business)
+    return object.owner if object.is_a?(CustomConfig) && object.owner.is_a?(Business)
     nil
   end
 
@@ -59,7 +59,7 @@ class EventSaver
 
     %w(config custom).each do |key|
       next unless changes.key?(key)
-      changes = changes.except('object_id', 'object_type', 'config_type')
+      changes = changes.except('owner_id', 'owner_type', 'config_type')
       changes.merge!(transform_field(*changes.delete(key)))
     end
     changes

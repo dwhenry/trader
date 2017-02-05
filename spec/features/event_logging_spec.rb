@@ -21,11 +21,11 @@ RSpec.feature 'Successfully logs events' do
       portfolio_section.save.click
 
       portfolio = Portfolio.find_by(name: 'Dans trades')
-      portfolio_create_event_id = Event.find_by(event_type: 'create', object_type: 'Portfolio').id
-      portfolio_edit_event_id = Event.find_by(event_type: 'edit', object_type: 'Portfolio').id
+      portfolio_create_event_id = Event.find_by(event_type: 'create', owner_type: 'Portfolio').id
+      portfolio_edit_event_id = Event.find_by(event_type: 'edit', owner_type: 'Portfolio').id
       portfolio_config_id = CustomConfig.find_for(portfolio).id
 
-      expect(Event.pluck(:portfolio_uid, :event_type, :user_id, :object_type, :object_id, :parent_id)).to eq(
+      expect(Event.pluck(:portfolio_uid, :event_type, :user_id, :owner_type, :owner_id, :parent_id)).to eq(
         [
           [portfolio.uid, 'create', user.id, 'Portfolio', portfolio.id, nil],
           [portfolio.uid, 'create', user.id, 'CustomConfig', portfolio_config_id, portfolio_create_event_id],
@@ -34,7 +34,7 @@ RSpec.feature 'Successfully logs events' do
         ],
       )
 
-      expect(Event.pluck(:event_type, :object_type, :details)).to eq(
+      expect(Event.pluck(:event_type, :owner_type, :details)).to eq(
         [
           ['create', 'Portfolio', { 'name' => [nil, 'Bobs trades'], 'business_id' => [nil, business.id] }],
           [

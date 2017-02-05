@@ -18,8 +18,8 @@ class FieldsController < ApplicationController
   def config_params
     hash = params[:field_form] || params
     {
-      object_id: hash.fetch(:object_id),
-      object_type: hash.fetch(:object_type),
+      owner_id: hash.fetch(:owner_id),
+      owner_type: hash.fetch(:owner_type),
       config_type: CustomConfig::FIELDS,
     }
   end
@@ -28,8 +28,8 @@ class FieldsController < ApplicationController
     params
       .require(:field_form)
       .permit(
-        :object_id,
-        :object_type,
+        :owner_id,
+        :owner_type,
         :name,
         :type,
         :default,
@@ -48,14 +48,14 @@ class FieldsController < ApplicationController
 
   def custom_config(portfolio)
     CustomConfig.find_or_initialize_by(
-      object_id: portfolio.id,
-      object_type: 'Portfolio',
+      owner_id: portfolio.id,
+      owner_type: 'Portfolio',
       config_type: CustomConfig::FIELDS,
     )
   end
 
   def portfolio
-    @portfolio ||= Portfolio.find(config_params[:object_id])
+    @portfolio ||= Portfolio.find(config_params[:owner_id])
   end
 
   def clone_portfolio(portfolio)
@@ -64,9 +64,9 @@ class FieldsController < ApplicationController
     portfolio.update!(current: false)
     new_portfolio.save!
 
-    CustomConfig.where(object_id: portfolio.id, object_type: 'Portfolio').each do |config|
+    CustomConfig.where(owner_id: portfolio.id, owner_type: 'Portfolio').each do |config|
       new_config = config.dup
-      new_config.object_id = new_portfolio.id
+      new_config.owner_id = new_portfolio.id
       new_config.save!
     end
     new_portfolio

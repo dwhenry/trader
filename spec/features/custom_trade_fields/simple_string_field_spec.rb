@@ -15,7 +15,7 @@ RSpec.feature 'Trade with simple custom string field' do
       expect(Trade.count).to eq(1)
       expect(Trade.first.custom_instance).to have_attributes(description: 'No default')
 
-      trade_event = Event.find_by(object_type: 'Trade', event_type: 'create')
+      trade_event = Event.find_by(owner_type: 'Trade', event_type: 'create')
       expect(trade_event).to have_attributes(
         details: {
           'date' => [nil, Time.zone.today.strftime('%Y-%m-%d')],
@@ -80,7 +80,7 @@ RSpec.feature 'Trade with simple custom string field' do
     create(:security, business: business)
     user = create(:user, business: business)
 
-    create(:custom_config, object: portfolio, config_type: 'fields', config: config_fields.as_json)
+    create(:custom_config, owner: portfolio, config_type: 'fields', config: config_fields.as_json)
 
     with_user(user) do
       page = PortfolioPage.new

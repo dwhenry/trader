@@ -35,7 +35,7 @@ RSpec.feature 'Custom config field' do
           ],
         },
         event_type: 'create',
-        object_type: 'CustomConfig',
+        owner_type: 'CustomConfig',
         parent_id: nil,
         portfolio_uid: portfolio.uid,
         trade_uid: nil,
@@ -55,7 +55,7 @@ RSpec.feature 'Custom config field' do
 
       expect(Portfolio.unscope(:where).count).to eq(2)
       expect(Portfolio.unscope(:where).distinct.pluck(:uid).count).to eq(1)
-      expect(Event.find_by(object_type: 'Portfolio', event_type: 'edit')).to be_nil
+      expect(Event.find_by(owner_type: 'Portfolio', event_type: 'edit')).to be_nil
     end
   end
 
@@ -69,7 +69,7 @@ RSpec.feature 'Custom config field' do
 
       expect(page.portfolios.first.fields.count).to eq(1)
 
-      event = Event.find_by(object_type: 'CustomConfig', event_type: 'edit')
+      event = Event.find_by(owner_type: 'CustomConfig', event_type: 'edit')
       expect(event).to have_attributes(
         details: {
           'fruit_field' => [
@@ -93,8 +93,8 @@ RSpec.feature 'Custom config field' do
     if field_config
       create(
         :custom_config,
-        object_id: portfolio.id,
-        object_type: 'Portfolio',
+        owner_id: portfolio.id,
+        owner_type: 'Portfolio',
         config_type: CustomConfig::FIELDS,
         config: field_config,
       )

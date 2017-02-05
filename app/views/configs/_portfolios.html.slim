@@ -17,7 +17,7 @@
       .row
         .form_group.col-md-12
           = f.submit 'Update', class: 'btn btn-primary t-save'
-          = link_to 'Add field', new_config_field_path(object_type: 'Portfolio', object_id: current_portfolio), class: 'btn btn-info t-add-field-config'
+          = link_to 'Add field', new_config_field_path(owner_type: 'Portfolio', owner_id: current_portfolio), class: 'btn btn-info t-add-field-config'
 
 config-group
   .row
