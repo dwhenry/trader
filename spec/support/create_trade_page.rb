@@ -5,7 +5,7 @@ module CreateTradePage
     create(:security, business: business)
     user = create(:user, business: business)
 
-    create(:custom_config, owner: portfolio, config_type: 'fields', config: config_fields.as_json)
+    create(:custom_config, owner: portfolio, config_type: CustomConfig::TRADE_FIELDS, config: config_fields.as_json)
 
     with_user(user) do
       page = PortfolioPage.new

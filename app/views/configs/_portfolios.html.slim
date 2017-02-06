@@ -11,9 +11,11 @@
             .form_group.col-md-8
               = f.label :name
               = f.text_field :name, required: true, class: 'form-control t-portfolio-name'
-
+      .row
         = render 'configs/fields', config: @portfolio&.id == portfolio.id ? params[:config] : config_for(current_portfolio)&.config
-        = render 'configs/custom_fields', config: config_for(portfolio, config_type: CustomConfig::FIELDS)&.config
+        .col-md-12
+          h3 Trade fields
+        = render 'configs/custom_fields', config: config_for(portfolio, config_type: CustomConfig::TRADE_FIELDS)&.config
       .row
         .form_group.col-md-12
           = f.submit 'Update', class: 'btn btn-primary t-save'

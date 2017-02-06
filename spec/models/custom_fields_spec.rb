@@ -14,7 +14,7 @@ RSpec.describe CustomFields do
         include ActiveModel::Model
         attr_accessor :key_id, :custom
         include CustomFields
-        setup_custom_field :key_id
+        setup_custom_field :key_id, config_type: CustomConfig::TRADE_FIELDS
       end,
     )
   end

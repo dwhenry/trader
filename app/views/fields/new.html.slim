@@ -7,6 +7,17 @@
     = form_for @field, as: :field_form, url: config_fields_path do |f|
       = f.hidden_field :owner_id
       = f.hidden_field :owner_type
+
+      .row
+        .form-group.col-md-12
+          h3 Field for
+
+          .form_control
+            .form-check.form-check-inline
+              label.form-check-label
+                = f.radio_button :config_type, CustomConfig::TRADE_FIELDS, class: 'form-check-input t-config-type'
+                ' Trade adjustment
+
       .row
         .form-group.col-md-8.col-xl-6
           = f.label :name

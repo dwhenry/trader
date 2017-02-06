@@ -19,9 +19,10 @@ module CustomFields
   end
 
   module ClassMethods
-    def setup_custom_field(custom_field_key, klass = nil)
+    def setup_custom_field(custom_field_key, config_type:, klass: nil)
       @_custom_field_key = custom_field_key
       @_custom_field_class = klass || custom_field_key.to_s.gsub(/_id$/, '').classify
+      @_config_type = config_type
     end
 
     def custom_field_key
@@ -32,7 +33,11 @@ module CustomFields
       name = "Custom#{key_id}"
       return const_get(name) if const_defined?(name)
 
-      config = CustomConfig.find_by(owner_id: key_id, owner_type: @_custom_field_class.to_s, config_type: 'fields')
+      config = CustomConfig.find_by(
+        owner_id: key_id,
+        owner_type: @_custom_field_class.to_s,
+        config_type: @_config_type
+      )
       return CustomField if config.nil?
       const_set(name, build_class(config))
     end

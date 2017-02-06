@@ -20,7 +20,7 @@ class FieldsController < ApplicationController
     {
       owner_id: hash.fetch(:owner_id),
       owner_type: hash.fetch(:owner_type),
-      config_type: CustomConfig::FIELDS,
+      config_type: CustomConfig::TRADE_FIELDS,
     }
   end
 
@@ -30,6 +30,7 @@ class FieldsController < ApplicationController
       .permit(
         :owner_id,
         :owner_type,
+        :config_type,
         :name,
         :type,
         :values,
@@ -42,17 +43,17 @@ class FieldsController < ApplicationController
   def update_config(field)
     new_portfolio = portfolio.trades.any? ? clone_portfolio(portfolio) : portfolio
 
-    custom_config = custom_config(new_portfolio)
+    custom_config = custom_config(new_portfolio, field.config_type)
     custom_config.config ||= {}
     custom_config.config.merge!(field.as_json)
     save_with_events(custom_config)
   end
 
-  def custom_config(portfolio)
+  def custom_config(portfolio, config_type)
     CustomConfig.find_or_initialize_by(
       owner_id: portfolio.id,
       owner_type: 'Portfolio',
-      config_type: CustomConfig::FIELDS,
+      config_type: config_type,
     )
   end
 
