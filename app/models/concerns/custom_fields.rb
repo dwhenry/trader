@@ -10,10 +10,11 @@ module CustomFields
   end
 
   def custom_instance
-    custom_class.new(custom)
+    @custom_instance ||= custom_class.new(custom)
   end
 
   def custom_instance=(hash)
+    @custom_instance = nil
     self.custom = custom_class.clean(hash)
   end
 
@@ -31,7 +32,7 @@ module CustomFields
       name = "Custom#{key_id}"
       return const_get(name) if const_defined?(name)
 
-      config = CustomConfig.find_by(object_id: key_id, object_type: @_custom_field_class.to_s, config_type: 'fields')
+      config = CustomConfig.find_by(owner_id: key_id, owner_type: @_custom_field_class.to_s, config_type: 'fields')
       return CustomField if config.nil?
       const_set(name, build_class(config))
     end

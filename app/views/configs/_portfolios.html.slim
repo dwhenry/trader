@@ -13,10 +13,11 @@
               = f.text_field :name, required: true, class: 'form-control t-portfolio-name'
 
         = render 'configs/fields', config: @portfolio&.id == portfolio.id ? params[:config] : config_for(current_portfolio)&.config
-
+        = render 'configs/custom_fields', config: config_for(portfolio, config_type: CustomConfig::FIELDS)&.config
       .row
         .form_group.col-md-12
           = f.submit 'Update', class: 'btn btn-primary t-save'
+          = link_to 'Add field', new_config_field_path(owner_type: 'Portfolio', owner_id: current_portfolio), class: 'btn btn-info t-add-field-config'
 
 config-group
   .row

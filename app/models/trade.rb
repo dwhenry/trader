@@ -18,6 +18,9 @@ class Trade < ApplicationRecord
   validates :quantity, presence: true, numericality: { other_than: 0 }
   validates :security_id, presence: true
   validates :uid, presence: true, length: { is: 8 }
+  validate do |t|
+    errors.add(:security_id, 'does not belong to business') unless t.security.business_id == t.portfolio.business_id
+  end
 
   scope :current, -> { where(current: true) }
 

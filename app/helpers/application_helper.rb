@@ -1,6 +1,6 @@
 module ApplicationHelper
   def config_tab_options
-    { 'business' => 'Business', 'user' => 'User', 'portfolios' => "Portfolio's" }
+    { 'business' => 'Business', 'user' => 'User', 'portfolios' => "Portfolio's", 'trade' => "Trade's" }
   end
 
   def copy_portfolio_config_options

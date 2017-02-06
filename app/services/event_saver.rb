@@ -8,10 +8,10 @@ class EventSaver
     Event.create!(
       object_to_logables(object).merge(
         event_type: get_event_type(object),
-        details: changes.except('id', 'version', 'created_at', 'updated_at'),
+        details: clean(changes),
         user: @user,
-        object_type: object.class,
-        object_id: object.id,
+        owner_type: object.class,
+        owner_id: object.id,
         parent: parent_event,
       ),
     )
@@ -23,7 +23,7 @@ class EventSaver
     business = get_business(portfolio, object)
     {
       trade: trade,
-      portfolio: portfolio,
+      portfolio_uid: portfolio&.uid,
       business: business,
     }
   end
@@ -43,14 +43,34 @@ class EventSaver
     return trade.portfolio if trade
     return object if object.is_a?(Portfolio)
     return object.portfolio if object.respond_to?(:portfolio)
-    return object.object if object.is_a?(CustomConfig) && object.object.is_a?(Portfolio)
+    return object.owner if object.is_a?(CustomConfig) && object.owner.is_a?(Portfolio)
     nil
   end
 
   def get_business(portfolio, object)
     return portfolio.business if portfolio
     return object if object.is_a?(Business)
-    return object.object if object.is_a?(CustomConfig) && object.object.is_a?(Business)
+    return object.owner if object.is_a?(CustomConfig) && object.owner.is_a?(Business)
     nil
+  end
+
+  def clean(changes)
+    changes = changes.except('uid', 'id', 'version', 'created_at', 'updated_at')
+
+    %w(config custom).each do |key|
+      next unless changes.key?(key)
+      changes = changes.except('owner_id', 'owner_type', 'config_type')
+      changes.merge!(transform_field(*changes.delete(key)))
+    end
+    changes
+  end
+
+  def transform_field(from, to)
+    from ||= {}
+    to ||= {}
+    fields = from.keys | to.keys
+    fields.each_with_object({}) do |field, hash|
+      hash[field] = [from[field], to[field]]
+    end
   end
 end

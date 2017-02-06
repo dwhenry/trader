@@ -20,21 +20,21 @@ RSpec.feature 'Editing a trade' do
 
       trade = Trade.current.first
       expect(Event.count).to eq(2)
-      trade_event = Event.find_by(object_type: 'Trade', event_type: 'edit')
+      trade_event = Event.find_by(owner_type: 'Trade', event_type: 'edit')
       expect(trade_event).to have_attributes(
         trade_uid: trade.uid,
-        portfolio_id: portfolio.id,
+        portfolio_uid: portfolio.uid,
         user_id: user.id,
-        object_id: trade.id,
+        owner_id: trade.id,
         parent_id: nil,
         details: { 'quantity' => [10, 200] },
       )
-      backoffice_event = Event.find_by(object_type: 'Backoffice', event_type: 'edit')
+      backoffice_event = Event.find_by(owner_type: 'Backoffice', event_type: 'edit')
       expect(backoffice_event).to have_attributes(
         trade_uid: trade.uid,
-        portfolio_id: portfolio.id,
+        portfolio_uid: portfolio.uid,
         user_id: user.id,
-        object_id: trade.backoffice.id,
+        owner_id: trade.backoffice.id,
         parent_id: trade_event.id,
         details: { 'trade_version' => [1, 3] },
       )
@@ -61,12 +61,12 @@ RSpec.feature 'Editing a trade' do
 
       trade = Trade.current.first
       expect(Event.count).to eq(1)
-      event = Event.find_by(object_type: 'Backoffice', event_type: 'edit')
+      event = Event.find_by(owner_type: 'Backoffice', event_type: 'edit')
       expect(event).to have_attributes(
         trade_uid: trade.uid,
-        portfolio_id: portfolio.id,
+        portfolio_uid: portfolio.uid,
         user_id: user.id,
-        object_id: trade.backoffice.id,
+        owner_id: trade.backoffice.id,
         parent_id: nil,
         details: { 'state' => %w(Pending Settled) },
       )

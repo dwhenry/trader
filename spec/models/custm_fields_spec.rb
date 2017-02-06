@@ -154,6 +154,21 @@ RSpec.describe CustomFields do
 
         subject.custom_instance = { fruit: 10 }
         expect(subject.custom_instance).to be_valid
+
+        subject.custom_instance = { fruit: '10' }
+        expect(subject.custom_instance).to be_valid
+      end
+    end
+
+    context 'list' do
+      let(:config) { { animal: { name: 'Animal', type: 'list', validations: { 'inclusion' => %w(bear pig) } } } }
+
+      it 'validates inclusion in list' do
+        subject.custom_instance = { animal: 'rat' }
+        expect(subject.custom_instance).not_to be_valid
+
+        subject.custom_instance = { animal: 'bear' }
+        expect(subject.custom_instance).to be_valid
       end
     end
   end

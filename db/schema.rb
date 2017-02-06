@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170119234202) do
+ActiveRecord::Schema.define(version: 20170205225310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(version: 20170119234202) do
   end
 
   create_table "custom_configs", force: :cascade do |t|
-    t.string   "object_type"
-    t.string   "object_id"
+    t.string   "owner_type"
+    t.string   "owner_id"
     t.jsonb    "config"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
@@ -45,27 +45,29 @@ ActiveRecord::Schema.define(version: 20170119234202) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.integer  "portfolio_id"
     t.integer  "business_id"
     t.integer  "user_id"
     t.string   "event_type"
     t.jsonb    "details"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.string   "object_type",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "owner_type",    null: false
     t.integer  "parent_id"
-    t.integer  "object_id"
+    t.integer  "owner_id"
     t.string   "trade_uid"
+    t.string   "portfolio_uid"
     t.index ["business_id"], name: "index_events_on_business_id", using: :btree
-    t.index ["portfolio_id"], name: "index_events_on_portfolio_id", using: :btree
     t.index ["user_id"], name: "index_events_on_user_id", using: :btree
   end
 
   create_table "portfolios", force: :cascade do |t|
     t.integer  "business_id"
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "uid",                        null: false
+    t.integer  "version",     default: 1,    null: false
+    t.boolean  "current",     default: true, null: false
     t.index ["business_id"], name: "index_portfolios_on_business_id", using: :btree
   end
 
@@ -128,7 +130,6 @@ ActiveRecord::Schema.define(version: 20170119234202) do
   end
 
   add_foreign_key "events", "businesses"
-  add_foreign_key "events", "portfolios"
   add_foreign_key "events", "users"
   add_foreign_key "portfolios", "businesses"
   add_foreign_key "trades", "portfolios"

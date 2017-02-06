@@ -34,7 +34,7 @@ module SaveWithVersions
       object = retire_current_object
 
       if object.is_a?(Trade)
-        object.version += 1
+        object.version += 1 if object.version > 1
         save_trade(object, changes)
       else
         object.save!
