@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Custom config field' do
   scenario 'can created a text field' do
-    new_field_config do |page, portfolio|
+    create_field_config_page do |page, portfolio|
       config_page = ConfigFieldPage.new
       config_page.add_fruit_field
 
@@ -44,7 +44,7 @@ RSpec.feature 'Custom config field' do
   end
 
   scenario 'adding a field to a portfolio with trades will generate a new portfolio version' do
-    new_field_config do |page, portfolio|
+    create_field_config_page do |page, portfolio|
       security = create(:security, business: portfolio.business)
       create(:trade, portfolio: portfolio, security: security)
 
@@ -60,7 +60,7 @@ RSpec.feature 'Custom config field' do
   end
 
   scenario 'edit a custom field with existing trades' do
-    new_field_config(fruit_field: { name: 'Old fruit' }) do |page, portfolio|
+    create_field_config_page(fruit_field: { name: 'Old fruit' }) do |page, portfolio|
       security = create(:security, business: portfolio.business)
       create(:trade, portfolio: portfolio, security: security)
 
@@ -83,34 +83,6 @@ RSpec.feature 'Custom config field' do
           ],
         },
       )
-    end
-  end
-
-  def new_field_config(field_config = nil) # rubocop:disable Metrics/MethodLength
-    business = create(:business, :with_config)
-    portfolio = create(:portfolio, :with_config, business: business)
-
-    if field_config
-      create(
-        :custom_config,
-        owner_id: portfolio.id,
-        owner_type: 'Portfolio',
-        config_type: CustomConfig::FIELDS,
-        config: field_config,
-      )
-    end
-
-    user = create(:user, business: business)
-
-    with_user(user) do
-      page = ConfigPage.new
-      page.load
-
-      # can update the user name
-      page.tab("portfolio's")
-      page.portfolios.first.add_field.click
-
-      yield page, portfolio
     end
   end
 end

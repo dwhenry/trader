@@ -7,7 +7,6 @@ RSpec.feature 'Trade with simple custom string field' do
       type: 'string',
     )
 
-
     create_trade_page(fields) do |page|
       page.create_trade(description: 'No default')
 

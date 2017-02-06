@@ -24,7 +24,7 @@ class FieldsController < ApplicationController
     }
   end
 
-  def field_params
+  def field_params # rubocop:disable Metrics/MethodLength
     params
       .require(:field_form)
       .permit(
@@ -32,8 +32,10 @@ class FieldsController < ApplicationController
         :owner_type,
         :name,
         :type,
+        :values,
         :default,
         :validates_presence,
+        :validates_inclusion,
       )
   end
 
