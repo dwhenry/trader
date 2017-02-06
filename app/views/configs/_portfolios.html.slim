@@ -16,6 +16,9 @@
         .col-md-12
           h3 Trade fields
         = render 'configs/custom_fields', config: config_for(portfolio, config_type: CustomConfig::TRADE_FIELDS)&.config
+        .col-md-12
+          h3 Backoffice fields
+        = render 'configs/custom_fields', config: config_for(portfolio, config_type: CustomConfig::BACKOFFICE_FIELDS)&.config
       .row
         .form_group.col-md-12
           = f.submit 'Update', class: 'btn btn-primary t-save'

@@ -2,6 +2,7 @@ class CustomConfig < ApplicationRecord
   CONFIG_TYPES = [
     SETTINGS = 'settings'.freeze,
     TRADE_FIELDS = 'trade_fields'.freeze,
+    BACKOFFICE_FIELDS = 'backoffice_fields'.freeze,
   ].freeze
 
   DEFAULT_CONFIG = {
@@ -21,8 +22,7 @@ class CustomConfig < ApplicationRecord
 
   class << self
     def fields_for(object)
-      return nil unless object
-      find_by(owner_type: object.class.to_s, owner_id: object.id, config_type: TRADE_FIELDS)
+      find_for(object, config_type: TRADE_FIELDS)
     end
 
     def find_for(object, config_type: SETTINGS)

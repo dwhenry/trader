@@ -1,5 +1,10 @@
 class Backoffice < ApplicationRecord
+  include CustomFields
+  setup_custom_field :portfolio_id, config_type: CustomConfig::BACKOFFICE_FIELDS
+
   belongs_to :trade, foreign_key: :trade_uid, primary_key: :uid
+
+  delegate :portfolio_id, to: :trade
 
   validates :state, presence: true
   validates :version, presence: true
