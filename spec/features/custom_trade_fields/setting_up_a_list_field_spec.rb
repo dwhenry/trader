@@ -9,7 +9,7 @@ RSpec.feature 'Custom config field' do
       expect(page.portfolios.first.fields.count).to eq(1)
 
       expect(CustomConfig.fields_for(portfolio)).to have_attributes(
-        config_type: 'fields',
+        config_type: CustomConfig::TRADE_FIELDS,
         config: {
           'animal_field' => {
             'name' => 'Animal field',

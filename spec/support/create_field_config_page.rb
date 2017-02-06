@@ -8,7 +8,7 @@ module CreateTradePage
         :custom_config,
         owner_id: portfolio.id,
         owner_type: 'Portfolio',
-        config_type: CustomConfig::FIELDS,
+        config_type: CustomConfig::TRADE_FIELDS,
         config: field_config,
       )
     end
