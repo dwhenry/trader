@@ -36,6 +36,8 @@ RSpec.feature 'Custom config field' do
 
       expect(page.portfolios.first.fields.count).to eq(1)
 
+      expect(portfolio).not_to eq(Portfolio.find_by(uid: portfolio.uid))
+
       event = Event.find_by(owner_type: 'CustomConfig', event_type: 'edit')
       expect(event).to have_attributes(
         details: {

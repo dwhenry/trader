@@ -6,11 +6,31 @@ class FieldsController < ApplicationController
   def create
     @field = FieldForm.new(field_params)
     if @field.valid?
-      update_config(@field)
+      custom_config_for_editing(portfolio, @field.config_type) do |config|
+        config.merge!(@field.as_json)
+      end
       redirect_to config_path(tab: 'portfolios', anchor: "portfolio-#{portfolio.id}")
     else
       render :new
     end
+  end
+
+  def edit
+    custom_config = CustomConfig.find(params[:id])
+    key = params.fetch(:key)
+    @field = FieldForm.new(custom_config.config.fetch(key).merge(config_type: custom_config.config_type))
+    render :new
+  end
+
+  def destroy
+    base_custom_config = CustomConfig.find(params[:id])
+    key = params.fetch(:key)
+    if base_custom_config.config.key?(key)
+      custom_config_for_editing(base_custom_config.owner, base_custom_config.config_type) do |config|
+        config.delete(key)
+      end
+    end
+    redirect_to config_path(tab: 'portfolios')
   end
 
   private
@@ -40,12 +60,12 @@ class FieldsController < ApplicationController
       )
   end
 
-  def update_config(field)
+  def custom_config_for_editing(portfolio, config_type)
     new_portfolio = portfolio.trades.any? ? clone_portfolio(portfolio) : portfolio
 
-    custom_config = custom_config(new_portfolio, field.config_type)
+    custom_config = custom_config(new_portfolio, config_type)
     custom_config.config ||= {}
-    custom_config.config.merge!(field.as_json)
+    yield custom_config.config
     save_with_events(custom_config)
   end
 

@@ -3,14 +3,21 @@
     table.table.table-striped
       thead
         tr
+          th style='width: 80px'
           th Name
           th Default
           th Type
           th Validations
       tbody
-        - config.each do |key, details|
+        - custom_config.config.each do |key, details|
           tr.t-field
-            td= details['name']
+            td
+              = link_to config_field_path(id: custom_config.id, key: key), method: :delete, 'data-confirm' => 'Are you sure you want to delete this field?', class: 't-delete' do
+                i.fa.fa-trash.fa-lg.warning  title='Delete'
+              '  |
+              = link_to edit_config_field_path(id: custom_config.id, key: key), class: 't-edit' do
+                i.fa.fa-edit.fa-lg title='Edit'
+            td.t-field-name= details['name']
             td= details['default']
             td= (details['type'] || '').humanize
             td= details['validations'] && details['validations'].keys.to_sentence.humanize
