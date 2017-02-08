@@ -16,6 +16,7 @@ source 'https://rubygems.org' do # rubocop:disable Metrics/BlockLength
   gem 'omniauth-google-oauth2'
   gem 'pg'
   gem 'puma', '~> 3.0'
+  gem 'pundit'
   gem 'rails', '~> 5.0.1'
   gem 'sass-rails', '~> 5.0'
   gem 'select2-rails'

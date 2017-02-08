@@ -4,6 +4,7 @@ class PortfoliosController < ApplicationController
   end
 
   def create
+    authorize Portfolio
     @new_portfolio = Portfolio.new(portfolio_params.merge(business: current_user.business, uid: SecureRandom.uuid))
 
     if save_with_events(@new_portfolio, config_for(@new_portfolio, clone_id: params[:configuration]))

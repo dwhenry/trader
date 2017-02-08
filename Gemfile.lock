@@ -134,6 +134,8 @@ GEM
       byebug (~> 9.0)
       pry (~> 0.10)
     puma (3.6.2)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.1)
     rack-protection (1.5.3)
       rack
@@ -264,6 +266,7 @@ DEPENDENCIES
   pg!
   pry-byebug!
   puma (~> 3.0)!
+  pundit!
   rails (~> 5.0.1)!
   rails-assets-tether (>= 1.1.0)!
   rspec-rails!

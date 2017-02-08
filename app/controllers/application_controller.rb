@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   include SaveWithEvents
   include BuildConfig
+  include Pundit
 
   private
 

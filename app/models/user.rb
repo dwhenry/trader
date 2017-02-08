@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   belongs_to :business, required: false
+  belongs_to :role
   validates :email, uniqueness: true
 
   def self.from_omniauth(auth)

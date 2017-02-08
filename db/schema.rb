@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170206224057) do
+ActiveRecord::Schema.define(version: 20170208232430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,14 @@ ActiveRecord::Schema.define(version: 20170206224057) do
     t.index ["user_id"], name: "index_events_on_user_id", using: :btree
   end
 
+  create_table "permissions", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "role_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["role_id"], name: "index_permissions_on_role_id", using: :btree
+  end
+
   create_table "portfolios", force: :cascade do |t|
     t.integer  "business_id"
     t.string   "name"
@@ -84,6 +92,14 @@ ActiveRecord::Schema.define(version: 20170206224057) do
     t.datetime "updated_at", null: false
     t.index ["date"], name: "index_prices_on_date", using: :btree
     t.index ["ticker"], name: "index_prices_on_ticker", using: :btree
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "business_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["business_id"], name: "index_roles_on_business_id", using: :btree
   end
 
   create_table "securities", force: :cascade do |t|
@@ -123,15 +139,17 @@ ActiveRecord::Schema.define(version: 20170206224057) do
     t.string   "email"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "role",             null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.integer  "role_id",          default: 1, null: false
     t.index ["business_id"], name: "index_users_on_business_id", using: :btree
   end
 
   add_foreign_key "events", "businesses"
   add_foreign_key "events", "users"
+  add_foreign_key "permissions", "roles"
   add_foreign_key "portfolios", "businesses"
+  add_foreign_key "roles", "businesses"
   add_foreign_key "trades", "portfolios"
   add_foreign_key "trades", "securities"
   add_foreign_key "users", "businesses"
