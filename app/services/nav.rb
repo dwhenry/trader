@@ -19,7 +19,7 @@ class Nav < SimpleDelegator
         Item.new(name: 'Business', path: business_path, icon: 'home'),
         Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
         Item.new(name: 'Securities', icon: 'bar-chart', children: securities),
-        Item.new(name: 'Configure', path: config_path, icon: 'gear'),
+        policies(self).configure_system? &&  Item.new(name: 'Configure', path: config_path, icon: 'gear'),
       ],
     )
   end
@@ -31,10 +31,14 @@ class Nav < SimpleDelegator
   end
 
   def securities
-    [Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')] +
+    [policies(self).follow_security? && Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')] +
       Security.where(business_id: current_user.business_id).map do |security|
         Item.new(name: security.name, path: security_path(security))
       end
+  end
+
+  def allow?(permission)
+    Pundit.policy(current_user, self)
   end
 
   class Item
@@ -45,7 +49,7 @@ class Nav < SimpleDelegator
       @name = name
       @path = path
       @icon = icon
-      @children = children
+      @children = children.compact
     end
 
     def flatten

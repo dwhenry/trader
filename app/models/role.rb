@@ -5,6 +5,8 @@ class Role < ApplicationRecord
   # permissions
   CREATE_PORTFOLIO = 'create_portfolio'
   EDIT_PORTFOLIO = 'edit_portfolio'
+  CONFIGURE_SYSTEM = 'configure_system'
+  FOLLOW_SECURITY = 'follow_security'
 
   belongs_to :business, required: false
   has_many :permissions

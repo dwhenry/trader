@@ -15,7 +15,8 @@ RSpec.describe PortfoliosController, type: :controller do
     end
 
     it 'disallows without portfolio_creation' do
-      expect { post 'create', params: { name: 'faker' } }.to raise_error(Pundit::NotAuthorizedError)
+      post 'create', params: { name: 'faker' }
+      expect(response).to redirect_to(root_path)
     end
   end
 
@@ -43,17 +44,15 @@ RSpec.describe PortfoliosController, type: :controller do
 
     it 'allows without portfolio_edit and user owns portfolio' do
       portfolio = create(:portfolio, business: user.business)
-      expect do
-        patch 'update', params: params.merge(id: portfolio.id)
-      end.to raise_error(Pundit::NotAuthorizedError)
+      patch 'update', params: params.merge(id: portfolio.id)
+      expect(response).to redirect_to(root_path)
     end
 
     it 'allows with portfolio_edit and user does not owns portfolio' do
       role.permissions.build(name: Role::EDIT_PORTFOLIO)
       portfolio = create(:portfolio, business: create(:business))
-      expect do
-        patch 'update', params: params.merge(id: portfolio.id)
-      end.to raise_error(Pundit::NotAuthorizedError)
+      patch 'update', params: params.merge(id: portfolio.id)
+      expect(response).to redirect_to(root_path)
     end
 
     it 'disallow if not the current portfolio version' do
