@@ -17,6 +17,8 @@ class EventSaver
     )
   end
 
+  private
+
   def object_to_logables(object)
     trade = get_trade(object)
     portfolio = get_portfolio(trade, object)
@@ -70,7 +72,29 @@ class EventSaver
     to ||= {}
     fields = from.keys | to.keys
     fields.each_with_object({}) do |field, hash|
-      hash[field] = [from[field], to[field]]
+      hash[field] = [from[field], to[field]] unless matching?(from[field], to[field])
     end
+  end
+
+  def matching?(left, right)
+    return false unless left.class == right.class
+    case left
+    when Array
+      matching_array?(left, right)
+    when Hash
+      matching_hash?(left, right)
+    else
+      left == right
+    end
+  end
+
+  def matching_array?(left, right)
+    left.count == right.count &&
+      left.sort.zip(right.sort).all? { |l, r| matching?(l, r) }
+  end
+
+  def matching_hash?(left, right)
+    left.keys.length == right.keys.length &&
+      left.all? { |k, v| matching?(v, right[k]) }
   end
 end

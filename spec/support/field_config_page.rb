@@ -1,5 +1,13 @@
-module CreateTradePage
-  def create_field_config_page(field_config = nil) # rubocop:disable Metrics/MethodLength
+module FieldConfigPage
+  def create_field_config_page(field_config = nil)
+    navigate_to_field_config_page(field_config) do |page, portfolio|
+      page.portfolios.first.add_field.click
+
+      yield page, portfolio
+    end
+  end
+
+  def navigate_to_field_config_page(field_config = nil) # rubocop:disable Metrics/MethodLength
     business = create(:business, :with_config)
     portfolio = create(:portfolio, :with_config, business: business)
 
@@ -21,7 +29,6 @@ module CreateTradePage
 
       # can update the user name
       page.tab("portfolio's")
-      page.portfolios.first.add_field.click
 
       yield page, portfolio
     end
@@ -29,5 +36,5 @@ module CreateTradePage
 end
 
 RSpec.configure do |config|
-  config.include CreateTradePage
+  config.include FieldConfigPage
 end

@@ -16,7 +16,11 @@
             .form-check.form-check-inline
               label.form-check-label
                 = f.radio_button :config_type, CustomConfig::TRADE_FIELDS, class: 'form-check-input t-config-type'
-                ' Trade adjustment
+                '  Trade adjustment
+            .form-check.form-check-inline
+              label.form-check-label
+                = f.radio_button :config_type, CustomConfig::BACKOFFICE_FIELDS, class: 'form-check-input t-config-type'
+                '  Trade tracking/settlement
 
       .row
         .form-group.col-md-8.col-xl-6

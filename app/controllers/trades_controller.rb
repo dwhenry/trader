@@ -42,6 +42,7 @@ class TradesController < ApplicationController
       .permit(
         :state,
         :settlement_date,
+        custom_instance: Backoffice.custom_class(params[:trade][:portfolio_id]).fields.map(&:key),
       )
   end
 

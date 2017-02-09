@@ -36,7 +36,7 @@ module CustomFields
       config = CustomConfig.find_by(
         owner_id: key_id,
         owner_type: @_custom_field_class.to_s,
-        config_type: @_config_type
+        config_type: @_config_type,
       )
       return CustomField if config.nil?
       const_set(name, build_class(config))
