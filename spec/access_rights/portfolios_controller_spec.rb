@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe PortfoliosController, type: :controller do
-  context 'create' do
-    let(:user) { create(:user, business: create(:business), role: role) }
-    let(:role) { Role.new(name: 'portfolio') }
+  let(:role) { Role.new(name: 'portfolio') }
+  let(:user) { create(:user, business: create(:business), role: role) }
+  before do
+    allow(controller).to receive(:current_user).and_return(user)
+  end
 
-    before do
-      allow(controller).to receive(:current_user).and_return(user)
-    end
-
+  context '#create' do
     it 'allows with portfolio_creation' do
       role.permissions.build(name: Role::CREATE_PORTFOLIO)
       post 'create', params: { portfolio: { name: '' } }
@@ -17,6 +16,52 @@ RSpec.describe PortfoliosController, type: :controller do
 
     it 'disallows without portfolio_creation' do
       expect { post 'create', params: { name: 'faker' } }.to raise_error(Pundit::NotAuthorizedError)
+    end
+  end
+
+  context '#show' do
+    it 'allow when user owns portfolio' do
+      portfolio = create(:portfolio, business: user.business)
+      post 'show', params: { id: portfolio.id }
+      expect(response).to be_success
+    end
+
+    it 'disallows when user does not own portfolio' do
+      portfolio = create(:portfolio, business: create(:business))
+      expect { post 'show', params: { id: portfolio.id } }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  context '#update' do
+    let(:params) { { portfolio: { name: 'jack' }, config: { allow_negative_positions: 'no' } } }
+    it 'allows with portfolio_edit and user owns portfolio' do
+      role.permissions.build(name: Role::EDIT_PORTFOLIO)
+      portfolio = create(:portfolio, business: user.business)
+      patch 'update', params: params.merge(id: portfolio.id)
+      expect(response).to be_redirect
+    end
+
+    it 'allows without portfolio_edit and user owns portfolio' do
+      portfolio = create(:portfolio, business: user.business)
+      expect do
+        patch 'update', params: params.merge(id: portfolio.id)
+      end.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it 'allows with portfolio_edit and user does not owns portfolio' do
+      role.permissions.build(name: Role::EDIT_PORTFOLIO)
+      portfolio = create(:portfolio, business: create(:business))
+      expect do
+        patch 'update', params: params.merge(id: portfolio.id)
+      end.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it 'disallow if not the current portfolio version' do
+      role.permissions.build(name: Role::EDIT_PORTFOLIO)
+      portfolio = create(:portfolio, business: user.business, current: false)
+      expect do
+        patch 'update', params: params.merge(id: portfolio.id)
+      end.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

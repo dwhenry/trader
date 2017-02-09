@@ -1,6 +1,6 @@
 class PortfoliosController < ApplicationController
   def show
-    @portfolio = Portfolio.find(params[:id])
+    @portfolio = policy_scope(Portfolio).find(params[:id])
   end
 
   def create
@@ -17,6 +17,7 @@ class PortfoliosController < ApplicationController
 
   def update
     @portfolio = Portfolio.find(params[:id])
+    authorize @portfolio
     @portfolio.assign_attributes(portfolio_params)
 
     if save_with_events(@portfolio, config_for(@portfolio, params: config_params(@portfolio)))
