@@ -18,14 +18,13 @@ class Nav < SimpleDelegator
   private
 
   def items
-    Item.new(
-      children: [
-        Item.new(name: 'Business', path: business_path, icon: 'home'),
-        Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
-        Item.new(name: 'Securities', icon: 'bar-chart', children: securities),
-        policy(self).configure_system? &&  Item.new(name: 'Configure', path: config_path, icon: 'gear'),
-      ],
-    )
+    children = [
+      Item.new(name: 'Business', path: business_path, icon: 'home'),
+      Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
+      Item.new(name: 'Securities', icon: 'bar-chart', children: securities),
+    ]
+    children << Item.new(name: 'Configure', path: config_path, icon: 'gear') if policy(self).configure_system?
+    Item.new(children: children)
   end
 
   def portfolios
@@ -35,11 +34,13 @@ class Nav < SimpleDelegator
   end
 
   def securities
-    add_security = Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')
-    [policy(self).follow_security? && add_security] +
-      Security.where(business_id: current_user.business_id).map do |security|
-        Item.new(name: security.name, path: security_path(security))
-      end
+    children = []
+    if policy(self).follow_security?
+      children << Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')
+    end
+    children + Security.where(business_id: current_user.business_id).map do |security|
+      Item.new(name: security.name, path: security_path(security))
+    end
   end
 
   class Item
@@ -50,7 +51,7 @@ class Nav < SimpleDelegator
       @name = name
       @path = path
       @icon = icon
-      @children = children.compact
+      @children = children
     end
 
     def flatten

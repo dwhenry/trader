@@ -9,7 +9,7 @@ RSpec.describe PortfoliosController, type: :controller do
 
   context '#create' do
     it 'allows with portfolio_creation' do
-      role.permissions.build(name: Role::CREATE_PORTFOLIO)
+      role.update(permissions: Role::CREATE_PORTFOLIO)
       post 'create', params: { portfolio: { name: '' } }
       expect(response).to be_success
     end
@@ -37,7 +37,7 @@ RSpec.describe PortfoliosController, type: :controller do
     let(:params) { { portfolio: { name: 'jack' }, config: { allow_negative_positions: 'no' } } }
 
     it 'allows with portfolio_edit and user owns portfolio' do
-      role.permissions.build(name: Role::EDIT_PORTFOLIO)
+      role.update(permissions: Role::EDIT_PORTFOLIO)
       portfolio = create(:portfolio, business: user.business)
       patch 'update', params: params.merge(id: portfolio.id)
       expect(response).to redirect_to(config_path(tab: 'portfolios', anchor: "portfolio-#{portfolio.id}"))
@@ -50,14 +50,14 @@ RSpec.describe PortfoliosController, type: :controller do
     end
 
     it 'allows with portfolio_edit and user does not owns portfolio' do
-      role.permissions.build(name: Role::EDIT_PORTFOLIO)
+      role.update(permissions: Role::EDIT_PORTFOLIO)
       portfolio = create(:portfolio, business: create(:business))
       patch 'update', params: params.merge(id: portfolio.id)
       expect(response).to redirect_to(root_path)
     end
 
     it 'disallow if not the current portfolio version' do
-      role.permissions.build(name: Role::EDIT_PORTFOLIO)
+      role.update(permissions: Role::EDIT_PORTFOLIO)
       portfolio = create(:portfolio, business: user.business, current: false)
       expect do
         patch 'update', params: params.merge(id: portfolio.id)

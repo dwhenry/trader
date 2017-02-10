@@ -9,7 +9,7 @@ RSpec.describe YahooSecuritySearchesController, type: :controller do
 
   context '#show' do
     it 'allow when user has `follow_security` permissions' do
-      Permission.create(role: role, name: Role::FOLLOW_SECURITY)
+      role.update(permissions: Role::FOLLOW_SECURITY)
       get 'show'
       expect(response).to be_success
     end

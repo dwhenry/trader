@@ -60,14 +60,6 @@ ActiveRecord::Schema.define(version: 20170208232430) do
     t.index ["user_id"], name: "index_events_on_user_id", using: :btree
   end
 
-  create_table "permissions", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "role_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["role_id"], name: "index_permissions_on_role_id", using: :btree
-  end
-
   create_table "portfolios", force: :cascade do |t|
     t.integer  "business_id"
     t.string   "name"
@@ -97,8 +89,9 @@ ActiveRecord::Schema.define(version: 20170208232430) do
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.integer  "business_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.jsonb    "permissions", default: {}
     t.index ["business_id"], name: "index_roles_on_business_id", using: :btree
   end
 
@@ -147,7 +140,6 @@ ActiveRecord::Schema.define(version: 20170208232430) do
 
   add_foreign_key "events", "businesses"
   add_foreign_key "events", "users"
-  add_foreign_key "permissions", "roles"
   add_foreign_key "portfolios", "businesses"
   add_foreign_key "roles", "businesses"
   add_foreign_key "trades", "portfolios"

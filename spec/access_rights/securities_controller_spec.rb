@@ -19,7 +19,7 @@ RSpec.describe SecuritiesController, type: :controller do
     end
 
     it 'allow when user has `follow_security` permissions' do
-      Permission.create(role: role, name: Role::FOLLOW_SECURITY)
+      role.update(permissions: Role::FOLLOW_SECURITY)
       post 'create', params: { security: { ticker: 'TICK' } }
       expect(response).to redirect_to(security_path(Security.last))
     end

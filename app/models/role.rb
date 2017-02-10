@@ -24,8 +24,6 @@ class Role < ApplicationRecord
 
   belongs_to :business, required: false
 
-  has_many :permissions
-
   scope :for_business, ->(business) { where(business_id: [nil, business.id]) }
   validates :name, presence: true, uniqueness: { scope: :business }
   validates :business, absence: true, if: ->(r) { r.name == SUPER_ADMIN }
@@ -36,9 +34,7 @@ class Role < ApplicationRecord
       trader: Role::DEFAULT_TRADER,
       backoffice: Role::DEFAULT_BACKOFFICE,
     }.map do |name, permissions|
-      role = Role.new(name: name, business: business)
-      permissions.map { |permission_name| role.permissions.build(name: permission_name) }
-      role
+      Role.new(name: name, business: business, permissions: permissions)
     end
   end
 
@@ -47,6 +43,6 @@ class Role < ApplicationRecord
   end
 
   def allow?(permission_name)
-    name == SUPER_ADMIN || permissions.detect { |p| p.name == permission_name }
+    name == SUPER_ADMIN || permissions.include?(permission_name)
   end
 end
