@@ -7,10 +7,7 @@ class CreateRoles < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    role = Role.create!(name: Role::SUPER_ADMIN)
-
-    remove_column :users, :role
-    add_column :users, :role_id, :integer, default: role.id
-    change_column :users, :role_id, :integer, null: false
+    remove_column :users, :role, :string
+    add_column :users, :role_id, :integer
   end
 end

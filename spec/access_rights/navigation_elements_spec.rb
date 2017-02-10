@@ -2,24 +2,30 @@ require 'rails_helper'
 
 RSpec.describe Nav do
   let(:business) { create(:business) }
-  let(:page) do
+  let(:page_class) do
     # page is a controller instance so need to provide a heap of methods for the build to work
     Class.new do
       def current_user; end
-      def current_page?(*); end
-      def method_missing(*); end
 
-      def respond_to?(m, *)
+      def current_page?(*); end
+
+      def method_missing(*); end # rubocop:disable Style/MethodMissing
+
+      def respond_to_missing?(m, *)
         m =~ /path$/ || super
       end
 
-      def policies(obj)
+      def policy(obj)
         Pundit.policy(current_user, obj)
       end
-    end.new.tap do |page|
+    end
+  end
+  let(:page) do
+    page_class.new.tap do |page|
       allow(page).to receive(:current_user).and_return(user)
     end
   end
+
   let(:user) { double(:user, business_id: business.id, role: role) }
   subject { tree(described_class.nav(page)) }
 
@@ -40,13 +46,13 @@ RSpec.describe Nav do
             'Business',
             { "Portfolio's" => ['Nav portfolio'] },
             { 'Securities' => ['Add', 'Nav security'] },
-            'Configure'
-          ]
+            'Configure',
+          ],
         )
       end
     end
   end
-  
+
   context 'when user does not have `configure_system` permission' do
     let(:role) { create(:role, name: 'other') }
 
@@ -62,7 +68,6 @@ RSpec.describe Nav do
       expect(subject[subject.index('Securities')]).not_to include('Add')
     end
   end
-
 
   def tree(nodes)
     nodes.map do |node|
