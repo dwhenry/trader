@@ -25,7 +25,6 @@ RSpec.describe Nav do
       allow(page).to receive(:current_user).and_return(user)
     end
   end
-
   let(:user) { double(:user, business_id: business.id, role: role) }
   subject { tree(described_class.nav(page)) }
 

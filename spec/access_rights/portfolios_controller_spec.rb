@@ -23,23 +23,24 @@ RSpec.describe PortfoliosController, type: :controller do
   context '#show' do
     it 'allow when user owns portfolio' do
       portfolio = create(:portfolio, business: user.business)
-      post 'show', params: { id: portfolio.id }
+      get 'show', params: { id: portfolio.id }
       expect(response).to be_success
     end
 
     it 'disallows when user does not own portfolio' do
       portfolio = create(:portfolio, business: create(:business))
-      expect { post 'show', params: { id: portfolio.id } }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { get 'show', params: { id: portfolio.id } }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
   context '#update' do
     let(:params) { { portfolio: { name: 'jack' }, config: { allow_negative_positions: 'no' } } }
+
     it 'allows with portfolio_edit and user owns portfolio' do
       role.permissions.build(name: Role::EDIT_PORTFOLIO)
       portfolio = create(:portfolio, business: user.business)
       patch 'update', params: params.merge(id: portfolio.id)
-      expect(response).to be_redirect
+      expect(response).to redirect_to(config_path(tab: 'portfolios', anchor: "portfolio-#{portfolio.id}"))
     end
 
     it 'allows without portfolio_edit and user owns portfolio' do

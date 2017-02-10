@@ -2,6 +2,7 @@ class YahooSecuritySearchesController < ApplicationController
   DEFAULT_FIELDS = %w(a b).freeze
 
   def show
+    authorize :yahoo_search
     @fields = params[:fields] = remember_fields(params[:fields])
 
     return unless params[:ticker]
