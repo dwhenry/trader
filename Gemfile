@@ -14,6 +14,7 @@ source 'https://rubygems.org' do # rubocop:disable Metrics/BlockLength
   gem 'bugsnag'
   gem 'jbuilder', '~> 2.5'
   gem 'jquery-rails'
+  gem 'newrelic_rpm'
   gem 'omniauth-google-oauth2'
   gem 'pg'
   gem 'puma', '~> 3.0'
