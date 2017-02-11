@@ -45,7 +45,7 @@ class ConfigUpdater
 
   def update_portfolio
     @params[:portfolio].each do |id, values|
-      portfolio = Portfolio.find_by(id: id)
+      portfolio = Portfolio.find_by(id: id, business_id: @current_user.business_id)
       if portfolio
         record_error { portfolio.update!(values.permit(:name)) }
       else

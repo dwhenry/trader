@@ -30,7 +30,7 @@ RSpec.describe SecuritiesController, type: :controller do
     end
   end
 
-  context '#create' do
+  context '#show' do
     it 'allows with any permissions when user business owns the security' do
       security = create(:security, business: user.business)
       get 'show', params: { id: security.id }

@@ -7,19 +7,27 @@ class Role < ApplicationRecord
   EDIT_PORTFOLIO = 'edit_portfolio'
   CONFIGURE_SYSTEM = 'configure_system'
   FOLLOW_SECURITY = 'follow_security'
+  CREATE_TRADE = 'create_trade'
+  EDIT_TRADE = 'edit_trade'
+  EDIT_BACKOFFICE = 'edit_backoffice'
 
   DEFAULT_ADMIN = [
     CREATE_PORTFOLIO,
     EDIT_PORTFOLIO,
     CONFIGURE_SYSTEM,
     FOLLOW_SECURITY,
+    CREATE_TRADE,
+    EDIT_TRADE,
   ].freeze
+
   DEFAULT_TRADER = [
     FOLLOW_SECURITY,
+    CREATE_TRADE,
+    EDIT_TRADE,
   ].freeze
 
   DEFAULT_BACKOFFICE = [
-
+    EDIT_BACKOFFICE,
   ].freeze
 
   belongs_to :business, required: false

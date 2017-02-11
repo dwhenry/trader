@@ -1,10 +1,12 @@
 class FieldsController < ApplicationController
   def new
     @field = FieldForm.new(config_params)
+    authorize @field
   end
 
   def create
     @field = FieldForm.new(field_params)
+    authorize @field
     if @field.valid?
       custom_config_for_editing(portfolio, @field.config_type) do |config|
         config.merge!(@field.as_json)
@@ -16,13 +18,12 @@ class FieldsController < ApplicationController
   end
 
   def edit
-    custom_config = CustomConfig.find(params[:id])
-    key = params.fetch(:key)
-    @field = FieldForm.new(custom_config.config.fetch(key).merge(config_type: custom_config.config_type))
+    authorize_change?
     render :new
   end
 
   def destroy
+    authorize_change?
     base_custom_config = CustomConfig.find(params[:id])
     key = params.fetch(:key)
     if base_custom_config.config.key?(key)
@@ -34,6 +35,13 @@ class FieldsController < ApplicationController
   end
 
   private
+
+  def authorize_change?
+    custom_config = CustomConfig.find(params[:id])
+    key = params.fetch(:key)
+    @field = FieldForm.new(custom_config.config.fetch(key).merge(config_type: custom_config.config_type))
+    authorize @field
+  end
 
   def config_params
     hash = params[:field_form] || params

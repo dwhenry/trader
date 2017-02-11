@@ -8,13 +8,13 @@ RSpec.describe PortfoliosController, type: :controller do
   end
 
   context '#create' do
-    it 'allows with portfolio_creation' do
+    it 'allows with create_portfolio' do
       role.update(permissions: Role::CREATE_PORTFOLIO)
       post 'create', params: { portfolio: { name: '' } }
       expect(response).to be_success
     end
 
-    it 'disallows without portfolio_creation' do
+    it 'disallows without create_portfolio' do
       post 'create', params: { name: 'faker' }
       expect(response).to redirect_to(root_path)
     end
