@@ -7,6 +7,6 @@ FactoryGirl.define do
     email 'primary@user.com'
     oauth_token { SecureRandom.uuid }
     oauth_expires_at { 1.week.from_now }
-    role 'admin'
+    role { create(:role, name: Role::SUPER_ADMIN) }
   end
 end

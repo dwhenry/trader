@@ -4,24 +4,27 @@ class Nav < SimpleDelegator
   end
 
   def nav
-    nav = items
-    nav.flatten.each do |item|
-      item.current = true if current_page?(item.path)
+    if current_user && current_user.role
+      nav = items
+      nav.flatten.each do |item|
+        item.current = true if current_page?(item.path)
+      end
+      nav.children
+    else
+      [Item.new(name: 'Business', path: business_path, icon: 'home')]
     end
-    nav.children
   end
 
   private
 
   def items
-    Item.new(
-      children: [
-        Item.new(name: 'Business', path: business_path, icon: 'home'),
-        Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
-        Item.new(name: 'Securities', icon: 'bar-chart', children: securities),
-        Item.new(name: 'Configure', path: config_path, icon: 'gear'),
-      ],
-    )
+    children = [
+      Item.new(name: 'Business', path: business_path, icon: 'home'),
+      Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
+      Item.new(name: 'Securities', icon: 'bar-chart', children: securities),
+    ]
+    children << Item.new(name: 'Configure', path: config_path, icon: 'gear') if policy(self).configure_system?
+    Item.new(children: children)
   end
 
   def portfolios
@@ -31,10 +34,13 @@ class Nav < SimpleDelegator
   end
 
   def securities
-    [Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')] +
-      Security.where(business_id: current_user.business_id).map do |security|
-        Item.new(name: security.name, path: security_path(security))
-      end
+    children = []
+    if policy(self).follow_security?
+      children << Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')
+    end
+    children + Security.where(business_id: current_user.business_id).map do |security|
+      Item.new(name: security.name, path: security_path(security))
+    end
   end
 
   class Item

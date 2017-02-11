@@ -15,5 +15,9 @@ FactoryGirl.define do
       portfolio { create(:portfolio, business: business) }
       security { create(:security, business: business) }
     end
+
+    trait :with_backoffice do
+      backoffice { |t| Backoffice.new(trade: t.instance_variable_get(:@instance)) }
+    end
   end
 end

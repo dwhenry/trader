@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170206224057) do
+ActiveRecord::Schema.define(version: 20170208232430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,15 @@ ActiveRecord::Schema.define(version: 20170206224057) do
     t.index ["ticker"], name: "index_prices_on_ticker", using: :btree
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "business_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.jsonb    "permissions", default: {}
+    t.index ["business_id"], name: "index_roles_on_business_id", using: :btree
+  end
+
   create_table "securities", force: :cascade do |t|
     t.string   "name"
     t.string   "ticker"
@@ -125,13 +134,14 @@ ActiveRecord::Schema.define(version: 20170206224057) do
     t.datetime "oauth_expires_at"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
-    t.string   "role",             null: false
+    t.integer  "role_id"
     t.index ["business_id"], name: "index_users_on_business_id", using: :btree
   end
 
   add_foreign_key "events", "businesses"
   add_foreign_key "events", "users"
   add_foreign_key "portfolios", "businesses"
+  add_foreign_key "roles", "businesses"
   add_foreign_key "trades", "portfolios"
   add_foreign_key "trades", "securities"
   add_foreign_key "users", "businesses"

@@ -54,3 +54,5 @@ Metrics/MethodLength:
   Exclude:
     - db/migrate/*
 
+Metrics/AbcSize:
+  Max: 16

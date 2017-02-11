@@ -4,7 +4,7 @@ class Backoffice < ApplicationRecord
 
   belongs_to :trade, foreign_key: :trade_uid, primary_key: :uid
 
-  delegate :portfolio_id, to: :trade
+  delegate :portfolio_id, :portfolio, to: :trade
 
   validates :state, presence: true
   validates :version, presence: true

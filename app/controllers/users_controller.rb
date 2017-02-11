@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def create
-    user_creator = UserCreator.new(current_user, params[:emails], params[:role])
+    user_creator = UserCreator.new(current_user, params[:emails], params[:role_id])
     if user_creator.save
       redirect_to config_path(tab: :user)
     else

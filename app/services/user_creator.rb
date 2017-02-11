@@ -1,8 +1,8 @@
 class UserCreator
-  def initialize(current_user, emails, role)
+  def initialize(current_user, emails, role_id)
     @current_user = current_user
     @emails = emails.split(',').map(&:strip).uniq
-    @role = role
+    @role_id = role_id
   end
 
   def valid?
@@ -18,7 +18,7 @@ class UserCreator
       User.create!(
         business: @current_user.business,
         email: email,
-        role: @role,
+        role_id: @role_id,
       )
     end
   end

@@ -8,7 +8,7 @@ class EventSaver
     Event.create!(
       object_to_logables(object).merge(
         event_type: get_event_type(object),
-        details: clean(changes),
+        details: clean(object, changes),
         user: @user,
         owner_type: object.class,
         owner_id: object.id,
@@ -53,10 +53,15 @@ class EventSaver
     return portfolio.business if portfolio
     return object if object.is_a?(Business)
     return object.owner if object.is_a?(CustomConfig) && object.owner.is_a?(Business)
+    return object.business if object.respond_to?(:business)
     nil
   end
 
-  def clean(changes)
+  def clean(object, changes)
+    if object.is_a?(Role)
+      # do something special here.. just not sure what..
+    end
+
     changes = changes.except('uid', 'id', 'version', 'created_at', 'updated_at')
 
     %w(config custom).each do |key|

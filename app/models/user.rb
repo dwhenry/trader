@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   belongs_to :business, required: false
+  belongs_to :role, required: false
   validates :email, uniqueness: true
+  validates :role, presence: true, if: :business
 
   def self.from_omniauth(auth)
     user = from_uid(auth) || from_email(auth) || from_auth(auth)
@@ -33,7 +35,6 @@ class User < ApplicationRecord
       uid: auth.uid,
       name: auth.info.name,
       email: auth.info.email,
-      role: 'admin',
     )
   end
 end

@@ -1,9 +1,10 @@
 class PortfoliosController < ApplicationController
   def show
-    @portfolio = Portfolio.find(params[:id])
+    @portfolio = policy_scope(Portfolio).find(params[:id])
   end
 
   def create
+    authorize Portfolio
     @new_portfolio = Portfolio.new(portfolio_params.merge(business: current_user.business, uid: SecureRandom.uuid))
 
     if save_with_events(@new_portfolio, config_for(@new_portfolio, clone_id: params[:configuration]))
@@ -16,6 +17,7 @@ class PortfoliosController < ApplicationController
 
   def update
     @portfolio = Portfolio.find(params[:id])
+    authorize @portfolio
     @portfolio.assign_attributes(portfolio_params)
 
     if save_with_events(@portfolio, config_for(@portfolio, params: config_params(@portfolio)))
