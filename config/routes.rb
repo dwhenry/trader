@@ -26,4 +26,8 @@ Rails.application.routes.draw do
     end
   end
   resource :yahoo_security_search, only: %i(show create)
+
+  # custom error pages
+  match '/404', :to => 'errors#not_found', :via => :all
+  match '/500', :to => 'errors#internal_server_error', :via => :all
 end
