@@ -11,6 +11,7 @@ end
 
 source 'https://rubygems.org' do # rubocop:disable Metrics/BlockLength
   gem 'bootstrap', '~> 4.0.0.alpha5'
+  gem 'bugsnag'
   gem 'jbuilder', '~> 2.5'
   gem 'jquery-rails'
   gem 'omniauth-google-oauth2'
