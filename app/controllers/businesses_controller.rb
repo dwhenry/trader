@@ -15,10 +15,11 @@ class BusinessesController < ApplicationController
   def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @business = Business.new(business_params)
     @portfolio = Portfolio.new(portfolio_params.merge(business: @business, uid: SecureRandom.uuid))
-    current_user.assign_attributes(business: @business)
 
     roles = Role.default_roles(@business)
+    current_user.business = @business
     current_user.role = roles.first
+
     if save_with_events(
       [@business, config_for(@business), *roles],
       [@portfolio, config_for(@portfolio)],
