@@ -39,7 +39,7 @@ class Nav < SimpleDelegator
       children << Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')
     end
     children + Security.where(business_id: current_user.business_id).map do |security|
-      Item.new(name: security.name, path: security_path(security))
+      Item.new(name: "#{security.ticker} - #{security.name}", path: security_path(security))
     end
   end
 

@@ -11,7 +11,7 @@
           <ul class="<%= 'in' if item.current? %>">
             <% item.children.each do |child| %>
               <li class="<%= 'active' if child.current? %>">
-                <a href="<%=child.path %>">
+                <a href="<%= child.path %>", class="nav__one-line">
                   <i class="<%= "fa fa-#{child.icon}" if child.icon %>"></i>
                   <%= child.name %>
                 </a>
