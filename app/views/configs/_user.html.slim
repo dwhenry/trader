@@ -20,7 +20,7 @@
       .row
         .form_group.col-md-6
           = label_tag :role_id, 'Role'
-          = select_tag :role_id, options_from_collection_for_select(Role.for_business(current_user.business), :id, :pretty_name, (@user || current_user).role_id), class: 'form-control input-normal'
+          = select_tag :role_id, options_from_collection_for_select(Role.settable_for_user(current_user), :id, :pretty_name, (@user || current_user).role_id), class: 'form-control input-normal'
 
       .row
         .form_group.col-md-12
