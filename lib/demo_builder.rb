@@ -17,7 +17,7 @@ class DemoBuilder
 
   def trade(security, portfolio, final)
     puts "building trades for #{security.ticker}"
-    quantities = quantities(final)
+    quantities = quantities(final.to_i)
     dates = dates(quantities.count)
     dates.zip(quantities).each do |offset, quantity|
       trade = Trade.new(uid: Trade.next_uid)
@@ -31,15 +31,20 @@ class DemoBuilder
           security_id: security.id,
         }
       )
+
+      # 90% chance of having been settled
+      if rand < 0.9
+        save_with_versions(trade => {}, trade.backoffice => { state: 'settled' })
+      end
     end
   end
 
   # randomly(ish) split the dates of the trades to reach the final position.
   def dates(count)
-    max = (100 * rand) + (count * 20)
+    max = rand(100) + (count * 20)
     intervals = count.times.map { rand }
     sum = intervals.inject(:+)
-    intervals.map! { |v| (max * v / sum) }
+    intervals.map! { |v| (max * (v / sum)) }
     offset = max - intervals.inject(:+)
     intervals[-1] += offset
     intervals
@@ -55,11 +60,11 @@ class DemoBuilder
       quantities << final
     else
       # add a start value # which must be positive
-      quantities << (final * 3 * rand()).to_i
+      quantities << rand(final * 3)
 
       # add some random values which can be positive or negative
       (trades - 2).times do
-        quantities << ((final * 3 * rand) - (final * 1.5)).to_i # need to allow negative sum of quantity.
+        quantities << (rand(final * 2) - final) # need to allow negative sum of quantity.
       end
       # determine final value
       sum = final - quantities.inject(:+)
@@ -72,6 +77,7 @@ class DemoBuilder
         quantities << sum
       end
     end
+    quantities.reject { |val| val == 0 } # just cause its a thing..
   end
 
   def close_price(ticker, date)

@@ -1,0 +1,26 @@
+#trades.tab-pane.portfolio-tab.fade.in.active role="tabpanel"
+  h2 Pending
+
+  .table-responsive
+    table.table.table-striped.table-hover
+      thead
+        tr
+          th UID
+          th Trade Date
+          th Direction
+          th Quantity
+          th Price
+          th CCY
+          th Cost
+          th Security
+      tbody
+        - portfolio.trades.current.unsettled.includes(:security).each do |trade|
+          tr.t-trade
+            td= link_to trade.uid, edit_trade_path(trade.uid), class: 't-trade-uid'
+            td= trade.date.to_s(:short)
+            td= trade.quantity.positive? ? 'Buy' : 'Sell'
+            td= trade.quantity.abs
+            td= number_to_currency trade.price
+            td= trade.currency
+            td= number_to_currency (trade.price * trade.quantity).abs
+            td= trade.security.name

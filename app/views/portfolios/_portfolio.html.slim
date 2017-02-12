@@ -4,54 +4,27 @@
       ' Portfolio:
       = portfolio.name
 
+
+- tab = params[:tab] || 'trades'
 .row
   .col-md-12
     ul.nav.nav-tabs role="tablist"
       li.nav-item.t-pending-trades
-        a.nav-link.active href="#trades" role="tab" data-toggle="tab"
+        a.nav-link class=('active' if tab == 'trades') href=portfolio_path(portfolio, tab: 'trades')
           .portfolio-stat__description Pending trades:&nbsp;
-          .portfolio-stat__number = portfolio.trades.current.count
+          .portfolio-stat__number = portfolio.trades.current.unsettled.count
       li.nav-item
-        a.nav-link href="#positions" role="tab" data-toggle="tab"
+        a.nav-link class=('active' if tab == 'positions') href=portfolio_path(portfolio, tab: 'positions')
           .portfolio-stat__description Positions:&nbsp;
           .portfolio-stat__number = portfolio.trades.current.group(:security_id).having('sum(quantity * price) != 0').count.count
       li.nav-item
-        a.nav-link href="#valuation" role="tab" data-toggle="tab"
+        a.nav-link class=('active' if tab == 'valuations') href=portfolio_path(portfolio, tab: 'valuations')
           .portfolio-stat__description Valuation:&nbsp;
           .portfolio-stat__number = number_to_currency portfolio.trades.current.sum('quantity * price')
+
 
 .row
   .col-md-12
     .tab-content
-      #trades.tab-pane.portfolio-tab.fade.in.active role="tabpanel"
-        h2 Pending Trades
-
-        .table-responsive
-          table.table.table-striped.table-hover
-            thead
-              tr
-                th UID
-                th Trade Date
-                th Direction
-                th Quantity
-                th Price
-                th CCY
-                th Cost
-                th Security
-            tbody
-              - portfolio.trades.current.each do |trade|
-                tr.t-trade
-                  td= link_to trade.uid, edit_trade_path(trade.uid), class: 't-trade-uid'
-                  td= trade.date.to_s(:short)
-                  td= trade.quantity.positive? ? 'Buy' : 'Sell'
-                  td= trade.quantity.abs
-                  td= number_to_currency trade.price
-                  td= trade.currency
-                  td= number_to_currency (trade.price * trade.quantity).abs
-                  td= trade.security.name
-
-      #position.tab-pane.portfolio-tab.fade role="tabpanel"
-        | Pending
-
-      #valuation.tab-pane.portfolio-tab.fade role="tabpanel"
-        | Pending
+      tab-pane.portfolio-tab.active role="tabpanel"
+        = render "portfolios/#{tab}", portfolio: portfolio

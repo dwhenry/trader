@@ -1,0 +1,34 @@
+#positions.tab-pane.portfolio-tab.fade.in.active role="tabpanel"
+
+  .table-responsive
+    table.table.table-striped.table-hover
+      thead
+        tr
+          th Symbol
+          th Quantity
+          th Description
+          th Book Cost
+          th Bid
+          th Offer
+          th Change
+          th Market Value
+          th Gain/Loss
+          th Open
+          th High
+          th Low
+      tbody
+        - positions = portfolio.trades.includes(security: :today_price).group(:security_id).select(:security_id, 'sum(quantity) quantity')
+        - positions.sort_by { |p| p.security.name }.each do |trade|
+          tr.t-trade
+            td= trade.security.ticker
+            td.right-align= number_with_delimiter(trade.quantity)
+            td= trade.security.name
+            th
+            th
+            th
+            th
+            th.right-align= number_to_currency(trade.security.today_price.close * trade.quantity, unit: trade.security.currency) if trade.security.today_price
+            th
+            th.right-align= number_to_currency(trade.security.today_price&.open)
+            th.right-align= number_to_currency(trade.security.today_price&.high)
+            th.right-align= number_to_currency(trade.security.today_price&.low)

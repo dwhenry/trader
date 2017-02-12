@@ -4,6 +4,7 @@ namespace :demo do
     require 'demo_builder'
 
     portfolio = Portfolio.find_by!(name: 'Example')
+
     builder = DemoBuilder.new(User.find_by!(business_id: portfolio.business_id))
 
     security_values = JSON.parse(args[:security_json].gsub(';', ','))
