@@ -44,7 +44,7 @@ RSpec.describe Nav do
           [
             'Business',
             { "Portfolio's" => ['Nav portfolio'] },
-            { 'Securities' => ['Add', 'Nav security'] },
+            { 'Securities' => ['Add', 'PSec - Nav security'] },
             'Configure',
           ],
         )

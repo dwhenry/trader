@@ -12,7 +12,7 @@ RSpec.describe SecuritiesController, type: :controller do
       allow(YahooSearch).to receive(:find).and_return(
         [
           ['symbol', 'name', 'stock exchange'],
-          ['TICK', 'My Ticker', 'AUX'],
+          ['TICK', 'My Ticker', 'ASX'],
         ],
       )
       allow(ImportPriceData).to receive(:perform_later)

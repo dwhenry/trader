@@ -6,7 +6,7 @@ class Trade < ApplicationRecord
   belongs_to :security
   belongs_to :portfolio
   has_one :scoped_backoffice,
-          ->{ where('backoffices.trade_version = trades.version').current },
+          -> { where('backoffices.trade_version = trades.version').current },
           foreign_key: :trade_uid,
           primary_key: :uid,
           class_name: 'Backoffice'
@@ -14,7 +14,6 @@ class Trade < ApplicationRecord
           ->(trade) { where(trade_version: trade.version).current },
           foreign_key: :trade_uid,
           primary_key: :uid
-
 
   validates :currency, presence: true
   validates :current, uniqueness: { scope: :uid, if: ->(t) { t.current } }
@@ -29,10 +28,7 @@ class Trade < ApplicationRecord
   end
 
   scope :current, -> { where(current: true) }
-  scope :unsettled, -> do
-    settled_state = 'settled'
-    includes(:scoped_backoffice).where.not(backoffices: { state: settled_state })
-  end
+  scope :unsettled, -> { includes(:scoped_backoffice).where.not(backoffices: { state: 'settled' }) }
 
   def validatables
     [self, portfolio, portfolio.business]

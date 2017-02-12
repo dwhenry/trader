@@ -96,7 +96,7 @@ RSpec.describe TradesController, type: :controller do
     context 'with change to trade fields' do
       it 'allows with edit_trade and for portfolio owned by user business' do
         portfolio = create(:portfolio, business: user.business)
-        trade = create(:trade,:with_backoffice,  portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_TRADE)
         patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
         expect(response).to redirect_to(edit_trade_path(trade.uid))
@@ -104,7 +104,7 @@ RSpec.describe TradesController, type: :controller do
 
       it 'disallows with edit_trade and for portfolio not owned by user business' do
         portfolio = create(:portfolio, business: create(:business))
-        trade = create(:trade, :with_backoffice, portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_TRADE)
         patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
         expect(response).to redirect_to(root_path)
@@ -112,7 +112,7 @@ RSpec.describe TradesController, type: :controller do
 
       it 'disallows with edit_backoffice and for portfolio owned by user business' do
         portfolio = create(:portfolio, business: user.business)
-        trade = create(:trade, :with_backoffice, portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_BACKOFFICE)
         patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
         expect(response).to redirect_to(root_path)
@@ -120,7 +120,7 @@ RSpec.describe TradesController, type: :controller do
 
       it 'disallows without edit_trade' do
         portfolio = create(:portfolio, business: user.business)
-        trade = create(:trade, :with_backoffice, portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
         expect(response).to redirect_to(root_path)
       end
@@ -129,7 +129,7 @@ RSpec.describe TradesController, type: :controller do
     context 'with change to backoffice fields' do
       it 'allows with edit_backoffice and for portfolio owned by user business' do
         portfolio = create(:portfolio, business: user.business)
-        trade = create(:trade,:with_backoffice,  portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_BACKOFFICE)
         patch 'update', params: { id: trade.uid, trade: { currency: 'AUD' }, backoffice: { state: 'Started' } }
         expect(response).to redirect_to(edit_trade_path(trade.uid))
@@ -137,7 +137,7 @@ RSpec.describe TradesController, type: :controller do
 
       it 'disallows with edit_backoffice and for portfolio not owned by user business' do
         portfolio = create(:portfolio, business: create(:business))
-        trade = create(:trade, :with_backoffice, portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_BACKOFFICE)
         patch 'update', params: { id: trade.uid, trade: { currency: 'AUD' }, backoffice: { state: 'Started' } }
         expect(response).to redirect_to(root_path)
@@ -145,7 +145,7 @@ RSpec.describe TradesController, type: :controller do
 
       it 'disallows with edit_trade and for portfolio owned by user business' do
         portfolio = create(:portfolio, business: user.business)
-        trade = create(:trade, :with_backoffice, portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_TRADE)
         patch 'update', params: { id: trade.uid, trade: { currency: 'AUD' }, backoffice: { state: 'Started' } }
         expect(response).to redirect_to(root_path)
@@ -153,45 +153,14 @@ RSpec.describe TradesController, type: :controller do
 
       it 'disallows without edit_backoffice' do
         portfolio = create(:portfolio, business: user.business)
-        trade = create(:trade, :with_backoffice, portfolio: portfolio, security: create(:security, business: portfolio.business))
+        trade = create(:trade, :with_backoffice, trade_params(portfolio))
         patch 'update', params: { id: trade.uid, trade: { currency: 'AUD' }, backoffice: { state: 'Started' } }
         expect(response).to redirect_to(root_path)
       end
     end
+
+    def trade_params(portfolio)
+      { portfolio: portfolio, security: create(:security, business: portfolio.business) }
+    end
   end
-  # context '#create' do
-  #   before do
-  #     allow(YahooSearch).to receive(:find).and_return(
-  #       [
-  #         ['symbol', 'name', 'stock exchange'],
-  #         ['TICK', 'My Ticker', 'AUX'],
-  #       ],
-  #     )
-  #     allow(ImportPriceData).to receive(:perform_later)
-  #   end
-  #
-  #   it 'allow when user has `follow_security` permissions' do
-  #     role.update(permissions: Role::FOLLOW_SECURITY)
-  #     post 'create', params: { security: { ticker: 'TICK' } }
-  #     expect(response).to redirect_to(security_path(Security.last))
-  #   end
-  #
-  #   it 'disallows when user does not has `follow_security` permissions' do
-  #     post 'create', params: { security: { ticker: 'TICK' } }
-  #     expect(response).to redirect_to(root_path)
-  #   end
-  # end
-  #
-  # context '#create' do
-  #   it 'allows with any permissions when user business owns the security' do
-  #     security = create(:security, business: user.business)
-  #     get 'show', params: { id: security.id }
-  #     expect(response).to be_success
-  #   end
-  #
-  #   it 'allows when user business dose not owns the security' do
-  #     security = create(:security, business: create(:business))
-  #     expect { get 'show', params: { id: security.id } }.to raise_error(ActiveRecord::RecordNotFound)
-  #   end
-  # end
 end

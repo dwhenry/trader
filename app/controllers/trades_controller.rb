@@ -48,7 +48,7 @@ class TradesController < ApplicationController
       )
   end
 
-  def trade_params # rubocop:disable Metrics/MethodLength
+  def trade_params # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     return {} unless params[:trade]
     params[:trade][:quantity] = calc_quantity if params[:trade][:quantity]
     params

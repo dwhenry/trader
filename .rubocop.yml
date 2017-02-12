@@ -49,6 +49,7 @@ Rails/NotNullColumn:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+    - config/routes.rb
 
 Metrics/MethodLength:
   Exclude:

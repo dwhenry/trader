@@ -17,7 +17,7 @@ class SecurityCreator
     )
   end
 
-  def self.currency_from_exchange(exchange)
+  def self.currency_from_exchange(exchange) # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
     case exchange
     when 'ASE' then 'USD' # American Stock Exchange
     when 'ASX' then 'AUD' # Australian Stock Exchange

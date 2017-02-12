@@ -7,16 +7,15 @@ class DemoBuilder
   end
 
   def security(ticker, business_id)
-    puts "creating security for #{ticker}"
+    Rails.logger.info "creating security for #{ticker}"
     security = Security.find_by(ticker: ticker, business_id: business_id)
     return security if security
-    if YahooSearch.find(ticker, %w(x)).count > 1 # 1 header + 1 data rows
-      SecurityCreator.from_yahoo(business_id, ticker).tap(&:save!)
-    end
+    return unless YahooSearch.find(ticker, %w(x)).count > 1 # 1 header + 1 data rows
+    SecurityCreator.from_yahoo(business_id, ticker).tap(&:save!)
   end
 
-  def trade(security, portfolio, final)
-    puts "building trades for #{security.ticker}"
+  def trade(security, portfolio, final) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    Rails.logger.info "building trades for #{security.ticker}"
     quantities = quantities(final.to_i)
     dates = dates(quantities.count)
     dates.zip(quantities).each do |offset, quantity|
@@ -29,7 +28,7 @@ class DemoBuilder
           price: close_price(security.ticker, offset.days.ago),
           currency: security.currency,
           security_id: security.id,
-        }
+        },
       )
 
       # 90% chance of having been settled
@@ -42,7 +41,7 @@ class DemoBuilder
   # randomly(ish) split the dates of the trades to reach the final position.
   def dates(count)
     max = rand(100) + (count * 20)
-    intervals = count.times.map { rand }
+    intervals = Array.new(count) { rand }
     sum = intervals.inject(:+)
     intervals.map! { |v| (max * (v / sum)) }
     offset = max - intervals.inject(:+)
@@ -52,7 +51,7 @@ class DemoBuilder
 
   # this is a bit of a crazy equation that doesn't quite work, but is close enough that it doesn't matter for
   # generating some random data
-  def quantities(final)
+  def quantities(final) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     # determine the number of trades to reach the final quantity
     trades = rand(5) + 2
     quantities = []
@@ -69,15 +68,14 @@ class DemoBuilder
       # determine final value
       sum = final - quantities.inject(:+)
 
-      if sum.abs < final * 2 # if the final value is inside normal ranges
-        quantities << sum
-      else # try and adjust the final value to be inside normal ranges - this doesn't quite work, not sure why?
+      # try and adjust the final value to be inside normal ranges - this doesn't quite work, not sure why?
+      unless sum.abs < final * 2
         quantities.map! { |val| ((val - final) * (final * 2) / sum) + final }
         sum = final - quantities.inject(:+)
-        quantities << sum
       end
+      quantities << sum
     end
-    quantities.reject { |val| val == 0 } # just cause its a thing..
+    quantities.reject(&:zero?) # just cause its a thing..
   end
 
   def close_price(ticker, date)
