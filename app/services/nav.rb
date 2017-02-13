@@ -21,8 +21,9 @@ class Nav < SimpleDelegator
     children = [
       Item.new(name: 'Business', path: business_path, icon: 'home'),
       Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
-      Item.new(name: 'Securities', icon: 'bar-chart', children: securities),
     ]
+    add_shared_portfolios(children)
+    children << Item.new(name: 'Securities', icon: 'bar-chart', children: securities)
     children << Item.new(name: 'Configure', path: config_path, icon: 'gear') if policy(self).configure_system?
     Item.new(children: children)
   end
@@ -31,6 +32,14 @@ class Nav < SimpleDelegator
     Portfolio.where(business_id: current_user.business_id).map do |portfolio|
       Item.new(name: portfolio.name, path: portfolio_path(portfolio))
     end
+  end
+
+  def add_shared_portfolios(list)
+    shared_portfolios = SharedPortfolio.for_business_id(current_user.business_id).map do |sp|
+      Item.new(name: sp.portfolio.name, path: portfolio_path(sp .portfolio))
+    end
+    return if shared_portfolios.empty?
+    list << Item.new(name: 'Shared portfolio\'s', icon: 'th-large', children: shared_portfolios)
   end
 
   def securities

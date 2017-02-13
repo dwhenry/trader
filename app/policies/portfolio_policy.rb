@@ -9,7 +9,11 @@ class PortfolioPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      scope.where(business_id: user.business_id)
+      result = scope.where(business_id: user.business_id)
+      if (shared_portfolios = SharedPortfolio.where(business_id: user.business_id).pluck(:portfolio_uid))
+        result = result.or(scope.where(uid: shared_portfolios))
+      end
+      result
     end
   end
 end
