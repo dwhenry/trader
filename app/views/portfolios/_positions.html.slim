@@ -20,7 +20,7 @@
         - positions = portfolio.trades.includes(security: :today_price).group(:security_id).select(:security_id, 'sum(quantity) quantity')
         - positions.sort_by { |p| p.security.name }.each do |trade|
           tr.t-trade
-            td= trade.security.ticker
+            td= link_to trade.security.ticker, security_path(trade.security_id)
             td.right-align= number_with_delimiter(trade.quantity)
             td= trade.security.name
             th

@@ -18,20 +18,19 @@ class TradesController < ApplicationController
   end
 
   def edit
-    @trade = Trade.current.find_by!(uid: params[:id])
-    authorize @trade
+    @trade = policy_scope(Trade.current).find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
   end
 
-  def update
-    @trade = Trade.current.find_by!(uid: params[:id])
+  def update # rubocop:disable Metrics/AbcSize
+    @trade = policy_scope(Trade.current).find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
 
     if authenticate_edit_and_save_with_versions(@trade => trade_params, @backoffice => backoffice_params)
       flash[:info] = 'Successfully updated trade'
       redirect_to edit_trade_path(@trade.uid)
     else
-      flash[:warning] ||= 'Trade could not be saved'
+      flash[:warning] ||= 'Trade could not be updated'
       render :edit
     end
   end

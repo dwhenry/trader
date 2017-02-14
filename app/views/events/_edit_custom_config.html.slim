@@ -2,20 +2,10 @@ a.activity.card-header data-toggle="collapse" data-parent="#events" href="#event
   .activity-details
     span.glyphicon.glyphicon-calendar aria-hidden="true"
     b= event.user.name
-    '  created
-    b Trade
-    '  -
-    = event.lookup(:security).ticker
-    ' :
-    = event.current(:quantity) > 0 ? 'Buy' : 'Sell'
-    '
-    = number_with_delimiter(event.current(:quantity).abs)
-    '  @
-    = number_to_currency(event.current(:price))
-    '
-    = event.current(:currency)
-    '  on
-    = Date.parse(event.current(:date)).to_s(:short)
+    '  edited
+    b Config
+    '  for
+    b= event.owner.owner_type.humanize
   .activity-badge
     em.tag.tag-pill.tag-default #{event.created_at.to_s(:short)} (#{time_ago_in_words(event.created_at)} ago)
 
@@ -25,10 +15,12 @@ a.activity.card-header data-toggle="collapse" data-parent="#events" href="#event
       thead
         tr
           th Field
-          th Value
+          th Old value
+          th New value
       tbody
-        - event.children.first.details.each do |key, (_from, to)|
-          - next if %(trade_uid trade_version).include?(key)
+        // forgive me the sin that is below..
+        - (event.filtered_details + event.children.map(&:filtered_details).inject([], :+)).sort.each do |key, (from, to)|
           tr
             td= key.humanize
+            td= from
             td= to

@@ -18,10 +18,11 @@ namespace :demo do
         puts "Skipping: #{ticker} as could not be found on yahoo"
         next
       end
+      final = (security_values[security.ticker].to_i / builder.close_price(ticker, Time.zone.today))
       builder.trade(
         security,
         portfolio,
-        (security_values[security.ticker].to_i / builder.close_price(ticker, Time.zone.today)),
+        final.ceil,
       )
     end
   end

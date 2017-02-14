@@ -27,12 +27,23 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
   end
 
   class StubApi
-    def self.find(*)
-      [['GOOG', 'Alphabet Inc.', '10.5'], ['APPL', 'APPELL PETE CORP', '12.4']]
+    def self.find(ticker, fields)
+      [[ticker, ticker] + fields.map { |field| value(field) }]
     end
 
     def self.prices(*)
-      []
+      [
+        ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Adj Close'],
+        [1.year.ago.strftime('%Y-%m-%d'), '816', '820.958984', '815.48999', '819.23999', '1198100', '819.23999'],
+      ]
+    end
+
+    def self.field_name(field)
+      { 'x' => 'stock exchange' }[field] || field
+    end
+
+    def self.value(field)
+      { 'x' => 'ASX' }[field]
     end
   end
 

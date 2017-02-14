@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170212212640) do
+ActiveRecord::Schema.define(version: 20170212213521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,16 @@ ActiveRecord::Schema.define(version: 20170212212640) do
     t.integer  "business_id",                null: false
   end
 
+  create_table "shared_portfolios", force: :cascade do |t|
+    t.string   "portfolio_uid"
+    t.integer  "business_id"
+    t.string   "access_level",  default: "read"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["business_id"], name: "index_shared_portfolios_on_business_id", using: :btree
+    t.index ["portfolio_uid"], name: "index_shared_portfolios_on_portfolio_uid", using: :btree
+  end
+
   create_table "trades", force: :cascade do |t|
     t.integer  "quantity"
     t.decimal  "price"
@@ -143,6 +153,7 @@ ActiveRecord::Schema.define(version: 20170212212640) do
   add_foreign_key "events", "users"
   add_foreign_key "portfolios", "businesses"
   add_foreign_key "roles", "businesses"
+  add_foreign_key "shared_portfolios", "businesses"
   add_foreign_key "trades", "portfolios"
   add_foreign_key "trades", "securities"
   add_foreign_key "users", "businesses"

@@ -1,6 +1,7 @@
 class SecuritiesController < ApplicationController
   def show
-    @security = policy_scope(Security).find(params[:id])
+    security = Security.find(params[:id])
+    @security = policy_scope(Security).find_by!(ticker: security.ticker)
   end
 
   def create

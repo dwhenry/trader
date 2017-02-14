@@ -50,6 +50,23 @@ RSpec.describe Nav do
         )
       end
     end
+
+    context 'and shared portfolios exists' do
+      let!(:portfolio) { create(:portfolio, name: 'Nav portfolio', business: create(:business)) }
+      let!(:shared_portfolio) { SharedPortfolio.create(business: business, portfolio: portfolio) }
+
+      it 'can see full navigation menu' do
+        expect(subject).to eq(
+          [
+            'Business',
+            "Portfolio's",
+            { "Shared portfolio's" => ['Nav portfolio'] },
+            { 'Securities' => ['Add'] },
+            'Configure',
+          ],
+        )
+      end
+    end
   end
 
   context 'when user does not have `configure_system` permission' do

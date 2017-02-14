@@ -31,7 +31,7 @@ RSpec.describe SecuritiesController, type: :controller do
   end
 
   context '#show' do
-    it 'allows with any permissions when user business owns the security' do
+    it 'allows with any permissions when users business owns the security' do
       security = create(:security, business: user.business)
       get 'show', params: { id: security.id }
       expect(response).to be_success
@@ -40,6 +40,13 @@ RSpec.describe SecuritiesController, type: :controller do
     it 'allows when user business dose not owns the security' do
       security = create(:security, business: create(:business))
       expect { get 'show', params: { id: security.id } }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'redirects to the version of the security owned by the business if they own one' do
+      security = create(:security, business: create(:business))
+      create(:security, business: user.business, ticker: security.ticker)
+      get 'show', params: { id: security.id }
+      expect(response).to be_success
     end
   end
 end

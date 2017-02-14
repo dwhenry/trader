@@ -31,6 +31,13 @@ RSpec.describe PortfoliosController, type: :controller do
       portfolio = create(:portfolio, business: create(:business))
       expect { get 'show', params: { id: portfolio.id } }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it 'allow when user does not own portfolio but portfolio has been shared with users business' do
+      portfolio = create(:portfolio, business: create(:business))
+      SharedPortfolio.create!(portfolio: portfolio, business: user.business)
+      get 'show', params: { id: portfolio.id }
+      expect(response).to be_success
+    end
   end
 
   context '#update' do

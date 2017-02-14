@@ -43,7 +43,7 @@ class DemoBuilder
     max = rand(100) + (count * 20)
     intervals = Array.new(count) { rand }
     sum = intervals.inject(:+)
-    intervals.map! { |v| (max * (v / sum)) }
+    intervals.map! { |v| (max * (v / sum)).round }
     offset = max - intervals.inject(:+)
     intervals[-1] += offset
     intervals

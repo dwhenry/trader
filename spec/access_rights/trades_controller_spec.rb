@@ -52,43 +52,25 @@ RSpec.describe TradesController, type: :controller do
   end
 
   context '#edit' do
-    it 'allows with edit_trade and for portfolio owned by user business' do
+    it 'allows for portfolio owned by user business' do
       portfolio = create(:portfolio, business: user.business)
       trade = create(:trade, portfolio: portfolio, security: create(:security, business: portfolio.business))
-      role.update(permissions: Role::EDIT_TRADE)
       get 'edit', params: { id: trade.uid }
       expect(response).to be_success
     end
 
-    it 'disallow with edit_trade and for portfolio not owned by user business' do
+    it '404 for portfolio not owned by user business' do
       portfolio = create(:portfolio, business: create(:business))
       trade = create(:trade, portfolio: portfolio, security: create(:security, business: portfolio.business))
-      role.update(permissions: Role::EDIT_TRADE)
-      get 'edit', params: { id: trade.uid }
-      expect(response).to redirect_to(root_path)
+      expect { get 'edit', params: { id: trade.uid } }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it 'allow with edit_back_office and for portfolio owned by user business' do
-      portfolio = create(:portfolio, business: user.business)
+    it 'allows for portfolio shared with user business' do
+      portfolio = create(:portfolio, business: create(:business))
+      SharedPortfolio.create(portfolio_uid: portfolio.uid, business: user.business)
       trade = create(:trade, portfolio: portfolio, security: create(:security, business: portfolio.business))
-      role.update(permissions: Role::EDIT_BACKOFFICE)
       get 'edit', params: { id: trade.uid }
       expect(response).to be_success
-    end
-
-    it 'disallow with edit_back_office and for portfolio not owned by user business' do
-      portfolio = create(:portfolio, business: create(:business))
-      trade = create(:trade, portfolio: portfolio, security: create(:security, business: portfolio.business))
-      role.update(permissions: Role::EDIT_BACKOFFICE)
-      get 'edit', params: { id: trade.uid }
-      expect(response).to redirect_to(root_path)
-    end
-
-    it 'disallows without edit_trade or edit_back_office' do
-      portfolio = create(:portfolio, business: user.business)
-      trade = create(:trade, portfolio: portfolio, security: create(:security, business: portfolio.business))
-      get 'edit', params: { id: trade.uid }
-      expect(response).to redirect_to(root_path)
     end
   end
 
@@ -102,12 +84,12 @@ RSpec.describe TradesController, type: :controller do
         expect(response).to redirect_to(edit_trade_path(trade.uid))
       end
 
-      it 'disallows with edit_trade and for portfolio not owned by user business' do
+      it '404 for portfolio not owned by user business' do
         portfolio = create(:portfolio, business: create(:business))
         trade = create(:trade, :with_backoffice, trade_params(portfolio))
-        role.update(permissions: Role::EDIT_TRADE)
-        patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
-        expect(response).to redirect_to(root_path)
+        expect do
+          patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it 'disallows with edit_backoffice and for portfolio owned by user business' do
@@ -135,12 +117,13 @@ RSpec.describe TradesController, type: :controller do
         expect(response).to redirect_to(edit_trade_path(trade.uid))
       end
 
-      it 'disallows with edit_backoffice and for portfolio not owned by user business' do
+      it '404 for portfolio not owned by user business' do
         portfolio = create(:portfolio, business: create(:business))
         trade = create(:trade, :with_backoffice, trade_params(portfolio))
         role.update(permissions: Role::EDIT_BACKOFFICE)
-        patch 'update', params: { id: trade.uid, trade: { currency: 'AUD' }, backoffice: { state: 'Started' } }
-        expect(response).to redirect_to(root_path)
+        expect do
+          patch 'update', params: { id: trade.uid, trade: { currency: 'USD' }, backoffice: { state: 'Pending' } }
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it 'disallows with edit_trade and for portfolio owned by user business' do
