@@ -18,7 +18,7 @@ class TradesController < ApplicationController
   end
 
   def edit
-    @trade = Trade.current.find_by!(uid: params[:id])
+    @trade = policy_scope(Trade.current).find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
   end
 
@@ -30,7 +30,7 @@ class TradesController < ApplicationController
       flash[:info] = 'Successfully updated trade'
       redirect_to edit_trade_path(@trade.uid)
     else
-      flash[:warning] ||= 'Trade could not be saved'
+      flash[:warning] = 'Trade could not be saved'
       render :edit
     end
   end

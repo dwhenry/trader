@@ -28,9 +28,7 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
 
   class StubApi
     def self.find(ticker, fields)
-      [
-        [ticker, ticker] + fields.map { |field| value(field) }
-      ]
+      [[ticker, ticker] + fields.map { |field| value(field) }]
     end
 
     def self.prices(*)
@@ -41,15 +39,11 @@ class YahooSearch # rubocop:disable Metrics/ClassLength
     end
 
     def self.field_name(field)
-      {
-        'x' => 'stock exchange'
-      }[field] || field
+      { 'x' => 'stock exchange' }[field] || field
     end
 
     def self.value(field)
-      {
-        'x' => 'ASX'
-      }[field]
+      { 'x' => 'ASX' }[field]
     end
   end
 
