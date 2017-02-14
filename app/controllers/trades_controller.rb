@@ -19,12 +19,11 @@ class TradesController < ApplicationController
 
   def edit
     @trade = Trade.current.find_by!(uid: params[:id])
-    authorize @trade
     @backoffice = @trade.backoffice
   end
 
   def update
-    @trade = Trade.current.find_by!(uid: params[:id])
+    @trade = policy_scope(Trade.current).find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
 
     if authenticate_edit_and_save_with_versions(@trade => trade_params, @backoffice => backoffice_params)
