@@ -22,7 +22,7 @@ class TradesController < ApplicationController
     @backoffice = @trade.backoffice
   end
 
-  def update
+  def update # rubocop:disable Metrics/AbcSize
     @trade = policy_scope(Trade.current).find_by!(uid: params[:id])
     @backoffice = @trade.backoffice
 
@@ -30,7 +30,7 @@ class TradesController < ApplicationController
       flash[:info] = 'Successfully updated trade'
       redirect_to edit_trade_path(@trade.uid)
     else
-      flash[:warning] = 'Trade could not be saved'
+      flash[:warning] ||= 'Trade could not be updated'
       render :edit
     end
   end

@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   def index
     authorize trade || portfolio || business, :event?
 
-    @events = Event.where(event_criteria).includes(:children).order(created_at: :desc).first(10)
+    @events = Event.where(event_criteria).includes(:children).order(created_at: :desc)
 
     request.xhr? && render('index', layout: false)
   end
