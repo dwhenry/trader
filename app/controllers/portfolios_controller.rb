@@ -19,8 +19,8 @@ class PortfoliosController < ApplicationController
     @portfolio = Portfolio.find(params[:id])
     authorize @portfolio
     @portfolio.assign_attributes(portfolio_params)
-
-    if save_with_events(@portfolio, config_for(@portfolio, params: config_params(@portfolio)))
+    @config = config_for(@portfolio, params: config_params(@portfolio))
+    if save_with_events(@portfolio, @config)
       redirect_to config_path(tab: :portfolios, anchor: "portfolio-#{@portfolio.id}")
     else
       @tab = 'portfolios'

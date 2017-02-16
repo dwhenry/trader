@@ -33,7 +33,7 @@ class Role < ApplicationRecord
   belongs_to :business, required: false
 
   scope :for_business, ->(business) { where(business_id: [nil, business.id]) }
-  scope :settable_for_user, ->(user) { for_business(user.business).where(level: 0..user.role.level) }
+  scope :settable_for_user, ->(user) { for_business(user.business).order(:name).where(level: 0..user.role.level) }
   validates :name, presence: true, uniqueness: { scope: :business }
   validates :business, absence: true, if: ->(r) { r.name == SUPER_ADMIN }
 

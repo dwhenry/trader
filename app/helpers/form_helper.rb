@@ -4,7 +4,7 @@ module FormHelper
     render 'form/field', hint: hint, error: errors, block: block
   end
 
-  def field_tag(value:, error_proc:, hint: nil, &block)
+  def field_tag(value:, error_proc: ->(value) { nil }, hint: nil, &block)
     errors = error_proc.call(value)
     render 'form/field', hint: hint, error: errors, block: block
   end
