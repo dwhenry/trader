@@ -8,7 +8,7 @@ class YahooSecuritySearchesController < ApplicationController
     return unless params[:ticker]
 
     params[:ticker] = clean_ticker(params[:ticker])
-    @headers, *@securities = *YahooSearch.find(params[:ticker], @fields)
+    @headers, *@securities = *YahooSearch.find(params[:ticker], @fields) if params[:ticker].present?
   end
 
   private
