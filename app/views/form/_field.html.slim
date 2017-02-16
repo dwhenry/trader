@@ -1,0 +1,6 @@
+.form-group class=('has-danger' if error)
+  = capture(&block)
+  - if error
+    .form-control-feedback= error.html_safe
+  - if hint
+    small.text-muted=hint

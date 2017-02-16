@@ -2,11 +2,12 @@
   .row
     .col-lg-6
       .row
-        .form_group.col-md-8
-          = f.label :name
-          = f.text_field :name, required: true, class: 'form-control t-business-name'
+        .col-md-8
+          = field(f, field_name: :name) do
+            = f.label :name
+            = f.text_field :name, class: 'form-control t-business-name'
 
-    = render 'fields', config: params[:config] || config_for(current_user.business).config
+    = render 'configs/fields', config: (@config || config_for(current_user.business)).config_instance
 
   .row
     .form_group.col-md-12

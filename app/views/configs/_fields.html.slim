@@ -1,4 +1,4 @@
-= fields_for :config, OpenStruct.new(config) do |f|
-  - config.each do |key, _|
+= fields_for :config, config do |f|
+  - config.each do |field|
     .col-lg-6
-      = render "configs/field_types/#{CustomConfig::CONFIG_OPTIONS[key.to_sym][:type]}", f: f, key: key
+      = render "configs/field_types/#{CustomConfig::CONFIG_OPTIONS[field.to_sym][:type]}", f: f, key: field

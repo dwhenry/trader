@@ -36,7 +36,8 @@ class BusinessesController < ApplicationController
   def update
     @business = current_user.business
     @business.assign_attributes(business_params)
-    if save_with_events(@business, config_for(@business, params: config_params))
+    @config = config_for(@business, params: config_params)
+    if save_with_events(@business, @config)
       redirect_to config_path(tab: :business)
     else
       @tab = 'business'
