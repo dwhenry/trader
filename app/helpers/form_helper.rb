@@ -1,6 +1,6 @@
 module FormHelper
   def field(f, field_name: , hint: nil, &block)
-    errors = f.object.errors[field_name].join('<br>').presence
+    errors = Array(field_name).flat_map { |fn| f.object.errors[fn] }.uniq.sort.join('<br>').presence
     render 'form/field', hint: hint, error: errors, block: block
   end
 

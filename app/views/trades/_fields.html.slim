@@ -1,8 +1,8 @@
-.form-group
+= field_tag(value: nil) do
   = label_tag :direction
   .radio
     label.custom-control.custom-radio
-      = radio_button_tag :direction, :buy, @trade.quantity.nil? ||  @trade.quantity.positive?, class: 't-direction-buy js-quantity-update js-direction custom-control-input'
+      = radio_button_tag :direction, :buy, @trade.quantity.nil? ||  (@trade.quantity.zero? || @trade.quantity.positive?), class: 't-direction-buy js-quantity-update js-direction custom-control-input'
       span.custom-control-indicator
       span.custom-control-description Buy
 
@@ -12,34 +12,39 @@
       span.custom-control-description Sell
 
 .row
-  .form-group.col-md-8.col-xl-6
-    = f.label :date
-    = f.date_field :date, class: 't-date form-control'
+  .col-md-8.col-xl-6
+    = field(f, field_name: :date) do
+      = f.label :date
+      = f.date_field :date, class: 't-date form-control'
 
 .row
-  .form-group.col-md-8.col-xl-6
-    = label_tag :quantity
-    = text_field_tag :quantity, @trade.quantity&.abs, type: :number, min: '0', step: '1', required: true, class: 'integer-only t-quantity js-quantity-update js-quantity form-control'
-    = f.hidden_field :quantity, class: 'js-quantity-submitted'
+  .col-md-12
+    = field(f, field_name: :security_id) do
+      = f.label :security_id
+      = f.collection_select :security_id, Security.where(business_id: current_user.business_id), :id, :name, { include_blank: true }, class: 't-security form-control js-enable-select'
 
 .row
-  .form-group.col-md-8.col-xl-6
-    = f.label :price
-    .row
-      .col-xs-8
-        / TODO: make the step size configurable - maybe on the portfolio or business
-        = f.text_field :price, type: :number, step: '0.01', class: 't-price form-control'
-      .col-xs-4.pull-xs-1
-        = f.text_field :currency, class: 'form__currency t-currency form-control'
+  .col-md-8.col-xl-6
+    = field(f, field_name: :quantity) do
+      = label_tag :quantity
+      = text_field_tag :quantity, @trade.quantity&.abs, type: :number, min: '0', step: '1', class: 'integer-only t-quantity js-quantity-update js-quantity form-control'
+      = f.hidden_field :quantity, class: 'js-quantity-submitted'
+
+.row
+  .col-md-8.col-xl-6
+    = field(f, field_name: [:price, :currency])
+      = f.label :price
+      .row
+        .col-xs-8
+          / TODO: make the step size configurable - maybe on the portfolio or business
+          = f.text_field :price, type: :number, step: '0.01', min: '0', class: 't-price form-control'
+        .col-xs-4.pull-xs-1
+          = f.text_field :currency, class: 'form__currency t-currency form-control'
 
 = f.fields_for(:custom_instance, f.object.custom_instance) do |c|
   - c.object.each do |cf|
     .row
-      .form-group.col-md-8.col-xl-6
-        = c.label cf.key
-        = field_for(cf, c, class: 't-custom-field')
-
-.row
-  .form-group.col-md-12
-    = f.label :security_id
-    = f.collection_select :security_id, Security.where(business_id: current_user.business_id), :id, :name, { include_blank: true }, class: 't-security form-control'
+      .col-md-8.col-xl-6
+        = field(c, field_name: cf.key) do
+          = c.label cf.key
+          = field_for(cf, c, class: 't-custom-field')
