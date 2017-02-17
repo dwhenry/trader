@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   belongs_to :business, required: false
   belongs_to :role, required: false
-  validates :email, uniqueness: true, format: %r{\A[^@]+@[^@]+\.[^@\.]+\z}
+  validates :email, uniqueness: true, format: /\A[^@]+@[^@]+\.[^@\.]+\z/
   validates :role, presence: true, if: :business
   validates :name, presence: true, if: :uid
 

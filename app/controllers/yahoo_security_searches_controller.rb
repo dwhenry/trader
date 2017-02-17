@@ -3,7 +3,7 @@ class YahooSecuritySearchesController < ApplicationController
 
   def show
     authorize :yahoo_search
-    @fields = params[:fields] = remember_fields(params[:fields])
+    @fields = remembered_fields
 
     return unless params[:ticker]
 
@@ -13,9 +13,10 @@ class YahooSecuritySearchesController < ApplicationController
 
   private
 
-  def remember_fields(fields)
+  def remembered_fields
+    fields = params[:fields]
     session['yahoo_search_params'] = fields if fields&.any?
-    session['yahoo_search_params'] || DEFAULT_FIELDS
+    params[:fields] = session['yahoo_search_params'] || DEFAULT_FIELDS
   end
 
   def clean_ticker(ticker)
