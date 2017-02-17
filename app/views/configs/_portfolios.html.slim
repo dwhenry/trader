@@ -6,11 +6,10 @@
         .col-lg-12
           h3= current_portfolio.name
       .row
-        .col-lg-6
-          .row
-            .form_group.col-md-8
-              = f.label :name
-              = f.text_field :name, class: 'form-control t-portfolio-name'
+        .col-md-6
+          = field(f, field_name: :name) do
+            = f.label :name
+            = f.text_field :name, class: 'form-control t-portfolio-name'
 
       .row
         = render 'configs/fields', config: (@portfolio&.id == portfolio.id ? @config : config_for(current_portfolio)).config_instance
@@ -39,17 +38,15 @@ config-group
       = form_for portfolio, url: config_portfolios_path(anchor: 'new_portfolio') do |f|
         h1 New Portfolio
         .row
-          .form_group.col-md-6
-            = f.label :name do
-              b Portfolio name
-              |  - this will help group similar trades together, you can have as many portfolio's as you like.
+          .col-md-6
+            = field(f, field_name: :name, hint: 'Portfolios group similar trades together.')
+              = f.label :name, 'Portfolio name'
               = f.text_field :name, class: 't-new-portfolio-name form-control'
 
         .row
-          .form_group.col-md-6
-            = f.label :configuration do
-              b Configuration
-              |  - copy the configuration from an existing portfolio.
+          .col-md-6
+            = field_tag(value: nil, hint: 'Select an existing portfolio to base the configuration off.')
+              = f.label :configuration, 'Base Configuration'
               = select_tag :configuration, options_for_select(copy_portfolio_config_options), required: true, class: 'form-control'
 
         .form_group

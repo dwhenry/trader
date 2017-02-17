@@ -1,11 +1,9 @@
-.row
-  .col-md-8
-    = field(f, field_name: key) do
-      = f.label key
+= field(f, field_name: key) do
+  = f.label key
 
-      .radio
-        - CustomConfig::CONFIG_OPTIONS[key.to_sym][:options].each do |option|
-          label.custom-control.custom-radio
-            = f.radio_button key, option, class: "custom-control-input t-#{key.tr('_', '-')}-#{option.tr('_', '-')}"
-            span.custom-control-indicator
-            span.custom-control-description= option.titlecase
+  .radio
+    - CustomConfig::CONFIG_OPTIONS[key.to_sym][:options].each do |option|
+      label.custom-control.custom-radio
+        = f.radio_button key, option, class: "custom-control-input t-#{key.tr('_', '-')}-#{option.tr('_', '-')}"
+        span.custom-control-indicator
+        span.custom-control-description= option.titlecase

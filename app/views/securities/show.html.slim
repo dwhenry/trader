@@ -6,15 +6,15 @@ row
 .row
   .col-md-12
     = form_for @security do |f|
-      .form_group
+      = field(f, field_name: :ticker) do
         = f.label :ticker
         = f.text_field :ticker, class: 'form-control', disabled: true
 
-      .form_group
+      = field(f, field_name: :name) do
         = f.label :name
         = f.text_field :name, class: 'form-control', disabled: true
 
-      .form_group
+      = field(f, field_name: :currency) do
         = f.label :currency
         = f.text_field :currency, class: 'form-control'
 
