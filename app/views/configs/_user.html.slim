@@ -12,19 +12,20 @@
           .form_group
             = f.submit 'Update', class: 'btn btn-primary t-save'
 
-    = form_tag config_users_path do
+    - user_creator = @user_creator || UserCreator.new(current_user: current_user, role_id: (@user || current_user).role_id)
+    = form_for user_creator, url: config_users_path(anchor: 'new_user_creator') do |f|
       h2 Add user(s)
       .row
         .col-md-12
-          = field_tag(value: params[:emails])
-            = label_tag :emails, 'Email(s)'
-            = text_field_tag :emails, params[:emails], placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal t-emails'
+          = field(f, field_name: :emails, hint: 'comma separated list of user emails to be created') do
+            = f.label :emails, 'Email(s)'
+            = f.text_field :emails, placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal t-emails'
 
       .row
         .col-md-6
-          .form_group
-            = label_tag :role_id, 'Role'
-            = select_tag :role_id, options_from_collection_for_select(Role.settable_for_user(current_user), :id, :pretty_name, (@user || current_user).role_id), class: 'form-control input-normal'
+          = field(f, field_name: :role_id) do
+            = f.label :role_id, 'Role'
+            = f.collection_select :role_id, Role.settable_for_user(current_user), :id, :pretty_name, {}, class: 'form-control input-normal'
 
       .row
         .col-md-12

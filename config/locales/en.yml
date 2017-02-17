@@ -6,3 +6,7 @@ en:
           attributes:
             quantity:
               other_than: 'must be greater than 0' # hack as negative value is a sell trade
+        user:
+          attributes:
+            email:
+              invalid: 'is not a valid email address'

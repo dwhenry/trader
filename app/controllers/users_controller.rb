@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   def create
-    user_creator = UserCreator.new(current_user, params[:emails], params[:role_id])
-    if user_creator.save
+    @user_creator = UserCreator.new(user_create_params)
+    if @user_creator.save
       redirect_to config_path(tab: :user)
     else
       @tab = 'user'
@@ -23,5 +23,12 @@ class UsersController < ApplicationController
     params
       .require(:user)
       .permit(:name)
+  end
+
+  def user_create_params
+    params
+      .require(:user_creator)
+      .permit(:emails, :role_id)
+      .merge(current_user: current_user)
   end
 end

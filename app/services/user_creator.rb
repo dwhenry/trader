@@ -1,25 +1,29 @@
 class UserCreator
-  def initialize(current_user, emails, role_id)
-    @current_user = current_user
-    @emails = emails.split(',').map(&:strip).uniq
-    @role_id = role_id
-  end
+  include ActiveModel::Model
 
-  def valid?
-    @emails.all? do |email|
-      User.find_by(email: email).nil? &&
-        User.new(email: email).valid?
+  attr_accessor :current_user, :emails, :role_id
+
+  validates :emails, presence: true
+  validate do
+    if emails.present?
+      errors.add(:role_id, 'is not allowed') unless users.first.role.level <= current_user.role.level
+      users.each do |user|
+        errors.add(:emails, "#{user.email} #{user.errors.messages.values.flatten.to_sentence}") unless user.valid?
+      end
     end
   end
 
-  def save
-    return false unless valid?
-    @emails.each do |email|
-      User.create!(
+  def users
+    @users ||= emails.split(',').map(&:strip).uniq.map do |email|
+      User.new(
         business: @current_user.business,
         email: email,
         role_id: @role_id,
       )
     end
+  end
+
+  def save
+    valid? && users.each(&:save!)
   end
 end

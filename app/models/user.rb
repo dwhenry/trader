@@ -1,9 +1,9 @@
 class User < ApplicationRecord
   belongs_to :business, required: false
   belongs_to :role, required: false
-  validates :email, uniqueness: true
+  validates :email, uniqueness: true, format: %r{\A[^@]+@[^@]+\.[^@\.]+\z}
   validates :role, presence: true, if: :business
-  validates :name, presence: true
+  validates :name, presence: true, if: :uid
 
   def self.from_omniauth(auth)
     user = from_uid(auth) || from_email(auth) || from_auth(auth)
