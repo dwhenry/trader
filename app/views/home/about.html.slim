@@ -11,6 +11,14 @@
 .row
   .col-md-6
     h2 In Progress
+
+    h2 Completed
+    | 16 Feb 2017
+    ul
+      li display better error messaging - in forms
+
+    h2 Completed
+    | 16 Feb 2017
     ul
       li Allow user to share portfolio with read only access
 
@@ -22,12 +30,14 @@
       li add bugsnag for error logging
       li add new relic for monitoring
       li add GA - because Chris was right
+      li generation of dummy trades to show potential
 
     h2 Completed
     | 6 Feb 2017
     ul
       li map config data in event object before saving
       li Custom field setup
+      li config update is logged to events. and works for portfolio/business custom config changes
 
     h2 Completed
     | 23 Jan 2017
@@ -38,6 +48,7 @@
     | 22 Jan 2017
     ul
       li Get a decent template with working menu items as a must have.
+      li better menu/navigation system
 
     h2 Completed
     | 21 Jan 2017
@@ -77,24 +88,18 @@
     h2 Pending for alpha - prioritised in planned order of implementation
 
     ul
-      li config update is logged to events. and works for portfolio/business custom config changes
-      li display better error messaging - in forms
-      li what happens when you change the field name while editing a custom field?
-      li add bugmuncher for feedback
-      li additional custom field types: boolean, date, cash (triggering cash balance event)
-      li create default portfolio option - pre-configure with default fields
       li currency pricing
       li reporting currency
+      li what happens when you change the field name while editing a custom field?
+      li add bugmuncher for feedback
+      li create default portfolio option - pre-configure with default fields
       li Add backoffice state config
       li retrieve user image (picture) during google oauth
-      li timezone issues related to dates
+      li timezone issues related to dates/reporting
       li allow comments to be created on trades/portfolios.
-      li generation of dummy trades to show potential
       li Backoffice functionality for managing trade settlement
       li Reporting
       li Rules engine to allow dynamic validations
-      li add new relic for performance monitoring
-      li better menu/navigation system
       li edit/delete existing users as admin
       li delete business from system as admin
 
@@ -103,3 +108,4 @@
       li Admin configuration - extract from hard-coded business config implementation
       li automated document generation - using interpolated markdown
       li handling of overlapping rules
+      li additional custom field types: boolean, date, cash (triggering cash balance event)
