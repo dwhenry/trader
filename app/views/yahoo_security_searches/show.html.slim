@@ -5,20 +5,22 @@
   = form_tag yahoo_security_search_path, method: :get do
     .col-xl-6
       .row
-        .form-group.col-md-8
-          = label_tag :ticker
-          = text_field_tag :ticker, params[:ticker], class: 'form-control t-ticker'
+        .col-md-8
+          = field_tag(value: params[:ticker], error_proc: ->(value) { 'please enter ticker to search for' if value.blank? }) do
+            = label_tag :ticker
+            = text_field_tag :ticker, params[:ticker], class: 'form-control t-ticker'
 
       .row
-        .form-group.col-md-8
-          = submit_tag 'Search', class:'btn btn-primary t-search'
-
+        .col-md-8
+          .form-group
+            = submit_tag 'Search', class:'btn btn-primary t-search'
 
     .col-xl-6
       .row
-        .form-group.col-md-12
-          = label_tag :fields
-          = select_tag :fields, grouped_options_for_select(YahooSearch.fields, params[:fields]), class: 'form-control js-enable-select', multiple: true
+        .col-md-12
+          .form-group
+            = label_tag :fields
+            = select_tag :fields, grouped_options_for_select(YahooSearch.fields, params[:fields]), class: 'form-control js-enable-select', multiple: true
 
 - if @securities
   .row

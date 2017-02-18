@@ -2,29 +2,35 @@
   .col-lg-6
     = form_for @user || current_user, url: config_user_path(@user || current_user) do |f|
       .row
-        .form_group.col-md-8
-          = f.label :name
-          = f.text_field :name, required: true, class: 'form-control t-user-name'
+        .col-md-8
+          = field(f, field_name: :name) do
+            = f.label :name
+            = f.text_field :name, class: 'form-control t-user-name'
 
       .row
-        .form_group.col-md-12
-          = f.submit 'Update', class: 'btn btn-primary t-save'
+        .col-md-12
+          .form_group
+            = f.submit 'Update', class: 'btn btn-primary t-save'
 
-    = form_tag config_users_path do
+    - user_creator = @user_creator || UserCreator.new(current_user: current_user, role_id: (@user || current_user).role_id)
+    = form_for user_creator, url: config_users_path(anchor: 'new_user_creator') do |f|
       h2 Add user(s)
       .row
-        .form_group.col-md-12
-          = label_tag :emails, 'Email(s)'
-          = text_field_tag :emails, params[:emails], placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal t-emails'
+        .col-md-12
+          = field(f, field_name: :emails, hint: 'comma separated list of user emails to be created') do
+            = f.label :emails, 'Email(s)'
+            = f.text_field :emails, placeholder: 'bob@new-user.com, jack@new-user.com', class: 'form-control input-normal t-emails'
 
       .row
-        .form_group.col-md-6
-          = label_tag :role_id, 'Role'
-          = select_tag :role_id, options_from_collection_for_select(Role.settable_for_user(current_user), :id, :pretty_name, (@user || current_user).role_id), class: 'form-control input-normal'
+        .col-md-6
+          = field(f, field_name: :role_id) do
+            = f.label :role_id, 'Role'
+            = f.collection_select :role_id, Role.settable_for_user(current_user), :id, :pretty_name, {}, class: 'form-control input-normal'
 
       .row
-        .form_group.col-md-12
-          = submit_tag 'Add', class: 'btn btn-primary t-add'
+        .col-md-12
+          .form_group
+            = submit_tag 'Add', class: 'btn btn-primary t-add'
 
   .col-lg-6
     h2 Users

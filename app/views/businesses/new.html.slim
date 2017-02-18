@@ -10,19 +10,17 @@
 
     = form_for @business, url: business_path do |f|
       .row
-        .form_group.col-md-6
-          = f.label :name do
-            b Business name
-            |  - this can be anything, but will hopefully help to identify you from other users.
-          = f.text_field :name, required: true, class: 't-business-name form-control'
+        .col-md-6
+          = field(f, field_name: :name) do
+            = f.label :name, 'Business name'
+            = f.text_field :name, required: true, class: 't-business-name form-control'
 
       = fields_for :portfolio, @portfolio do |p|
         .row
-          .form_group.col-md-6
-            = p.label :name do
-              b Portfolio name
-              |  - this will help group similar trades together, you can have as many portfolio's as you like.
-            = p.text_field :name, required: true, class: 't-portfolio-name form-control'
+          .col-md-6
+            = field(p, field_name: :name, hint: 'Portfolios group similar trades together.') do
+              = p.label :name, 'Portfolio name'
+              = p.text_field :name, required: true, class: 't-portfolio-name form-control'
 
       .row
         .form_group.col-md-12

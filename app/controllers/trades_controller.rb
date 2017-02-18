@@ -65,7 +65,7 @@ class TradesController < ApplicationController
   end
 
   def calc_quantity
-    return nil unless params[:direction] && params[:quantity]
+    return params[:quantity] unless params[:direction]
     (params[:direction] == 'buy' ? 1 : -1) * params[:quantity].to_i
   end
 

@@ -9,64 +9,71 @@
       = f.hidden_field :owner_type
 
       .row
-        .form-group.col-md-12
-          h3 Field for
+        .col-md-12
+          = field(f, field_name: :config_type) do
+            h3 Field for
 
-          .form_control
-            .form-check.form-check-inline
+            .form_control
+              .form-check.form-check-inline
+                label.form-check-label
+                  = f.radio_button :config_type, CustomConfig::TRADE_FIELDS, class: 'form-check-input t-config-type'
+                  '  Trade adjustment
+              .form-check.form-check-inline
+                label.form-check-label
+                  = f.radio_button :config_type, CustomConfig::BACKOFFICE_FIELDS, class: 'form-check-input t-config-type'
+                  '  Trade tracking/settlement
+
+      .row
+        .col-md-8.col-xl-6
+          = field(f, field_name: :name) do
+            = f.label :name
+            = f.text_field :name, class: 't-name form-control'
+
+      .row
+        .col-md-8.col-xl-6
+          = field(f, field_name: :deafult) do
+            = f.label :default
+            = f.text_field :default, class: 't-default form-control'
+
+      .row
+        .col-md-12
+          = field(f, field_name: :type) do
+            h3 Field Type
+
+            .form_control
+              .form-check.form-check-inline
+                label.form-check-label
+                  = f.radio_button :type, :string, class: 'form-check-input t-type'
+                  '  Text
+              .form-check.form-check-inline
+                label.form-check-label
+                  = f.radio_button :type, :number, class: 'form-check-input t-type'
+                  '  Number
+              .form-check.form-check-inline
+                label.form-check-label
+                  = f.radio_button :type, :list, class: 'form-check-input t-type'
+                  '  Lookup
+
+      .row
+        .col-md-8.col-xl-6
+          = field(f, field_name: :values) do
+            = f.label :values
+            = f.text_field :values, class: 't-values form-control'
+      .row
+        .col-md-8.col-xl-6
+          = field(f, field_name: :name) do
+            h3 Validations
+            .form-check
               label.form-check-label
-                = f.radio_button :config_type, CustomConfig::TRADE_FIELDS, class: 'form-check-input t-config-type'
-                '  Trade adjustment
-            .form-check.form-check-inline
+                = f.check_box :validates_presence, class: 't-validates-presence form-check-input'
+                | Required field
+
+            .form-check
               label.form-check-label
-                = f.radio_button :config_type, CustomConfig::BACKOFFICE_FIELDS, class: 'form-check-input t-config-type'
-                '  Trade tracking/settlement
+                = f.check_box :validates_inclusion, class: 't-validates-inclusion form-check-input'
+                | Must be element from list
 
       .row
-        .form-group.col-md-8.col-xl-6
-          = f.label :name
-          = f.text_field :name, class: 't-name form-control'
-
-      .row
-        .form-group.col-md-8.col-xl-6
-          = f.label :default
-          = f.text_field :default, class: 't-default form-control'
-
-      .row
-        .form-group.col-md-12
-          h3 Field Type
-
-          .form_control
-            .form-check.form-check-inline
-              label.form-check-label
-                = f.radio_button :type, :string, class: 'form-check-input t-type'
-                '  Text
-            .form-check.form-check-inline
-              label.form-check-label
-                = f.radio_button :type, :number, class: 'form-check-input t-type'
-                '  Number
-            .form-check.form-check-inline
-              label.form-check-label
-                = f.radio_button :type, :list, class: 'form-check-input t-type'
-                '  Lookup
-
-      .row
-        .form-group.col-md-8.col-xl-6
-          = f.label :values
-          = f.text_field :values, class: 't-values form-control'
-      .row
-        .form-group.col-md-8.col-xl-6
-          h3 Validations
-          .form-check
-            label.form-check-label
-              = f.check_box :validates_presence, class: 't-validates-presence form-check-input'
-              | Required field
-
-          .form-check
-            label.form-check-label
-              = f.check_box :validates_inclusion, class: 't-validates-inclusion form-check-input'
-              | Must be element from list
-
-      .row
-        .form-group.col-md-4
-          = f.submit 'Save', class: 'btn btn-primary t-save-button'
+        .col-md-4
+          .form-group
+            = f.submit 'Save', class: 'btn btn-primary t-save-button'

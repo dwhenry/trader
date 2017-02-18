@@ -1,4 +1,3 @@
-.row
-  .form_group.col-md-8
-    = f.label key
-    = f.select key, CustomConfig::CONFIG_OPTIONS[key.to_sym][:options], {}, required: true, class: "form-control t-#{key.tr('_', '-')}"
+= field(f, field_name: key) do
+  = f.label key
+  = f.select key, CustomConfig::CONFIG_OPTIONS[key.to_sym][:options], { include_blank: true }, class: "form-control t-#{key.tr('_', '-')}"

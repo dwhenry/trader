@@ -19,6 +19,11 @@ class CustomConfig < ApplicationRecord
   validates :config_type,
             uniqueness: { scope: [:owner_type, :owner_id] },
             inclusion: { in: CONFIG_TYPES }
+  validates_with ActiveRecord::Validations::AssociatedValidator, attributes: [:config_instance]
+
+  def config_instance
+    @config_instance ||= OpenModel.new(config)
+  end
 
   class << self
     def fields_for(object)
