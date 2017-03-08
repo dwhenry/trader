@@ -32,7 +32,14 @@ RSpec.describe Nav do
     let(:role) { create(:role, name: Role::SUPER_ADMIN) }
 
     it 'can see full navigation menu' do
-      expect(subject).to eq(['Business', "Portfolio's", { 'Securities' => ['Add'] }, 'Configure'])
+      expect(subject).to eq(
+        [
+          'Business',
+          'Portfolios',
+          { 'Securities' => ['Add'] },
+          'Configure'
+        ]
+      )
     end
 
     context 'and portfolios and securities exist' do
@@ -43,7 +50,7 @@ RSpec.describe Nav do
         expect(subject).to eq(
           [
             'Business',
-            { "Portfolio's" => ['Nav portfolio'] },
+            { 'Portfolios' => ['Nav portfolio'] },
             { 'Securities' => ['Add', 'PSec - Nav security'] },
             'Configure',
           ],
@@ -59,8 +66,8 @@ RSpec.describe Nav do
         expect(subject).to eq(
           [
             'Business',
-            "Portfolio's",
-            { "Shared portfolio's" => ['Nav portfolio'] },
+            'Portfolios',
+            { 'Shared portfolios' => ['Nav portfolio'] },
             { 'Securities' => ['Add'] },
             'Configure',
           ],

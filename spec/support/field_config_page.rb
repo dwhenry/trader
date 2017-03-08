@@ -28,7 +28,7 @@ module FieldConfigPage
       page.load
 
       # can update the user name
-      page.tab("portfolio's")
+      page.tab('portfolios')
 
       yield page, portfolio
     end

@@ -11,7 +11,7 @@ RSpec.feature 'Successfully logs events' do
       page.load
 
       # can update the portfolio and portfolio config
-      page.tab("portfolio's")
+      page.tab('portfolios')
       page.new_portfolio_name.set('Bobs trades')
       page.add.click
 
