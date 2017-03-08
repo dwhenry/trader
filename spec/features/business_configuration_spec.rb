@@ -35,7 +35,7 @@ RSpec.feature 'Business configuration' do
       expect(User.where(business: business).pluck(:email)).to include('jim@bob.com', 'jack@been.stalk')
 
       # can update the portfolio and portfolio config
-      page.tab("portfolio's")
+      page.tab('portfolios')
       portfolio_section = page.portfolios.first
       portfolio_section.portfolio_name.set('Bobs trades')
       portfolio_section.allow_negative_positions.set true

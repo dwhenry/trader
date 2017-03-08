@@ -20,7 +20,7 @@ class Nav < SimpleDelegator
   def items
     children = [
       Item.new(name: 'Business', path: business_path, icon: 'home'),
-      Item.new(name: 'Portfolio\'s', icon: 'th-large', children: portfolios),
+      Item.new(name: 'Portfolios', icon: 'th-large', children: portfolios),
     ]
     add_shared_portfolios(children)
     children << Item.new(name: 'Securities', icon: 'bar-chart', children: securities)
@@ -39,7 +39,7 @@ class Nav < SimpleDelegator
       Item.new(name: sp.portfolio.name, path: portfolio_path(sp .portfolio))
     end
     return if shared_portfolios.empty?
-    list << Item.new(name: 'Shared portfolio\'s', icon: 'th-large', children: shared_portfolios)
+    list << Item.new(name: 'Shared portfolios', icon: 'th-large', children: shared_portfolios)
   end
 
   def securities
@@ -47,7 +47,7 @@ class Nav < SimpleDelegator
     if policy(self).follow_security?
       children << Item.new(name: 'Add', path: yahoo_security_search_path, icon: 'pencil-square-o')
     end
-    children + Security.where(business_id: current_user.business_id).map do |security|
+    children + Security.where(business_id: current_user.business_id).order(:ticker, :name).map do |security|
       Item.new(name: "#{security.ticker} - #{security.name}", path: security_path(security))
     end
   end
