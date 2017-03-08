@@ -16,7 +16,7 @@
       li.nav-item
         a.nav-link class=('active' if tab == 'positions') href=portfolio_path(portfolio, tab: 'positions')
           .portfolio-stat__description Positions:&nbsp;
-          .portfolio-stat__number = portfolio.trades.current.group(:security_id).having('sum(quantity * price) != 0').count.count
+          .portfolio-stat__number = portfolio.trades.current.group(:security_id).having('sum(quantity) != 0').count.count
       li.nav-item
         a.nav-link class=('active' if tab == 'valuations') href=portfolio_path(portfolio, tab: 'valuations')
           .portfolio-stat__description Valuation:&nbsp;
