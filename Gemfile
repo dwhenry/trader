@@ -12,6 +12,13 @@ end
 source 'https://rubygems.org' do # rubocop:disable Metrics/BlockLength
   gem 'bootstrap', '~> 4.0.0.alpha5'
   gem 'bugsnag'
+  gem 'bunny'
+  if Rails.env.development? || ENV['LOCAL_HEADBUTT']
+    gem 'headbutt', path: '../headbutt'
+  else
+    gem 'headbutt', github: 'dwhenry/headbutt'
+  end
+
   gem 'jbuilder', '~> 2.5'
   gem 'jquery-rails'
   gem 'newrelic_rpm'

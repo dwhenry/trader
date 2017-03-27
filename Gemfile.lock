@@ -40,6 +40,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    amq-protocol (2.1.0)
     arel (7.1.4)
     ast (2.3.0)
     autoprefixer-rails (6.6.0)
@@ -49,6 +50,8 @@ GEM
       sass (>= 3.4.19)
     bugsnag (5.0.1)
     builder (3.2.2)
+    bunny (2.6.4)
+      amq-protocol (>= 2.0.1)
     byebug (9.0.6)
     capybara (2.10.1)
       addressable
@@ -260,6 +263,7 @@ PLATFORMS
 DEPENDENCIES
   bootstrap (~> 4.0.0.alpha5)!
   bugsnag!
+  bunny!
   capybara!
   factory_girl_rails!
   jbuilder (~> 2.5)!
