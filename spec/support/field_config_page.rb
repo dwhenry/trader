@@ -8,7 +8,7 @@ module FieldConfigPage
   end
 
   def navigate_to_field_config_page(field_config = nil) # rubocop:disable Metrics/MethodLength
-    business = create(:business, :with_config)
+    business = create(:business)
     portfolio = create(:portfolio, :with_config, business: business)
 
     if field_config

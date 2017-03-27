@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Successfully logs events' do
   scenario 'creation and editing of a portfolio' do
-    business = create(:business, :with_config)
+    business = create(:business)
     create(:portfolio, :with_config, business: business)
     user = create(:user, business: business)
 

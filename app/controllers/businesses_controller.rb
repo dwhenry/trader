@@ -21,7 +21,7 @@ class BusinessesController < ApplicationController
     current_user.role = roles.first
 
     if save_with_events(
-      [@business, config_for(@business), *roles],
+      [@business, *roles],
       [@portfolio, config_for(@portfolio)],
       [@portfolio, config_for(@portfolio)],
       [current_user],
@@ -36,8 +36,7 @@ class BusinessesController < ApplicationController
   def update
     @business = current_user.business
     @business.assign_attributes(business_params)
-    @config = config_for(@business, params: config_params)
-    if save_with_events(@business, @config)
+    if save_with_events(@business)
       redirect_to config_path(tab: :business)
     else
       @tab = 'business'
@@ -48,15 +47,11 @@ class BusinessesController < ApplicationController
   private
 
   def business_params
-    params.require(:business).permit(:name)
+    params.require(:business).permit(:name, :reporting_currency)
   end
 
   def portfolio_params
     params.require(:portfolio).permit(:name)
-  end
-
-  def config_params
-    params.require(:config).permit(CustomConfig.defaults(current_user.business).keys)
   end
 
   def one_business_only

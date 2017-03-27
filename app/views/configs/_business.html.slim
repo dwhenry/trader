@@ -7,7 +7,10 @@
             = f.label :name
             = f.text_field :name, class: 'form-control t-business-name'
 
-    = render 'configs/fields', config: (@config || config_for(current_user.business)).config_instance
+    .col-lg-6
+      = field(f, field_name: :reporting_currency) do
+      = f.label :reporting_currency
+      = f.select :reporting_currency, %w(AUD USD), { include_blank: true }, class: "form-control t-reporting-currency"
 
   .row
     .form_group.col-md-12
