@@ -6,13 +6,12 @@ class CustomConfig < ApplicationRecord
   ].freeze
 
   DEFAULT_CONFIG = {
-    'Business' => { reporting_currency: 'USD' },
+    'Business' => { },
     'Portfolio' => { allow_negative_positions: 'no' },
   }.freeze
 
   CONFIG_OPTIONS = {
     allow_negative_positions: { type: :radio, options: %w(yes no) },
-    reporting_currency: { type: :select, options: %w(AUD USD) },
   }.freeze
 
   belongs_to :owner, polymorphic: true

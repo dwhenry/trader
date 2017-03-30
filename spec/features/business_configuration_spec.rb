@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Business configuration' do
   scenario 'can update settings' do
-    business = create(:business, :with_config)
+    business = create(:business)
     portfolio = create(:portfolio, :with_config, business: business)
     user = create(:user, business: business)
 
@@ -18,8 +18,7 @@ RSpec.feature 'Business configuration' do
 
       business.reload
       expect(business.name).to eq('New name')
-      business_config = CustomConfig.find_for(business).config
-      expect(business_config['reporting_currency']).to eq('AUD')
+      expect(business.reporting_currency).to eq('AUD')
 
       # can update the user name
       page.tab(:user)
